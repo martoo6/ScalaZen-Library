@@ -4,7 +4,7 @@ package main
 import org.scalajs.dom
 
 import scala.scalajs.js
-import scala.scalajs.js.JSApp
+import scala.scalajs.js._
 
 object ThreeJSApp extends JSApp with Helpers{
 
@@ -22,13 +22,13 @@ object ThreeJSApp extends JSApp with Helpers{
 
     implicit var camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 )
 
+    Setup.Center
 
     val renderer = new WebGLRenderer(js.Dynamic.literal())
     renderer.setSize(dom.window.innerWidth, dom.window.innerHeight)
     val e =renderer.domElement
     val b: dom.Node = dom.document.body
     b.appendChild(e)
-    camera.position.z = 5
 
 //    def createCube(side: Double): Mesh = {
 //      val geometry = new BoxGeometry(side, side, side)
@@ -39,40 +39,33 @@ object ThreeJSApp extends JSApp with Helpers{
 //    val cube = createCube(3)
 //    scene.add(cube)
 
-    stroke(new Color(Math.random(),Math.random(),Math.random()))
-    val v = (1 to 100).map(_=>(Math.random()*200,Math.random()*200.0,0.0))
-    line(v:_*)
+//    (0 to 100 by 2).foreach{_=>
+//      stroke(new Color(Math.random(),Math.random(),Math.random()))
+//      val pos1 = (random(width),random(height))
+//      val pos2 = (random(width),random(height))
+//      line(pos1 :: pos2 :: Nil :_*)
+//      stroke(new Color(Math.random(),Math.random(),Math.random()))
+//      rect(pos1,random(5,10),random(5,10))
+//      rect(pos2,random(5,10),random(5,10))
+//    }
 
-
-
-    //line((1,2,0),(100,1000,0),(500,300,0),(500,0,0), (0,300,0))
-
-    //YEAHP
-    line(-1000,-1000,-1000,1000,1000,1000)
-
-
-    //rect(1,1,0,0)
-
-    stroke(new Color(Math.random(),Math.random(),Math.random()))
-
-    rect(10,10,0,0)
-
-    rect(10,10,width/2,0)
-
-    rect(10,10,0,height/2)
-
-    rect(10,10,width/2,height/2)
-
-    (0 to 100).foreach{_=>
-      stroke(new Color(Math.random(),Math.random(),Math.random()))
-      rect(random(20,50),random(20,50),random(width/2),random(height/2))
-    }
+//    def render{
+////      cube.rotation.x += delta*.5
+////      cube.rotation.y += delta*.5
+////      stroke(new Color(Math.random(),Math.random(),Math.random()))
+////      line((0.0,0.0,0.0),(Math.random()*200-100,Math.random()*200.0-100,0.0))
+//    }
 
     def render{
-//      cube.rotation.x += delta*.5
-//      cube.rotation.y += delta*.5
-//      stroke(new Color(Math.random(),Math.random(),Math.random()))
-//      line((0.0,0.0,0.0),(Math.random()*200-100,Math.random()*200.0-100,0.0))
+
+      stroke(Palette.pop.getRandom)
+
+      val pos2 = (random(-width,width),random(-height,height),0.0)
+      line((0.0,0.0,0.0) :: pos2 :: Nil :_*)
+      stroke(Palette.blue.getRandom)
+      val size = random(5,10)
+      //rect(pos2,size,size)
+      circle(pos2,size)
     }
 
     def renderLoop(timestamp: Double){
