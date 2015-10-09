@@ -6,7 +6,7 @@ import org.scalajs.dom
 import scala.scalajs.js
 import scala.scalajs.js._
 
-object ThreeJSApp extends JSApp with Helpers{
+object ThreeJSApp extends JSApp with BasicCanvas with Helpers{
 
   def now = System.currentTimeMillis()
 
@@ -17,12 +17,10 @@ object ThreeJSApp extends JSApp with Helpers{
 
   def main():Unit = {
 
-    implicit var material = new LineBasicMaterial(js.Dynamic.literal(color = 0xffffff))
-    implicit val scene = new Scene()
-
-    implicit var camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 )
 
     Setup.Center
+
+
 
     val renderer = new WebGLRenderer(js.Dynamic.literal())
     renderer.setSize(dom.window.innerWidth, dom.window.innerHeight)
@@ -56,16 +54,27 @@ object ThreeJSApp extends JSApp with Helpers{
 ////      line((0.0,0.0,0.0),(Math.random()*200-100,Math.random()*200.0-100,0.0))
 //    }
 
-    def render{
+    Perlin.init
 
+    def render{
       stroke(Palette.pop.getRandom)
 
-      val pos2 = (random(-width,width),random(-height,height),0.0)
+      val fc = frameCount*0.02
+      val x = PerlinNoise.perlinNoise(fc,0,0)*500
+      val y = PerlinNoise.perlinNoise(0,fc,0)*500
+      val z = PerlinNoise.perlinNoise(0,0,fc)*500
+
+      println(s"$x - $y")
+
+      //val pos2 = (random(-width,width),random(-height,height),0.0)
+      val pos2 = (x,y,z)
       line((0.0,0.0,0.0) :: pos2 :: Nil :_*)
-      stroke(Palette.blue.getRandom)
+
+      fill(Palette.blue.getRandom)
       val size = random(5,10)
       //rect(pos2,size,size)
-      circle(pos2,size)
+
+      cube(pos2,size)
     }
 
     def renderLoop(timestamp: Double){

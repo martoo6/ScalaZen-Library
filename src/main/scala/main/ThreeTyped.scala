@@ -13,8 +13,9 @@ import scala.scalajs.js.typedarray.Float32Array
     var Detector: DetectorStatic = js.native
   }
 
-  //@JSName("THREE")
-  package object THREE extends js.Object {
+  @js.native
+  @JSName("THREE")
+  object THREE extends js.Object {
     var CopyShader: Shader = js.native
     var REVISION: String = js.native
     var CullFaceNone: CullFace = js.native
