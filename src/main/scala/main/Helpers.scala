@@ -68,7 +68,7 @@ trait Helpers extends MathUtils{
     geometry.vertices.push(vertexes:_*)
     //geometry.vertices.push(vertex2)
     //new THREE.Vector3( -10, 0, 0 )
-    val l = new Line(geometry, material.clone())
+    val l = new Line(geometry, material)
     scene.add(l)
   }
 
@@ -105,7 +105,7 @@ trait Helpers extends MathUtils{
   def rect(pos:Vector3, width:Double, height:Double):Unit = {
     val geometry      = new PlaneGeometry(width, height)
     geometry.vertices = geometry.vertices.map(_.add(pos))
-    scene.add(new Mesh( geometry, meshMaterial.clone() ))
+    scene.add(new Mesh( geometry, meshMaterial))
   }
 
 
@@ -122,14 +122,16 @@ trait Helpers extends MathUtils{
   def circle(pos:Vector3, radius:Double): Unit = {
     val geometry = new CircleGeometry( radius, radius/2 )
     geometry.vertices = geometry.vertices.map(_.add(pos))
-    scene.add( new Mesh( geometry, meshMaterial.clone() ) )
+    scene.add( new Mesh( geometry, meshMaterial) )
   }
 
   def stroke(color:Color) = {
-    lineMaterial.color= color
+    lineMaterial = lineMaterial.clone().asInstanceOf[LineBasicMaterial]
+    lineMaterial.color = color
   }
 
   def fill(color:Color) = {
+    meshMaterial = meshMaterial.clone().asInstanceOf[MeshBasicMaterial]
     meshMaterial.color = color
   }
 
@@ -138,7 +140,7 @@ trait Helpers extends MathUtils{
   def cube(pos:Vector3, sideSize:Double): Unit ={
     val geometry = new BoxGeometry(sideSize, sideSize, sideSize)
     geometry.vertices = geometry.vertices.map(_.add(pos))
-    scene.add(new Mesh(geometry, meshMaterial.clone()))
+    scene.add(new Mesh(geometry, meshMaterial))
   }
 
   implicit def SeqIntToColor(lst:Seq[Int]): Seq[Color] = lst.map{new Color(_)}
