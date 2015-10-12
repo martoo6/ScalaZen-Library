@@ -6,7 +6,7 @@ import org.scalajs.dom
 import scala.scalajs.js
 import scala.scalajs.js._
 
-object ThreeJSApp extends JSApp with BasicCanvas with Helpers{
+object ThreeJSApp extends JSApp with BasicCanvas with Helpers with PerlinNoise{
 
   def now = System.currentTimeMillis()
 
@@ -28,53 +28,33 @@ object ThreeJSApp extends JSApp with BasicCanvas with Helpers{
     val b: dom.Node = dom.document.body
     b.appendChild(e)
 
-//    def createCube(side: Double): Mesh = {
-//      val geometry = new BoxGeometry(side, side, side)
-//      val material = new MeshBasicMaterial(js.Dynamic.literal(color = 0xffffff, wireframe=true))
-//      new Mesh(geometry, material)
-//    }
-//
-//    val cube = createCube(3)
-//    scene.add(cube)
+    val controls = new OrbitControls(camera , renderer.domElement)
 
-//    (0 to 100 by 2).foreach{_=>
-//      stroke(new Color(Math.random(),Math.random(),Math.random()))
-//      val pos1 = (random(width),random(height))
-//      val pos2 = (random(width),random(height))
-//      line(pos1 :: pos2 :: Nil :_*)
-//      stroke(new Color(Math.random(),Math.random(),Math.random()))
-//      rect(pos1,random(5,10),random(5,10))
-//      rect(pos2,random(5,10),random(5,10))
-//    }
-
-//    def render{
-////      cube.rotation.x += delta*.5
-////      cube.rotation.y += delta*.5
-////      stroke(new Color(Math.random(),Math.random(),Math.random()))
-////      line((0.0,0.0,0.0),(Math.random()*200-100,Math.random()*200.0-100,0.0))
-//    }
-
-    Perlin.init
+    //val controls = new OrbitControls( js.Dynamic.literal(`object`=camera , domElement=renderer.domElement))
+    controls.center=(0,0,-500)
+    //controls.addEventListener("change", render _)
 
     def render{
       stroke(Palette.pop.getRandom)
 
       val fc = frameCount*0.02
-      val x = PerlinNoise.perlinNoise(fc,0,0)*500
-      val y = PerlinNoise.perlinNoise(0,fc,0)*500
-      val z = PerlinNoise.perlinNoise(0,0,fc)*500
+      val x = noise(fc,0,0)*500
+      val y = noise(0,fc,0)*500
+      val z = noise(0,0,fc)*500-500
 
       println(s"$x - $y")
 
       //val pos2 = (random(-width,width),random(-height,height),0.0)
-      val pos2 = (x,y,z)
-      line((0.0,0.0,0.0) :: pos2 :: Nil :_*)
+      val dest = (x,y,z)
+      line((0,0,-500),dest)
 
       fill(Palette.blue.getRandom)
-      val size = random(5,10)
+      val size = random(2,5)
       //rect(pos2,size,size)
 
-      cube(pos2,size)
+      sphere(dest,size)
+
+      controls.update()
     }
 
     def renderLoop(timestamp: Double){
@@ -83,6 +63,7 @@ object ThreeJSApp extends JSApp with BasicCanvas with Helpers{
       dom.requestAnimationFrame(renderLoop _)
       render
       renderer.render(scene, camera)
+      camera.updateMatrix()
     }
 
     renderLoop(now)

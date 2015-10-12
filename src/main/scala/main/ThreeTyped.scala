@@ -1284,7 +1284,8 @@ import scala.scalajs.js.typedarray.Float32Array
   @js.native
   @JSName("THREE.MeshLambertMaterial")
   class MeshLambertMaterial extends Material {
-    def this(parameters: MeshLambertMaterialParameters = ???) = this()
+    //def this(parameters: MeshLambertMaterialParameters = ???) = this()
+    def this(parameters: js.Dynamic = ???) = this()
     var color: Color = js.native
     var emissive: Color = js.native
     var wrapAround: Boolean = js.native
@@ -3592,10 +3593,12 @@ import scala.scalajs.js.typedarray.Float32Array
 
   @js.native
   @JSName("THREE.OrbitControls")
-  class OrbitControls extends js.Object {
-    def this(`object`: Camera, domElement: HTMLElement = ???) = this()
-    var `object`: Camera = js.native
-    var domElement: HTMLElement = js.native
+//  class OrbitControls extends js.Object {
+  class OrbitControls(var `object`: Camera,var domElement: HTMLElement = ???) extends js.Object {
+    //def this(`object`: Camera, domElement: HTMLElement = ???) = this()
+    //def this(parameters: js.Dynamic = ???) = this()
+//    var `object`: Camera = js.native
+//    var domElement: HTMLElement = js.native
     var enabled: Boolean = js.native
     var target: Vector3 = js.native
     var center: Vector3 = js.native
