@@ -46,37 +46,52 @@ trait Helpers extends MathUtils{
 
   val origin = new Vector3(0.0,0.0,0.0)
 
+  val white = 0xffffff
+  val black = 0x000000
+  val red = 0xFF0000
+  val green = 0x00FF00
+  val blue = 0x0000FF
+
+  var mouseX = 0.0
+  var mouseY = 0.0
+
   object Setup
   {
+    val center = new Vector3(0,0,500)
+    val leftBottom = (width / 2, height / 2, 1000)
+    var position = center
     def Center= {
-      camera match{
-        case camera:OrthographicCamera =>
-          camera.left = width / -2
-          camera.right = width / 2
-          camera.top = height / 2
-          camera.bottom = height / -2
-          camera.near = 1
-          camera.far = 1000
-          camera.position.z = 1
-      }
+      position = center
+      camera.position.set(position.x, position.y, position.z)
       this
     }
     def LeftBottom={
-      camera match {
-        case camera: OrthographicCamera =>
-          camera.left = width / -2
-          camera.right = width / 2
-          camera.top = height / 2
-          camera.bottom = height / -2
-          camera.near = 1
-          camera.far = 1000
-          camera.position.z = 1
-          camera.position.set(width / 2, height / 2, 1)
-      }
+      position = leftBottom
+      camera.position.set(position.x, position.y, position.z)
       this
     }
-    def Dim3(implicit meshMaterial: MeshBasicMaterial) = new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
-    def Dim2(implicit meshMaterial: MeshBasicMaterial) = new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00))
+    def Dim3 = {
+      //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
+      camera = new PerspectiveCamera( 45, width / height, 1, 1000 )
+      camera.position.set(position.x, position.y, position.z)
+      this
+    }
+    def Dim2 = {
+      //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00))
+      camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
+      camera.position.set(position.x, position.y, position.z)
+      this
+    }
+    def ortho = {
+      camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
+      camera.position.set(position.x, position.y, position.z)
+      this
+    }
+    def perspective = {
+      camera = new PerspectiveCamera( 45, width / height, 1, 1000 )
+      camera.position.set(position.x, position.y, position.z)
+      this
+    }
   }
   //########################   LINE   ############################
 
@@ -121,7 +136,19 @@ trait Helpers extends MathUtils{
   def rect(pos:(Double, Double, Double), width:Double, height:Double):Geometry = rect(new Vector3(pos._1,pos._2,pos._3),width,height)
 
   def rect(pos:Vector3, width:Double, height:Double):Geometry = {
-    addMeshInPlace(new PlaneGeometry(width, height), pos)
+    val geo = addMeshInPlace(new PlaneGeometry(width, height), pos)
+    geo.vertices = geo.vertices.map(x=>RectMode.rectMode(x, (width, height)))
+    geo
+  }
+
+  object RectMode{
+    private val half = new Vector3(2,2,2)
+    private val _centerMode     =  (v: Vector3, volume:Vector3) => v
+    private val _leftBottomMode =  (v: Vector3, volume:Vector3) => v.add(volume.divide(half))
+    var rectMode: (Vector3, Vector3) => Vector3  = _centerMode
+
+    def centerMode     = rectMode = _centerMode
+    def leftBottomMode = rectMode = _leftBottomMode
   }
 
   //########################   Circle   ############################
@@ -240,4 +267,5 @@ trait Helpers extends MathUtils{
     val oceanFive           = Palette(0x00A0B0 :: 0x6A4A3C :: 0xCC333F :: 0xEB6841 :: 0xEDC951 :: Nil :_*)
     val iDemandPancake      = Palette(0x594F4F :: 0x547980 :: 0x45ADA8 :: 0x9DE0AD :: 0xE5FCC2 :: Nil :_*)
   }
+
 }

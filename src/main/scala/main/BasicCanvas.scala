@@ -1,6 +1,7 @@
 package main
 
 import org.scalajs.dom
+import org.scalajs.dom.raw.MouseEvent
 
 import scala.scalajs.js
 
@@ -10,8 +11,8 @@ import scala.scalajs.js
 trait BasicCanvas {
   self: Helpers=>
 
-  var lineMaterial            = new LineBasicMaterial(js.Dynamic.literal(color = 0xffffff, side= THREE.DoubleSide))
-  var meshMaterial: Material  = new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
+  var lineMaterial            = new LineBasicMaterial(js.Dynamic.literal(color = white, side= THREE.DoubleSide))
+  var meshMaterial: Material  = new MeshBasicMaterial(js.Dynamic.literal(color= white, side= THREE.DoubleSide))
   val scene                   = new Scene()
   var camera: Camera          = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
 
@@ -22,9 +23,23 @@ trait BasicCanvas {
   b.appendChild(e)
 
 
+  val stats = new Stats()
+  stats.domElement.style.position = "absolute"
+  stats.domElement.style.top = "0px"
+  b.appendChild( stats.domElement )
+
+
   var clock = new Clock()
   var delta:Double = 0
   var frameCount:Long = 0
+
+  val canvasData = (lineMaterial, meshMaterial, scene, camera, renderer, clock)
+
+  dom.onmousemove = {
+    event:MouseEvent =>
+      mouseX = event.clientX
+      mouseY = event.clientY
+  }
 
   def render():Unit
 
@@ -36,4 +51,5 @@ trait BasicCanvas {
     renderer.render(scene, camera)
     camera.updateMatrix()
   }
+
 }

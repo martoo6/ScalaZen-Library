@@ -4,6 +4,16 @@ package main
  *
  * @author Hans Haggstrom
  */
+object Perlin extends PerlinNoise{
+  def build = new PerlinNoise {}
+}
+
+case class Perlin(from:Double = -1, to: Double = 1) extends PerlinNoise with MathUtils{
+  override def noise(x: Double, y: Double = 0, z: Double = 0): Double = {
+    map(super.noise(x,y,z),-1,1,from,to)
+  }
+}
+
 trait PerlinNoise extends MathUtils{
 
 
@@ -87,7 +97,7 @@ trait PerlinNoise extends MathUtils{
     val BB = p(B + 1) + Z
 
     // and add blended results from 8 corners of cube
-    return interpolate(w,
+    interpolate(w,
       interpolate(v,
         interpolate(u,
           grad(p(AA), x_, y_, z_),
