@@ -140,6 +140,11 @@ trait Helpers extends MathUtils{
 
   //############# STROKE AND FILL ##################
 
+  def lineWeight(weight: Double) = {
+    lineMaterial = lineMaterial.clone().asInstanceOf[LineBasicMaterial]
+    lineMaterial.linewidth = weight
+  }
+
   def stroke(color:Color) = {
     lineMaterial = lineMaterial.clone().asInstanceOf[LineBasicMaterial]
     lineMaterial.color = color
@@ -203,10 +208,10 @@ trait Helpers extends MathUtils{
     controls
   }
 
-
   implicit def SeqIntToColor(lst:Seq[Int]): Seq[Color] = lst.map{new Color(_)}
 
   implicit def IntToColor(value:Int): Color = new Color(value)
+
 
   case class Palette(colors:Color*){
     def getRandom: Color = colors(Random.nextInt(colors.size))

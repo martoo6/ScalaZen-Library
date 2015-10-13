@@ -26,6 +26,9 @@ object ThreeJSApp extends JSApp with BasicCanvas with Helpers with PerlinNoise{
   def render():Unit = {
     stroke(Palette.iDemandPancake.getRandom)
 
+    val size = random(2,5)
+    lineWeight(size*2)
+
     val fc = frameCount*0.02
     val x = noise(fc,0,0)*500
     val y = noise(0,fc,0)*500
@@ -36,7 +39,7 @@ object ThreeJSApp extends JSApp with BasicCanvas with Helpers with PerlinNoise{
 
     fillLambert(Palette.iDemandPancake.getRandom)
 
-    val size = random(2,5)
+
 
     sphere(dest,size)
 
