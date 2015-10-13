@@ -1,5 +1,6 @@
 package main
 
+import main.ThreeJSApp._
 import org.scalajs.dom
 
 import scala.scalajs.js
@@ -9,7 +10,11 @@ import scala.util.Random
  * Created by martin on 07/10/15.
  */
 trait Helpers extends MathUtils{
-  self: BasicCanvas =>
+  var lineMaterial: LineBasicMaterial
+  var meshMaterial: Material
+  val scene: Scene
+  var camera: Camera
+
 
   type vec3Double = (Double, Double, Double)
   type vec3Int = (Int, Int, Int)
@@ -35,31 +40,39 @@ trait Helpers extends MathUtils{
   implicit def SeqVec2ToVector3(lst:Seq[vec2Double]) = lst.map{case(x,y)=>new Vector3(x,y,0)}
 
   def width = dom.window.innerWidth
-
   def height = dom.window.innerHeight
+
+  def now = System.currentTimeMillis()
+
+  val origin = new Vector3(0.0,0.0,0.0)
 
   object Setup
   {
-    def Center(implicit camera: OrthographicCamera) = {
-      camera.left = width / -2
-      camera.right = width / 2
-      camera.top = height / 2
-      camera.bottom = height / -2
-      camera.near = 1
-      camera.far = 1000
-      camera.position.z = 1
+    def Center= {
+      camera match{
+        case camera:OrthographicCamera =>
+          camera.left = width / -2
+          camera.right = width / 2
+          camera.top = height / 2
+          camera.bottom = height / -2
+          camera.near = 1
+          camera.far = 1000
+          camera.position.z = 1
+      }
       this
     }
-    def LeftBottom(implicit camera: OrthographicCamera) ={
-      //TODO: ver q onda
-      camera.left = width / -2
-      camera.right = width / 2
-      camera.top = height / 2
-      camera.bottom = height / -2
-      camera.near = 1
-      camera.far = 1000
-      camera.position.z = 1
-      camera.position.set(width / 2, height / 2, 1)
+    def LeftBottom={
+      camera match {
+        case camera: OrthographicCamera =>
+          camera.left = width / -2
+          camera.right = width / 2
+          camera.top = height / 2
+          camera.bottom = height / -2
+          camera.near = 1
+          camera.far = 1000
+          camera.position.z = 1
+          camera.position.set(width / 2, height / 2, 1)
+      }
       this
     }
     def Dim3(implicit meshMaterial: MeshBasicMaterial) = new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
@@ -111,7 +124,6 @@ trait Helpers extends MathUtils{
     addMeshInPlace(new PlaneGeometry(width, height), pos)
   }
 
-
   //########################   Circle   ############################
 
   def circle(x: Double, y: Double, radius: Double): Geometry = {
@@ -125,6 +137,8 @@ trait Helpers extends MathUtils{
   def circle(pos:Vector3, radius:Double): Geometry = {
     addMeshInPlace(new CircleGeometry(radius), pos)
   }
+
+  //############# STROKE AND FILL ##################
 
   def stroke(color:Color) = {
     lineMaterial = lineMaterial.clone().asInstanceOf[LineBasicMaterial]
@@ -160,6 +174,31 @@ trait Helpers extends MathUtils{
     scene.add(new Mesh(geometry, meshMaterial))
     geometry
   }
+
+  //#######################  LIGHTS #############################
+
+  def addAmbientLight(color: Int) = {
+    val light = new AmbientLight(color)
+    scene.add( light )
+    light
+  }
+
+  def addDirectionalLight(color:Int, intensity: Double, position: Vector3)= {
+    val directionalLight = new DirectionalLight(color, intensity)
+    directionalLight.position.add(position)
+    scene.add(directionalLight)
+    directionalLight
+  }
+
+  //############## ADD CONTROLS ###################
+
+  def addOrbitControls(coordinate: Vector3) ={
+    val controls = new OrbitControls(camera , renderer.domElement)
+    controls.center = coordinate
+    //controls.addEventListener("change", render _)
+    controls
+  }
+
 
   implicit def SeqIntToColor(lst:Seq[Int]): Seq[Color] = lst.map{new Color(_)}
 

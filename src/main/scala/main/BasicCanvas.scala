@@ -1,6 +1,6 @@
 package main
 
-import main.ThreeJSApp._
+import org.scalajs.dom
 
 import scala.scalajs.js
 
@@ -8,9 +8,32 @@ import scala.scalajs.js
  * Created by martin on 09/10/15.
  */
 trait BasicCanvas {
-  implicit var lineMaterial = new LineBasicMaterial(js.Dynamic.literal(color = 0xffffff, side= THREE.DoubleSide))
-  //implicit var meshMaterial  = new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
-  implicit var meshMaterial:Material  = new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
-  implicit val scene = new Scene()
-  implicit var camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 )
+  self: Helpers=>
+
+  var lineMaterial            = new LineBasicMaterial(js.Dynamic.literal(color = 0xffffff, side= THREE.DoubleSide))
+  var meshMaterial: Material  = new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
+  val scene                   = new Scene()
+  var camera: Camera          = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
+
+  val renderer = new WebGLRenderer(js.Dynamic.literal())
+  renderer.setSize(dom.window.innerWidth, dom.window.innerHeight)
+  val e =renderer.domElement
+  val b: dom.Node = dom.document.body
+  b.appendChild(e)
+
+
+  var clock = new Clock()
+  var delta:Double = 0
+  var frameCount:Long = 0
+
+  def render():Unit
+
+  def renderLoop(timestamp: Double){
+    delta = clock.getDelta()
+    frameCount+=1
+    dom.requestAnimationFrame(renderLoop _)
+    render
+    renderer.render(scene, camera)
+    camera.updateMatrix()
+  }
 }

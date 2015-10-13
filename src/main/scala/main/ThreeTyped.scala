@@ -441,10 +441,11 @@ import scala.scalajs.js.typedarray.Float32Array
 
   @js.native
   @JSName("THREE.Camera")
-  class Camera extends Object3D {
+  trait Camera extends Object3D{
     var matrixWorldInverse: Matrix4 = js.native
     var projectionMatrix: Matrix4 = js.native
   }
+
 
   @js.native
   @JSName("THREE.CubeCamera")

@@ -1,71 +1,44 @@
 package main
 
 
-import org.scalajs.dom
-
-import scala.scalajs.js
 import scala.scalajs.js._
 
 object ThreeJSApp extends JSApp with BasicCanvas with Helpers with PerlinNoise{
-
-  def now = System.currentTimeMillis()
-
-  var clock = new Clock()
-
-  var delta:Double = 0
-  var frameCount:Long = 0
+  var controls:OrbitControls = null
 
   def main():Unit = {
-
-
     Setup.Center
 
+    addAmbientLight(0x404040)
+    addDirectionalLight(0x40FF40, 0.9, (0,1,0))
 
+    controls = addOrbitControls(origin)
 
-    val renderer = new WebGLRenderer(js.Dynamic.literal())
-    renderer.setSize(dom.window.innerWidth, dom.window.innerHeight)
-    val e =renderer.domElement
-    val b: dom.Node = dom.document.body
-    b.appendChild(e)
-
-    val controls = new OrbitControls(camera , renderer.domElement)
-
-    //val controls = new OrbitControls( js.Dynamic.literal(`object`=camera , domElement=renderer.domElement))
-    controls.center=(0,0,-500)
-    //controls.addEventListener("change", render _)
-
-    def render{
-      stroke(Palette.pop.getRandom)
-
-      val fc = frameCount*0.02
-      val x = noise(fc,0,0)*500
-      val y = noise(0,fc,0)*500
-      val z = noise(0,0,fc)*500-500
-
-      println(s"$x - $y")
-
-      //val pos2 = (random(-width,width),random(-height,height),0.0)
-      val dest = (x,y,z)
-      line((0,0,-500),dest)
-
-      fill(Palette.blue.getRandom)
-      val size = random(2,5)
-      //rect(pos2,size,size)
-
-      sphere(dest,size)
-
-      controls.update()
-    }
-
-    def renderLoop(timestamp: Double){
-      delta = clock.getDelta()
-      frameCount+=1
-      dom.requestAnimationFrame(renderLoop _)
-      render
-      renderer.render(scene, camera)
-      camera.updateMatrix()
-    }
-
+    //Should be the last thing to be executed, else, weird things happen
     renderLoop(now)
   }
+
+  def render():Unit = {
+    stroke(Palette.pop.getRandom)
+
+    val fc = frameCount*0.02
+    val x = noise(fc,0,0)*500
+    val y = noise(0,fc,0)*500
+    val z = noise(0,0,fc)*500
+
+    val dest = (x,y,z)
+    line(origin,dest)
+
+
+    fillLambert(Palette.blue.getRandom)
+
+    val size = random(2,5)
+
+    sphere(dest,size)
+
+    //Should attach as an observable
+    controls.update()
+  }
+
+
 }
