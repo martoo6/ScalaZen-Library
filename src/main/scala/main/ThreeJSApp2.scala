@@ -6,7 +6,7 @@ import scala.scalajs.js._
 //########################
 //########################
 
-object ThreeJSApp02 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
+object ThreeJSApp2 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
 
   def main():Unit = {
     Setup.Dim2.LeftBottom.asCanvas

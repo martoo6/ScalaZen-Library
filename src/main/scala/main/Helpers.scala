@@ -46,6 +46,12 @@ trait Helpers extends MathUtils{
 
   val origin = new Vector3(0.0,0.0,0.0)
 
+  //Should re calculate acording to origin
+  val leftTop     = new Vector3(0.0,height,0.0)
+  val rightTop    = new Vector3(width,height,0.0)
+  val leftBottom  = new Vector3(0.0,0.0,0.0)
+  val rightBottom = new Vector3(width,0.0,0.0)
+
   val white = 0xffffff
   val black = 0x000000
   val red = 0xFF0000
@@ -185,6 +191,18 @@ trait Helpers extends MathUtils{
     addMeshInPlace(new CircleGeometry(radius), pos)
   }
 
+  //########################   Triangle   ############################
+
+  def triangle(pos1:Vector3, pos2:Vector3, pos3:Vector3): Geometry = {
+    val geometry = new Geometry()
+    geometry.vertices.push(pos1)
+    geometry.vertices.push(pos2)
+    geometry.vertices.push(pos3)
+
+    geometry.faces.push(new Face3(0, 2, 1))
+    addMeshInPlace(geometry, origin)
+  }
+
   //############# STROKE AND FILL ##################
 
   def lineWeight(weight: Double) = {
@@ -261,6 +279,7 @@ trait Helpers extends MathUtils{
 
 
   case class Palette(colors:Color*){
+    def apply(pos:Int) = colors(pos)
     def getRandom: Color = colors(Random.nextInt(colors.size))
     //Mayble use math to set it in range would be faster
     def getRandom(amount: Int): Color = colors(Random.nextInt(if (amount>colors.size) colors.size else amount))

@@ -40,7 +40,7 @@ trait BasicCanvas {
   dom.onmousemove = {
     event:MouseEvent =>
       mouseX = event.clientX
-      mouseY = event.clientY
+      mouseY = height - event.clientY
   }
 
   def render():Unit
