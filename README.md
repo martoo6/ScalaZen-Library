@@ -7,4 +7,4 @@ sbt
 ~fastOptJS
 ```
 
-Then open the **index.html** file in the browser.
+Then open the **index.html** or **index2.html** or **index3.html** files in the browser.
