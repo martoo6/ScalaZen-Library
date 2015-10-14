@@ -162,6 +162,8 @@ trait Helpers extends MathUtils{
   def rect(pos:(Double, Double, Double), width:Double, height:Double):Geometry = rect(new Vector3(pos._1,pos._2,pos._3),width,height)
 
   def rect(pos:Vector3, width:Double, height:Double):Geometry = {
+
+    //val geo = addMeshInPlace(new PlaneBufferGeometry(width, height), pos)
     val geo = addMeshInPlace(new PlaneGeometry(width, height), pos)
     geo.vertices = geo.vertices.map(x=>RectMode.rectMode(x, (width, height)))
     geo

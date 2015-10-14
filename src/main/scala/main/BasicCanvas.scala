@@ -49,11 +49,18 @@ trait BasicCanvas {
     delta = clock.getDelta()
     frameCount+=1
 
-    if(!Setup.canvasStyle) renderer.clear()
+    if(!Setup.canvasStyle)  renderer.clear()
     if(Setup.clearObjects){
       val l = scene.children.length
       (0 to l).reverse.foreach{ i=>
-        scene.remove(scene.children(i))
+      val c = scene.children(i)
+        c match{
+          case m:Mesh=>
+            m.material.dispose()
+            m.geometry.dispose()
+          case _ =>
+        }
+        scene.remove(c)
       }
     }
 

@@ -9,27 +9,28 @@ import scala.scalajs.js._
 object ThreeJSApp3 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
 
   def main():Unit = {
-    Setup.Dim2.LeftBottom.autoClear
+    Setup.Dim2.LeftBottom.asScene.noClear
     RectMode.leftBottomMode
     //Should be the last thing to be executed, else, weird things happen
     renderLoop(now)
   }
 
-  val c1 = Palette.iDemandPancake(0)
-  val c2 = Palette.iDemandPancake(1)
-  val c3 = Palette.iDemandPancake(2)
-  val c4 = Palette.iDemandPancake(3)
+
+  fill(Palette.iDemandPancake(0))
+  val t1 = triangle(leftTop,rightTop,(mouseX,mouseY))
+  fill(Palette.iDemandPancake(1))
+  val t2 = triangle(leftBottom,rightBottom,(mouseX,mouseY))
+  fill(Palette.iDemandPancake(2))
+  val t3 = triangle(leftTop,leftBottom,(mouseX,mouseY))
+  fill(Palette.iDemandPancake(3))
+  val t4 = triangle(rightTop,rightBottom,(mouseX,mouseY))
+
+  val lst = t1::t2::t3::t4::Nil
+
 
   def render():Unit = {
-    fill(c1)
-    triangle(leftTop,rightTop,(mouseX,mouseY))
-    fill(c2)
-    triangle(leftBottom,rightBottom,(mouseX,mouseY))
-    fill(c3)
-    triangle(leftTop,leftBottom,(mouseX,mouseY))
-    fill(c4)
-    triangle(rightTop,rightBottom,(mouseX,mouseY))
-
+    lst.foreach(_.vertices.last.set(mouseX,mouseY,0))
+    lst.foreach(_.verticesNeedUpdate=true)
     stats.update()
   }
 
