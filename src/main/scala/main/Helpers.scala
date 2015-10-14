@@ -60,6 +60,10 @@ trait Helpers extends MathUtils{
     val center = new Vector3(0,0,500)
     val leftBottom = (width / 2, height / 2, 1000)
     var position = center
+
+    var clearObjects = false
+    var canvasStyle = false
+
     def Center= {
       position = center
       camera.position.set(position.x, position.y, position.z)
@@ -90,6 +94,22 @@ trait Helpers extends MathUtils{
     def perspective = {
       camera = new PerspectiveCamera( 45, width / height, 1, 1000 )
       camera.position.set(position.x, position.y, position.z)
+      this
+    }
+    def autoClear = {
+      clearObjects= true
+      this
+    }
+    def noClear = {
+      clearObjects= false
+      this
+    }
+    def asCanvas={
+      canvasStyle=true
+      this
+    }
+    def asScene={
+      canvasStyle=false
       this
     }
   }

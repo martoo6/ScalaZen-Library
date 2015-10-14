@@ -15,7 +15,7 @@ object ThreeJSApp extends JSApp with BasicCanvas with Helpers with PerlinNoise{
   val n3 = Perlin(-500,500)
 
   def main():Unit = {
-    Setup.Dim3.Center
+    Setup.Dim3.Center.asScene.noClear
 
     addAmbientLight(0xFFFFFF)
     addDirectionalLight(0xFFFFFF, 0.9, (0,1,0))

@@ -9,19 +9,19 @@ import scala.scalajs.js._
 object ThreeJSApp02 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
 
   def main():Unit = {
-    Setup.Dim2.LeftBottom
+    Setup.Dim2.LeftBottom.asCanvas
     RectMode.leftBottomMode
     //Should be the last thing to be executed, else, weird things happen
     renderLoop(now)
   }
 
   def render():Unit = {
-    println(mouseX)
     val pos = mouseX - (mouseX % 50)
     fill(Palette.iDemandPancake.getRandom)
     rect(pos,0,50,height)
 
     stats.update()
+
   }
 
 
