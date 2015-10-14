@@ -29,8 +29,8 @@ object ThreeJSApp3 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
 
 
   def render():Unit = {
-    lst.foreach(_.vertices.last.set(mouseX,mouseY,0))
-    lst.foreach(_.verticesNeedUpdate=true)
+    lst.foreach(_.geometry.vertices.last.set(mouseX,mouseY,0))
+    lst.foreach(_.geometry.verticesNeedUpdate=true)
     stats.update()
   }
 

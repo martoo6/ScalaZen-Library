@@ -44,6 +44,9 @@ trait Helpers extends MathUtils{
 
   def now = System.currentTimeMillis()
 
+  //Should re calculate acording to origin
+  def random2D = new Vector3(random(width), random(height),0)
+
   val origin = new Vector3(0.0,0.0,0.0)
 
   //Should re calculate acording to origin
@@ -153,20 +156,20 @@ trait Helpers extends MathUtils{
   //    scene.add(plane)
   //  }
 
-  def rect(x:Double, y:Double, width:Double, height:Double):Geometry =  rect(new Vector3(x,y,0),width,height)
+  def rect(x:Double, y:Double, width:Double, height:Double):Mesh =  rect(new Vector3(x,y,0),width,height)
 
-  def rect(x:Double, y:Double, z:Double, width:Double, height:Double):Geometry =  rect(new Vector3(x,y,z),width,height)
+  def rect(x:Double, y:Double, z:Double, width:Double, height:Double):Mesh =  rect(new Vector3(x,y,z),width,height)
 
-  def rect(pos:(Double, Double), width:Double, height:Double):Geometry = rect(new Vector3(pos._1,pos._2,0),width,height)
+  def rect(pos:(Double, Double), width:Double, height:Double):Mesh = rect(new Vector3(pos._1,pos._2,0),width,height)
 
-  def rect(pos:(Double, Double, Double), width:Double, height:Double):Geometry = rect(new Vector3(pos._1,pos._2,pos._3),width,height)
+  def rect(pos:(Double, Double, Double), width:Double, height:Double):Mesh = rect(new Vector3(pos._1,pos._2,pos._3),width,height)
 
-  def rect(pos:Vector3, width:Double, height:Double):Geometry = {
+  def rect(pos:Vector3, width:Double, height:Double):Mesh = {
 
     //val geo = addMeshInPlace(new PlaneBufferGeometry(width, height), pos)
-    val geo = addMeshInPlace(new PlaneGeometry(width, height), pos)
-    geo.vertices = geo.vertices.map(x=>RectMode.rectMode(x, (width, height)))
-    geo
+    val mesh = addMeshInPlace(new PlaneGeometry(width, height), pos)
+    mesh.geometry.vertices = mesh.geometry.vertices.map(x=>RectMode.rectMode(x, (width, height)))
+    mesh
   }
 
   object RectMode{
@@ -181,21 +184,21 @@ trait Helpers extends MathUtils{
 
   //########################   Circle   ############################
 
-  def circle(x: Double, y: Double, radius: Double): Geometry = {
+  def circle(x: Double, y: Double, radius: Double): Mesh = {
     circle(new Vector3(x,y,0), radius)
   }
 
-  def circle(x: Double, y: Double,z: Double, radius: Double): Geometry = {
+  def circle(x: Double, y: Double,z: Double, radius: Double): Mesh = {
     circle(new Vector3(x,y,z), radius)
   }
 
-  def circle(pos:Vector3, radius:Double): Geometry = {
+  def circle(pos:Vector3, radius:Double): Mesh = {
     addMeshInPlace(new CircleGeometry(radius), pos)
   }
 
   //########################   Triangle   ############################
 
-  def triangle(pos1:Vector3, pos2:Vector3, pos3:Vector3): Geometry = {
+  def triangle(pos1:Vector3, pos2:Vector3, pos3:Vector3): Mesh = {
     val geometry = new Geometry()
     geometry.vertices.push(pos1)
     geometry.vertices.push(pos2)
@@ -231,24 +234,26 @@ trait Helpers extends MathUtils{
 
   //#######################  CUBE #############################
 
-  def cube(pos:Vector3, sideSize:Double): Geometry ={
+  def cube(pos:Vector3, sideSize:Double)={
     addMeshInPlace(new BoxGeometry(sideSize, sideSize, sideSize), pos)
   }
 
   //#######################  SPHERE #############################
 
-  def sphere(pos:Vector3, radius:Double): Geometry ={
+  def sphere(pos:Vector3, radius:Double): Mesh ={
     addMeshInPlace(new SphereGeometry(radius), pos)
   }
 
-  def sphere(pos:Vector3, radius:Double, segments: Int): Geometry ={
+  def sphere(pos:Vector3, radius:Double, segments: Int): Mesh ={
     addMeshInPlace(new SphereGeometry(radius, segments, segments), pos)
   }
 
   def addMeshInPlace(geometry: Geometry, pos:Vector3) = {
-    geometry.vertices = geometry.vertices.map(_.add(pos))
-    scene.add(new Mesh(geometry, meshMaterial))
-    geometry
+    //geometry.vertices = geometry.vertices.map(_.add(pos))
+    val mesh = new Mesh(geometry, meshMaterial)
+    mesh.position.add(pos)
+    scene.add(mesh)
+    mesh
   }
 
   //#######################  LIGHTS #############################
