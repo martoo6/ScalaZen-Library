@@ -16,7 +16,7 @@ trait BasicCanvas {
   val scene                   = new Scene()
   var camera: Camera          = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
 
-  val renderer = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true))
+  val renderer = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true, antialias = true))
   renderer.autoClear = false
 
   renderer.setSize(dom.window.innerWidth, dom.window.innerHeight)

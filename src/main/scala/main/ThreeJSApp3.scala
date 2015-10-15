@@ -10,7 +10,7 @@ object ThreeJSApp3 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
 
   def main():Unit = {
     Setup.Dim2.LeftBottom.asScene.noClear
-    RectMode.leftBottomMode
+    RectMode.leftBottom
     //Should be the last thing to be executed, else, weird things happen
     renderLoop(now)
   }

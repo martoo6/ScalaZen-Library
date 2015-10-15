@@ -15,14 +15,20 @@ trait Helpers extends MathUtils{
   val scene: Scene
   var camera: Camera
 
-
   type vec3Double = (Double, Double, Double)
-  type vec3Int = (Int, Int, Int)
+  type vec3Int    = (Int, Int, Int)
   type vec2Double = (Double, Double)
-  type vec2Int = (Int, Int)
+  type vec2Int    = (Int, Int)
 
-  type vec2IntPartial1 = (Double, Int)
-  type vec2IntPartial2 = (Int, Double)
+  type vec2DoubleInt = (Double, Int)
+  type vec2IntDouble = (Int, Double)
+
+  type vec3IntDoubleDouble = (Int, Double, Double)
+  type vec3DoubleIntDouble = (Double, Int, Double)
+  type vec3DoubleDoubleInt = (Double, Double, Int)
+  type vec3IntIntDouble = (Int, Int, Double)
+  type vec3DoubleIntInt = (Double, Int, Int)
+  type vec3IntDoubleInt = (Int, Double, Int)
 
   implicit def Vec3IntToDouble(i: vec3Int): vec3Double = (i._1.toDouble, i._2.toDouble, i._3.toDouble)
 
@@ -34,11 +40,23 @@ trait Helpers extends MathUtils{
 
   implicit def Vec3IntToVector3(i: vec3Int): Vector3 = new Vector3(i._1, i._2, i._3)
 
+  implicit def Vec3IntDoubleDoubleToVector3(i: vec3IntDoubleDouble): Vector3 = new Vector3(i._1, i._2, i._3)
+
+  implicit def Vec3DoubleIntDoubleToVector3(i: vec3DoubleIntDouble): Vector3 = new Vector3(i._1, i._2, i._3)
+
+  implicit def Vec3DoubleDoubleIntToVector3(i: vec3DoubleDoubleInt): Vector3 = new Vector3(i._1, i._2, i._3)
+
+  implicit def Vec3IntIntDoubleToVector3(i: vec3IntIntDouble): Vector3 = new Vector3(i._1, i._2, i._3)
+
+  implicit def Vec3DoubleIntIntToVector3(i: vec3DoubleIntInt): Vector3 = new Vector3(i._1, i._2, i._3)
+
+  implicit def Vec3IntDoubleIntToVector3(i: vec3IntDoubleInt): Vector3 = new Vector3(i._1, i._2, i._3)
+
   implicit def Vec2IntToVector3(i: vec2Int): Vector3 = new Vector3(i._1, i._2, 0)
 
-  implicit def Vec2IntPartial1ToVector3(i: vec2IntPartial1): Vector3 = new Vector3(i._1, i._2, 0)
+  implicit def Vec2DoubleIntToVector3(i: vec2DoubleInt): Vector3 = new Vector3(i._1, i._2, 0)
 
-  implicit def Vec2IntPartial2ToVector3(i: vec2IntPartial2): Vector3 = new Vector3(i._1, i._2, 0)
+  implicit def Vec2IntDoubleToVector3(i: vec2IntDouble): Vector3 = new Vector3(i._1, i._2, 0)
 
   implicit def IntToDouble(i: Int): Double = i.toDouble
 
@@ -51,10 +69,16 @@ trait Helpers extends MathUtils{
 
   def now = System.currentTimeMillis()
 
+  val xAxis = (1,0,0)
+  val yAxis = (0,1,0)
+  val zAxis = (0,0,1)
+
   //Should re calculate acording to origin
   def random2D = new Vector3(random(width), random(height),0)
   def randomWidth = random(width)
   def randomHeight = random(height)
+
+  def vecXYAngle(angle:Double, size:Double=1) = new Vector3(size,0,0).applyAxisAngle(zAxis, angle)
 
   val origin = new Vector3(0.0,0.0,0.0)
 
@@ -187,8 +211,8 @@ trait Helpers extends MathUtils{
     private val _leftBottomMode =  (v: Vector3, volume:Vector3) => v.add(volume.divide(half))
     var rectMode: (Vector3, Vector3) => Vector3  = _centerMode
 
-    def centerMode     = rectMode = _centerMode
-    def leftBottomMode = rectMode = _leftBottomMode
+    def center     = rectMode = _centerMode
+    def leftBottom = rectMode = _leftBottomMode
   }
 
   //########################   Circle   ############################

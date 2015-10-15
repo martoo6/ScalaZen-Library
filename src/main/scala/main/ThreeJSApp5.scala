@@ -12,7 +12,7 @@ object ThreeJSApp5 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
 
   def main():Unit = {
     Setup.Dim2.LeftBottom.asScene.noClear
-    RectMode.leftBottomMode
+    RectMode.leftBottom
     //Should be the last thing to be executed, else, weird things happen
     renderLoop(now)
   }
@@ -26,7 +26,8 @@ object ThreeJSApp5 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
   def render():Unit = {
     circles.foreach{ c=>
       val pos = c.position
-      pos.add(new Vector3(0,5,0).applyAxisAngle((0,0,1),perlin.noise(c.position.x*0.01, c.position.y*0.01, frameCount*0.002)))
+      //pos.add(new Vector3(0,5,0).applyAxisAngle((0,0,1),perlin.noise(c.position.x*0.01, c.position.y*0.01, frameCount*0.002)))
+      pos.add(vecXYAngle(perlin.noise(c.position.x*0.01, c.position.y*0.01, frameCount*0.002)))
       if(pos.x < 0) pos.add((width,0,0))
       if(pos.x > width) pos.add((-width,0,0))
       if(pos.y < 0) pos.add((0,height,0))
