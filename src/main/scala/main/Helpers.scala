@@ -12,7 +12,7 @@ import scala.util.Random
 trait Helpers extends MathUtils{
   var lineMaterial: LineBasicMaterial
   var meshMaterial: Material
-  val scene: Scene
+  var scene: Scene
   var camera: Camera
 
   type vec3Double = (Double, Double, Double)

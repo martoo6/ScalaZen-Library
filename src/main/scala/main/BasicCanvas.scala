@@ -8,16 +8,22 @@ import scala.scalajs.js
 /**
  * Created by martin on 09/10/15.
  */
-trait BasicCanvas {
+trait BasicCanvas extends Canvas{
   self: Helpers=>
 
-  var lineMaterial            = new LineBasicMaterial(js.Dynamic.literal(color = white, side= THREE.DoubleSide))
-  var meshMaterial: Material  = new MeshBasicMaterial(js.Dynamic.literal(color= white, side= THREE.DoubleSide))
-  val scene                   = new Scene()
-  var camera: Camera          = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
+  val r = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true, antialias = true))
+  r.autoClear = false
 
-  val renderer = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true, antialias = true))
-  renderer.autoClear = false
+  implicit val canvasData = CanvasData(
+    new LineBasicMaterial(js.Dynamic.literal(color = white, side= THREE.DoubleSide)),
+    new MeshBasicMaterial(js.Dynamic.literal(color= white, side= THREE.DoubleSide)),
+    new Scene(),
+    new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 ),
+    r,
+    new Clock()
+  )
+
+  start
 
   renderer.setSize(dom.window.innerWidth, dom.window.innerHeight)
   val e =renderer.domElement
@@ -34,8 +40,6 @@ trait BasicCanvas {
   var clock = new Clock()
   var delta:Double = 0
   var frameCount:Long = 0
-
-  val canvasData = (lineMaterial, meshMaterial, scene, camera, renderer, clock)
 
   dom.onmousemove = {
     event:MouseEvent =>

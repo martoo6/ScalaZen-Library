@@ -4,6 +4,12 @@ package main
  * Created by martin on 09/10/15.
  */
 trait MathUtils {
+  import Math._
+
+  val TWO_PI = PI*2
+  val HALF_PI = PI/2
+  val QUARTER_PI = PI/4
+
   def random(Min: Double, Max: Double) = Min + (Math.random * (Max - Min + 1))
 
   def random(ceil: Double) = Math.random * ceil
