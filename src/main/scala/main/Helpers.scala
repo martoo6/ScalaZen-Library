@@ -21,6 +21,9 @@ trait Helpers extends MathUtils{
   type vec2Double = (Double, Double)
   type vec2Int = (Int, Int)
 
+  type vec2IntPartial1 = (Double, Int)
+  type vec2IntPartial2 = (Int, Double)
+
   implicit def Vec3IntToDouble(i: vec3Int): vec3Double = (i._1.toDouble, i._2.toDouble, i._3.toDouble)
 
   implicit def Vec2IntToDouble(i: vec2Int): vec2Double = (i._1.toDouble, i._2.toDouble)
@@ -33,11 +36,15 @@ trait Helpers extends MathUtils{
 
   implicit def Vec2IntToVector3(i: vec2Int): Vector3 = new Vector3(i._1, i._2, 0)
 
+  implicit def Vec2IntPartial1ToVector3(i: vec2IntPartial1): Vector3 = new Vector3(i._1, i._2, 0)
+
+  implicit def Vec2IntPartial2ToVector3(i: vec2IntPartial2): Vector3 = new Vector3(i._1, i._2, 0)
+
   implicit def IntToDouble(i: Int): Double = i.toDouble
 
-  implicit def SeqVec3ToVector3(lst:Seq[vec3Double]) = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
+  implicit def SeqVec3ToVector3(lst:Seq[vec3Double]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
 
-  implicit def SeqVec2ToVector3(lst:Seq[vec2Double]) = lst.map{case(x,y)=>new Vector3(x,y,0)}
+  implicit def SeqVec2ToVector3(lst:Seq[vec2Double]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
 
   def width = dom.window.innerWidth
   def height = dom.window.innerHeight
@@ -46,6 +53,8 @@ trait Helpers extends MathUtils{
 
   //Should re calculate acording to origin
   def random2D = new Vector3(random(width), random(height),0)
+  def randomWidth = random(width)
+  def randomHeight = random(height)
 
   val origin = new Vector3(0.0,0.0,0.0)
 
