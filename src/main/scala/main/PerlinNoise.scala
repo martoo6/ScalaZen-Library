@@ -5,12 +5,13 @@ package main
  * @author Hans Haggstrom
  */
 object Perlin extends PerlinNoise{
-  def build = new PerlinNoise {}
+  def apply(max: Double):Perlin = Perlin(0,max)
+  def apply:Perlin = Perlin(-1,1)
 }
 
-case class Perlin(from:Double = -1, to: Double = 1) extends PerlinNoise with MathUtils{
+case class Perlin(min:Double, max: Double) extends PerlinNoise with MathUtils{
   override def noise(x: Double, y: Double = 0, z: Double = 0): Double = {
-    map(super.noise(x,y,z),-1,1,from,to)
+    map(super.noise(x,y,z),-1,1,min,max)
   }
 }
 
