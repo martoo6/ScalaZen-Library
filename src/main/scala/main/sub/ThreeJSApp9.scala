@@ -11,6 +11,11 @@ import java.lang.Math._
 
 object ThreeJSApp9 extends ThreeJSApp9
 
+trait CanvasApp{
+  def setup():Unit
+  def render():Unit
+}
+
 trait ThreeJSApp9 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
 
   val circlemanager = new CircleManager

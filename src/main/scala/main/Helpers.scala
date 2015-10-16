@@ -271,6 +271,10 @@ trait Helpers extends MathUtils{
     addMeshInPlace(new BoxGeometry(sideSize, sideSize, sideSize), pos)
   }
 
+  def cube(pos:Vector3, width:Double, height:Double, deep:Double)={
+    addMeshInPlace(new BoxGeometry(width, height, deep), pos)
+  }
+
   //#######################  SPHERE #############################
 
   def sphere(pos:Vector3, radius:Double): Mesh ={

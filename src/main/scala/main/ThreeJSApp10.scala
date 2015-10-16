@@ -16,20 +16,13 @@ object ThreeJSApp10 extends JSApp with BasicCanvas with Helpers with PerlinNoise
   }
 
 
+
   def render():Unit = {
-    val div = map(mouseX,0,width,5,20).toInt
+    val div = map(mouseX,0,width,5,30).toInt
 
-    val lst = (1 to div).map(_*TWO_PI/div)
-    lst.zipWithIndex.foreach{ case (x,i)=>
-      val si = lst.size
-
-      val s = if(i+1<si) lst(i+1) else lst(i+1-si)
-      val t = if(i+2<si) lst(i+2) else lst(i+2-si)
-      val f = if(i+3<si) lst(i+3) else lst(i+3-si)
-
-      line((sin(x)*200, cos(x)*200), (sin(s)*200, cos(s)*200))
-      line((sin(x)*200, cos(x)*200), (sin(t)*200, cos(t)*200))
-      line((sin(x)*200, cos(x)*200), (sin(f)*200, cos(f)*200))
+    val lst = (1 to div).map(_*TWO_PI/div).toList ::: (1 to div).map(_*TWO_PI/div).toList.take(div)
+    for(x<-lst.sliding(div+1); y<-x.drop(1)){
+        line((sin(x.head)*200, cos(x.head)*200), (sin(y)*200, cos(y)*200))
     }
 
     stats.update()
