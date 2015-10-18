@@ -20,6 +20,5 @@ trait ThreeJSApp9T extends JSApp with BasicCanvas with DrawingUtils with PerlinN
 
   def render():Unit = {
     circlemanager.draw
-    stats.update()
   }
 }
