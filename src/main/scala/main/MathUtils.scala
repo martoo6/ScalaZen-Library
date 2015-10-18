@@ -27,6 +27,12 @@ trait MathUtils {
     ((value-in_min)/(in_max-in_min))*(out_max-out_min) + out_min
   }
 
+  implicit class RichDouble(value:Double) extends MathUtils{
+    def map(in_min:Double,in_max:Double,out_min:Double,out_max:Double):Double = {
+       map(value,in_min,in_max,out_min,out_max)
+    }
+  }
+
   def constrain(value:Double, min:Double, max:Double) = {
     //Faster than match ???
     if(value<min) min

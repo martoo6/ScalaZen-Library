@@ -1,31 +1,22 @@
 package main.sub
 
-import main.{BasicCanvas, Helpers, Perlin, PerlinNoise}
+import main.{BasicCanvas, DrawingUtils, PerlinNoise}
 
 import scala.scalajs.js._
+import scala.scalajs.js.annotation.JSExport
 
 //Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
 //########################
-import java.lang.Math._
 //########################
 
-object ThreeJSApp9 extends ThreeJSApp9
+@JSExport
+class ThreeJSApp9 extends ThreeJSApp9T
 
-trait CanvasApp{
-  def setup():Unit
-  def render():Unit
-}
+trait ThreeJSApp9T extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
 
-trait ThreeJSApp9 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
-
+  Setup.Dim3.LeftBottom.asScene.noClear.withStats
+  RectMode.leftBottom
   val circlemanager = new CircleManager
-
-  def main():Unit = {
-    Setup.Dim3.LeftBottom.asScene.noClear
-    RectMode.leftBottom
-    //Should be the last thing to be executed, else, weird things happen
-    renderLoop(now)
-  }
 
   def render():Unit = {
     circlemanager.draw

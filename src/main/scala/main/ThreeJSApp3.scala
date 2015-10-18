@@ -1,20 +1,16 @@
 package main
 
 import scala.scalajs.js._
+import scala.scalajs.js.annotation.JSExport
 
 //Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
 //########################
 //########################
 
-object ThreeJSApp3 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
-
-  def main():Unit = {
-    Setup.Dim2.LeftBottom.asScene.noClear
-    RectMode.leftBottom
-    //Should be the last thing to be executed, else, weird things happen
-    renderLoop(now)
-  }
-
+@JSExport
+class ThreeJSApp3 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
+  Setup.Dim2.LeftBottom.asScene.noClear.withStats
+  RectMode.leftBottom
 
   fill(Palette.iDemandPancake(0))
   val t1 = triangle(leftTop,rightTop,(mouseX,mouseY))
@@ -31,7 +27,6 @@ object ThreeJSApp3 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
   def render():Unit = {
     lst.foreach(_.geometry.vertices.last.set(mouseX,mouseY,0))
     lst.foreach(_.geometry.verticesNeedUpdate=true)
-    stats.update()
   }
 
 

@@ -19,18 +19,12 @@ trait PerlinNoise extends MathUtils{
 
 
   //======================================================================
-  // Private Constants
-  val permutation = Array.fill(300){ random(255).toInt }
-
-  val p =new Array[Int](512)
+  // Private Constants for some reason it doesnt work if they are not lazy
+  //val permutation = Array.fill(300){ random(255).toInt }
+  val permutation = (1 to 300).map(_=>random(255).toInt)
 
   // Initialize the p array with two copies of the permutation array.
-  var j = 0
-  while (j < 256) {
-    p(j) = permutation(j)
-    p(256 + j) = p(j)
-    j += 1
-  }
+  val p = permutation++permutation
 
   /**
    *  Three dimensional Perlin noise.

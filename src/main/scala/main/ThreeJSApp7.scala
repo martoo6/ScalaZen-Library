@@ -1,27 +1,23 @@
 package main
 
 import scala.scalajs.js._
+import scala.scalajs.js.annotation.JSExport
 
 //Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
 //########################
 //########################
 
-object ThreeJSApp7 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
+@JSExport
+class ThreeJSApp7 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
+  Setup.Dim2.LeftBottom.asCanvas.noClear.withStats
+  RectMode.leftBottom
 
   val perlin = Perlin(-15,15)
-
-  def main():Unit = {
-    Setup.Dim2.LeftBottom.asCanvas.noClear
-    RectMode.leftBottom
-    //Should be the last thing to be executed, else, weird things happen
-    renderLoop(now)
-  }
 
   val circles = (0 to 1000).map{ i=>
     fill(Palette.iDemandPancake.getRandom)
     circle(random2D, 5)
   }
-
 
   def render():Unit = {
     circles.foreach{ c=>

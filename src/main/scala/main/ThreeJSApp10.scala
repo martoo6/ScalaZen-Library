@@ -1,24 +1,20 @@
 package main
 
 import scala.scalajs.js._
+import scala.scalajs.js.annotation.JSExport
 
 //Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
 //########################
 import java.lang.Math._
 
-object ThreeJSApp10 extends JSApp with BasicCanvas with Helpers with PerlinNoise{
+@JSExport
+class ThreeJSApp10 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
 
-  def main():Unit = {
-    Setup.Dim3.Center.asScene.autoClear
-    //Should be the last thing to be executed, else, weird things happen
-    stroke(0xFFFFFF)
-    renderLoop(now)
-  }
-
-
+  Setup.Dim3.Center.asScene.autoClear
+  stroke(0xFFFFFF)
 
   def render():Unit = {
-    val div = map(mouseX,0,width,5,30).toInt
+    val div = mouseX.map(0,width,5,30).toInt
 
     val lst = (1 to div).map(_*TWO_PI/div).toList ::: (1 to div).map(_*TWO_PI/div).toList.take(div)
     for(x<-lst.sliding(div+1); y<-x.drop(1)){
