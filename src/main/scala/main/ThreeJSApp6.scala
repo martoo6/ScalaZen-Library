@@ -23,14 +23,12 @@ class ThreeJSApp6 extends JSApp with BasicCanvas with DrawingUtils with PerlinNo
     val mult = map(Math.sin(frameCount*0.01),-1,1,0.00001,0.01)
     circles.foreach{ c=>
       val pos = c.position
-      pos.add(new Vector3(noise(pos.x*mult, pos.y*mult, frameCount*0.01)* -4,-random(4),0))
+      pos.add((noise(pos.x*mult, pos.y*mult, frameCount*0.01),-random(1)))
       if(pos.x < 0) pos.add((width,0,0))
       if(pos.x > width) pos.add((-width,0,0))
       if(pos.y < 0) pos.add((0,height,0))
       if(pos.y > height) pos.add((0,-height,0))
     }
-
-    stats.update()
   }
 
 

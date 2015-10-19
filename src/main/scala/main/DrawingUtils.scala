@@ -55,6 +55,8 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
 
   def rect(x:Double, y:Double, z:Double, width:Double, height:Double):Mesh =  rect(new Vector3(x,y,z),width,height)
 
+  def rect(pos: Vector3, width:Double):Mesh = rect(pos,width,width)
+
   def rect(pos:(Double, Double), width:Double, height:Double):Mesh = rect(new Vector3(pos._1,pos._2,0),width,height)
 
   def rect(pos:(Double, Double, Double), width:Double, height:Double):Mesh = rect(new Vector3(pos._1,pos._2,pos._3),width,height)
