@@ -13,4 +13,5 @@ trait BasicCanvas extends Canvas{
   var renderer     = canvasData.renderer
   var clock        = canvasData.clock
   var body         = canvasData.body
+  val composer     = new EffectComposer( renderer )
 }

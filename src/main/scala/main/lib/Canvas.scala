@@ -15,47 +15,50 @@ trait Canvas extends JSApp with WorldCoordinates{
     renderLoop(System.currentTimeMillis())
   }
 
+  val center = new Vector3(0,0,500)
+  val leftBottomPosition = new Vector3(width / 2, height / 2, 1000)
+  var position = center
+
+  var renderAction: Unit => Unit = {_=>renderer.render(scene, camera, forceClear = !canvasStyle)}
+  var clearObjectsAction: Unit => Unit = {_=>}
+  var canvasStyle = false
+  var withStatsRender = false
+  var withControlsRender = false
+
   object Setup
   {
-    val center = new Vector3(0,0,500)
-    val leftBottom = new Vector3(width / 2, height / 2, 1000)
-    var position = center
-
-    var clearObjectsAction: Unit => Unit = {_=>}
-    var canvasStyle = false
-    var withStatsRender = false
-    var withControlsRender = false
+    private def resetPosition = camera.position.set(position.x, position.y, position.z)
 
     def Center= {
       position = center
-      camera.position.set(position.x, position.y, position.z)
+      resetPosition
       this
     }
     def LeftBottom={
-      position = leftBottom
-      camera.position.set(position.x, position.y, position.z)
+      position = leftBottomPosition
+      resetPosition
       this
     }
     def _3D = {
       //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
       camera = new PerspectiveCamera( 45, width / height, 1, 1000 )
-      camera.position.set(position.x, position.y, position.z)
+      resetPosition
       this
     }
     def _2D = {
       //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00))
       camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
-      camera.position.set(position.x, position.y, position.z)
+      resetPosition
       this
     }
     def ortho = {
       camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
-      camera.position.set(position.x, position.y, position.z)
+      resetPosition
       this
     }
     def perspective = {
       camera = new PerspectiveCamera( 45, width / height, 1, 1000 )
-      camera.position.set(position.x, position.y, position.z)
+      resetPosition
       this
     }
     def autoClear = {
@@ -99,18 +102,22 @@ trait Canvas extends JSApp with WorldCoordinates{
       controls.center = origin
       this
     }
+    def antialiasing = {
+      composer.addPass( new RenderPass( scene, camera ) )
+
+      val effect = new ShaderPass(FXAAShader)
+      effect.uniforms.resolution.value.set( 1.0 / width, 1.0 / height )
+
+      //TODO: render to screen should be the last one, check on that later
+      effect.renderToScreen = true
+      composer.addPass( effect )
+      renderAction = _ => composer.render(1)
+      this
+    }
   }
 
 
   val canvasData: CanvasData
-
-//  var lineMaterial: LineBasicMaterial  = null
-//  var meshMaterial: Material           = null
-//  var scene:Scene                      = null
-//  var camera: Camera                   = null
-//  var renderer: WebGLRenderer          = null
-//  var clock: Clock                     = null
-//  var body: dom.Node                   = null
 
   var lineMaterial: LineBasicMaterial
   var meshMaterial: Material
@@ -123,19 +130,7 @@ trait Canvas extends JSApp with WorldCoordinates{
 
   val stats = new Stats()
   var controls:OrbitControls = null
-
-
-  def start() = {
-    println(canvasData)
-    lineMaterial = canvasData.lineMaterial
-    meshMaterial = canvasData.meshMaterial
-    scene        = canvasData.scene
-    camera       = canvasData.camera
-    renderer     = canvasData.renderer
-    clock        = canvasData.clock
-    body         = canvasData.body
-    println("started")
-  }
+  val composer:EffectComposer
 
   var delta:Double = 0
   var frameCount:Long = 0
@@ -156,14 +151,14 @@ trait Canvas extends JSApp with WorldCoordinates{
     frameCount+=1
 
     //Should replace for function/s that execute whats needed instead of ugly ifs
-    if(Setup.withControlsRender) controls.update()
-    if(Setup.withStatsRender) stats.update()
-    Setup.clearObjectsAction()
+    if(withControlsRender) controls.update()
+    if(withStatsRender) stats.update()
+    clearObjectsAction()
 
 
     dom.requestAnimationFrame(renderLoop _)
     render
-    renderer.render(scene, camera, forceClear = !Setup.canvasStyle)
+    renderAction()
     camera.updateMatrix()
   }
 }

@@ -11,7 +11,7 @@ object DefaultCanvas{
   def width = dom.window.innerWidth
   def height = dom.window.innerHeight
 
-  val renderer = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true, antialias = true))
+  val renderer = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true))
   renderer.autoClear = false
 
   renderer.setSize(width, height)

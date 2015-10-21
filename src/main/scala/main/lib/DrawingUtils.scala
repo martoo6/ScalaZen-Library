@@ -81,16 +81,9 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
 
   //########################   Circle   ############################
 
-  def circle(x: Double, y: Double, radius: Double): Mesh = {
-    circle(new Vector3(x,y,0), radius)
-  }
 
-  def circle(x: Double, y: Double,z: Double, radius: Double): Mesh = {
-    circle(new Vector3(x,y,z), radius)
-  }
-
-  def circle(pos:Vector3, radius:Double): Mesh = {
-    addMeshInPlace(new CircleGeometry(radius), pos)
+  def circle(pos:Vector3, radius:Double, segments:Int = 8): Mesh = {
+    addMeshInPlace(new CircleGeometry(radius, segments), pos)
   }
 
   //########################   Triangle   ############################
