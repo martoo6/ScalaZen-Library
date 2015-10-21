@@ -1,5 +1,7 @@
 package main
 
+import main.lib.{Palette, BasicCanvas, DrawingUtils, PerlinNoise}
+
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
@@ -9,7 +11,7 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 class ThreeJSApp4 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
-  Setup.Dim2.LeftBottom.asScene.autoClear.withStats
+  Setup._2D.LeftBottom.asScene.autoClear.withStats
   RectMode.leftBottom
 
   def render():Unit = {

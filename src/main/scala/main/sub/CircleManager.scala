@@ -2,7 +2,7 @@ package main.sub
 
 import java.lang.Math._
 
-import main.{DrawingUtils, BasicCanvas, Perlin}
+import main.lib.{Perlin, DrawingUtils, BasicCanvas}
 
 /**
  * Created by martin on 15/10/15.

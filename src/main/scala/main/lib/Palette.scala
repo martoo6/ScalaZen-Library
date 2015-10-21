@@ -1,10 +1,14 @@
-package main
+package main.lib
+
+import main.lib.Color
 
 import scala.util.Random
 
 /**
- * Created by martin on 10/17/15.
+ * Created by martin on 20/10/15.
  */
+object Palette extends PaletteT
+
 case class Palette(colors:Color*){
   def apply(pos:Int) = colors(pos)
   def getRandom: Color = colors(Random.nextInt(colors.size))
@@ -41,4 +45,3 @@ trait PaletteT extends Converters{
 
 }
 
-object Palette extends PaletteT

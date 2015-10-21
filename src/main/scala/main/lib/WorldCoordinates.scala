@@ -1,4 +1,4 @@
-package main
+package main.lib
 
 import org.scalajs.dom
 

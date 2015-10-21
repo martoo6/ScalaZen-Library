@@ -1,6 +1,6 @@
 package main.sub
 
-import main.{BasicCanvas, DrawingUtils, PerlinNoise}
+import main.lib.{PerlinNoise, DrawingUtils, BasicCanvas}
 
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
@@ -14,7 +14,7 @@ class ThreeJSApp9 extends ThreeJSApp9T
 
 trait ThreeJSApp9T extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
 
-  Setup.Dim3.LeftBottom.asScene.noClear.withStats
+  Setup._3D.LeftBottom.asScene.noClear.withStats
   RectMode.leftBottom
   val circlemanager = new CircleManager
 

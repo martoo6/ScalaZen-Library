@@ -1,15 +1,13 @@
-package main
+package main.lib
 
 import org.scalajs.dom
-import org.scalajs.dom.raw.MouseEvent
+import org.scalajs.dom.MouseEvent
 
 import scala.scalajs.js.JSApp
 
 /**
- * Created by martin on 15/10/15.
+ * Created by martin on 20/10/15.
  */
-case class CanvasData(lineMaterial :LineBasicMaterial,meshMaterial: Material,scene: Scene,camera: Camera,renderer: WebGLRenderer,clock: Clock, body: dom.Node)
-
 trait Canvas extends JSApp with WorldCoordinates{
   //self: Helpers=>
 
@@ -38,13 +36,13 @@ trait Canvas extends JSApp with WorldCoordinates{
       camera.position.set(position.x, position.y, position.z)
       this
     }
-    def Dim3 = {
+    def _3D = {
       //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
       camera = new PerspectiveCamera( 45, width / height, 1, 1000 )
       camera.position.set(position.x, position.y, position.z)
       this
     }
-    def Dim2 = {
+    def _2D = {
       //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00))
       camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
       camera.position.set(position.x, position.y, position.z)

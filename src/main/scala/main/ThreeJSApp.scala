@@ -1,6 +1,8 @@
 package main
 
 
+import main.lib._
+
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
@@ -9,8 +11,8 @@ import scala.scalajs.js.annotation.JSExport
 //########################
 
 @JSExport
-class ThreeJSApp extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
-  Setup.Dim3.Center.asScene.noClear.withStats.withControls
+class ThreeJSApp extends BasicCanvas with DrawingUtils with PerlinNoise{
+  Setup._3D.Center.asScene.noClear.withStats.withControls
 
   addAmbientLight(0xFFFFFF)
   addDirectionalLight(0xFFFFFF, 0.9, (0,1,0))

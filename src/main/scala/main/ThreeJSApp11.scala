@@ -1,5 +1,7 @@
 package main
 
+import main.lib._
+
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
@@ -9,7 +11,7 @@ import scala.scalajs.js.annotation.JSExport
 @JSExport
 class ThreeJSApp11 extends JSApp with PerlinNoise with DrawingUtils with BasicCanvas {
 
-  Setup.Dim3.Center.asScene.noClear.withStats.withControls
+  Setup._3D.Center.asScene.noClear.withStats.withControls
 
   val step = 10
   val cubes = for{

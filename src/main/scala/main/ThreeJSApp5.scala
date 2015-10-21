@@ -1,5 +1,7 @@
 package main
 
+import main.lib._
+
 import scala.scalajs.js.annotation.JSExport
 
 //Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
@@ -9,7 +11,7 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 class ThreeJSApp5 extends BasicCanvas with DrawingUtils with PerlinNoise{
-  Setup.Dim2.LeftBottom.asScene.noClear.withStats
+  Setup._2D.LeftBottom.asScene.noClear.withStats
   RectMode.leftBottom
 
   val perlin = Perlin(-15,15)

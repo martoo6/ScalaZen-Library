@@ -1,5 +1,7 @@
 package main
 
+import main.lib.{Palette, BasicCanvas, DrawingUtils, PerlinNoise}
+
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
@@ -9,7 +11,7 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 class ThreeJSApp3 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
-  Setup.Dim2.LeftBottom.asScene.noClear.withStats
+  Setup._2D.LeftBottom.asScene.noClear.withStats
   RectMode.leftBottom
 
   fill(Palette.iDemandPancake(0))

@@ -1,4 +1,4 @@
-package main
+package main.lib
 
 import org.scalajs.dom.raw._
 
@@ -16,7 +16,7 @@ import scala.scalajs.js.typedarray.Float32Array
   @js.native
   @JSName("THREE")
   object THREE extends js.Object {
-    var CopyShader: Shader = js.native
+    var CopyShader: Shader[_] = js.native
     var REVISION: String = js.native
     var CullFaceNone: CullFace = js.native
     var CullFaceBack: CullFace = js.native
@@ -161,10 +161,10 @@ import scala.scalajs.js.typedarray.Float32Array
 
   @js.native
   @JSName("THREE.ShaderPass")
-  class ShaderPass extends js.Object {
-    def this(shader: Shader, textureID: String = ???) = this()
+  class ShaderPass[T] extends js.Object {
+    def this(shader: Shader[T], textureID: String = ???) = this()
     var textureID: String = js.native
-    var uniforms: js.Any = js.native
+    var uniforms: T = js.native
     var material: ShaderMaterial = js.native
     var renderToScreen: Boolean = js.native
     var enabled: Boolean = js.native
@@ -185,7 +185,7 @@ import scala.scalajs.js.typedarray.Float32Array
     var writeBuffer: WebGLRenderTarget = js.native
     var readBuffer: WebGLRenderTarget = js.native
     var passes: js.Array[js.Any] = js.native
-    var copyPass: ShaderPass = js.native
+    var copyPass: ShaderPass[_] = js.native
     def swapBuffers(): Unit = js.native
     def addPass(pass: js.Any): Unit = js.native
     def insertPass(pass: js.Any, index: Double): Unit = js.native
@@ -2551,8 +2551,8 @@ import scala.scalajs.js.typedarray.Float32Array
   }
 
   @js.native
-  trait Shader extends js.Object {
-    var uniforms: js.Any = js.native
+  trait Shader[T] extends js.Object {
+    var uniforms: T = js.native
     var vertexShader: String = js.native
     var fragmentShader: String = js.native
   }
@@ -2561,20 +2561,20 @@ import scala.scalajs.js.typedarray.Float32Array
   @JSName("THREE.ShaderLib")
   object ShaderLib extends js.Object {
     @JSBracketAccess
-    def apply(name: String): Shader = js.native
+    def apply(name: String): Shader[_] = js.native
     @JSBracketAccess
-    def update(name: String, v: Shader): Unit = js.native
-    var basic: Shader = js.native
-    var lambert: Shader = js.native
-    var phong: Shader = js.native
-    var particle_basic: Shader = js.native
-    var dashed: Shader = js.native
-    var depth: Shader = js.native
-    var normal: Shader = js.native
-    var normalmap: Shader = js.native
-    var cube: Shader = js.native
-    var equirect: Shader = js.native
-    var depthRGBA: Shader = js.native
+    def update(name: String, v: Shader[_]): Unit = js.native
+    var basic: Shader[_] = js.native
+    var lambert: Shader[_] = js.native
+    var phong: Shader[_] = js.native
+    var particle_basic: Shader[_] = js.native
+    var dashed: Shader[_] = js.native
+    var depth: Shader[_] = js.native
+    var normal: Shader[_] = js.native
+    var normalmap: Shader[_] = js.native
+    var cube: Shader[_] = js.native
+    var equirect: Shader[_] = js.native
+    var depthRGBA: Shader[_] = js.native
   }
 
   @js.native

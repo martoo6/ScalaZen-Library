@@ -1,5 +1,7 @@
 package main
 
+import main.lib.{BasicCanvas, DrawingUtils, PerlinNoise}
+
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
@@ -10,7 +12,7 @@ import java.lang.Math._
 @JSExport
 class ThreeJSApp10 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
 
-  Setup.Dim3.Center.asScene.autoClear
+  Setup._3D.Center.asScene.autoClear
   stroke(0xFFFFFF)
 
   def render():Unit = {
@@ -20,8 +22,6 @@ class ThreeJSApp10 extends JSApp with BasicCanvas with DrawingUtils with PerlinN
     for(x<-lst.sliding(div+1); y<-x.drop(1)){
         line((sin(x.head)*200, cos(x.head)*200), (sin(y)*200, cos(y)*200))
     }
-
-    stats.update()
   }
 
 

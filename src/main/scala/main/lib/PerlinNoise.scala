@@ -1,20 +1,8 @@
-package main
+package main.lib
+
 /**
- *  Perlin noise function.
- *
- * @author Hans Haggstrom
+ * Created by martin on 20/10/15.
  */
-object Perlin extends PerlinNoise{
-  def apply(max: Double):Perlin = Perlin(0,max)
-  def apply:Perlin = Perlin(-1,1)
-}
-
-case class Perlin(min:Double, max: Double) extends PerlinNoise with MathUtils{
-  override def noise(x: Double, y: Double = 0, z: Double = 0): Double = {
-    map(super.noise(x,y,z),-1,1,min,max)
-  }
-}
-
 trait PerlinNoise extends MathUtils{
 
 
@@ -110,4 +98,15 @@ trait PerlinNoise extends MathUtils{
   }
 
 
+}
+
+case class Perlin(min:Double, max: Double) extends PerlinNoise with MathUtils{
+  override def noise(x: Double, y: Double = 0, z: Double = 0): Double = {
+    map(super.noise(x,y,z),-1,1,min,max)
+  }
+}
+
+object Perlin extends PerlinNoise{
+  def apply(max: Double):Perlin = Perlin(0,max)
+  def apply:Perlin = Perlin(-1,1)
 }

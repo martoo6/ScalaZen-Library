@@ -1,4 +1,4 @@
-package main
+package main.lib
 
 /**
  * Created by martin on 09/10/15.

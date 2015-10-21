@@ -1,5 +1,7 @@
 package main
 
+import main.lib._
+
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
@@ -9,7 +11,7 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 class ThreeJSApp7 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
-  Setup.Dim2.LeftBottom.asCanvas.noClear.withStats
+  Setup._2D.LeftBottom.asCanvas.noClear.withStats
   RectMode.leftBottom
 
   val perlin = Perlin(-15,15)
@@ -29,8 +31,6 @@ class ThreeJSApp7 extends JSApp with BasicCanvas with DrawingUtils with PerlinNo
       if(pos.y < 0) pos.add((0,height,0))
       if(pos.y > height) pos.add((0,-height,0))
     }
-
-    stats.update()
   }
 
 
