@@ -18,7 +18,7 @@ class ThreeJSApp12 extends JSApp with PerlinNoise with DrawingUtils with BasicCa
     val c = pos.x.map(0,width,0,1)
     fill(new Color(random(1),0,c))
     val radio = pos.y.map(0,height, 10,50)
-    circle(pos, radio, 8)
+    circle(pos, radio, 15)
   }
 
 

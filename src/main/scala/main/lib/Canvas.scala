@@ -83,10 +83,14 @@ trait Canvas extends JSApp with WorldCoordinates{
     }
     def asCanvas={
       canvasStyle=true
+      renderer.autoClear = false
+      renderer.autoClearColor = false
       this
     }
     def asScene={
       canvasStyle=false
+      renderer.autoClear = true
+      renderer.autoClearColor = true
       this
     }
     def withStats={

@@ -12,7 +12,6 @@ object DefaultCanvas{
   def height = dom.window.innerHeight
 
   val renderer = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true))
-  renderer.autoClear = false
 
   renderer.setSize(width, height)
   val e =renderer.domElement

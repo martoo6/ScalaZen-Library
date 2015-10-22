@@ -11,14 +11,14 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 class ThreeJSApp7 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
-  Setup._2D.LeftBottom.asCanvas.noClear.withStats
+  Setup._2D.LeftBottom.asCanvas.noClear.withStats.antialiasing
   RectMode.leftBottom
 
   val perlin = Perlin(-15,15)
 
   val circles = (0 to 1000).map{ i=>
     fill(Palette.iDemandPancake.getRandom)
-    circle(random2D, 5)
+    circle(random2D, 5, 15)
   }
 
   def render():Unit = {
