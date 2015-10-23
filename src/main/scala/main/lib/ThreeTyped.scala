@@ -3762,3 +3762,20 @@ import scala.scalajs.js.typedarray.Float32Array
   //}
   
 }
+
+@js.native
+@JSName("THREE.PointsMaterial")
+class PointsMaterial extends js.Object{
+  def this(parameters: js.Dynamic = ???) = this()
+  var color: Color = js.native
+  var map: Texture = js.native
+  var size: Double = js.native
+  var sizeAttenuation: Boolean = js.native
+  var vertexColors: Colors = js.native
+  var fog: Boolean = js.native
+}
+
+@js.native
+@JSName("THREE.Points")
+class Points(var geometry: Geometry, var material:PointsMaterial) extends Object3D{
+}

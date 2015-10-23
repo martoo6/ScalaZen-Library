@@ -150,6 +150,25 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     mesh
   }
 
+  //
+
+  def point(positions:Vector3*): Unit ={
+    val geometry = new Geometry()
+
+    positions.foreach{ pos =>
+      geometry.vertices.push( pos )
+      geometry.colors.push(lineMaterial.color)
+    }
+
+    //Check for options
+    val material = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= 1, sizeAttenuation= false, transparent= false))
+
+    val mesh = new Points( geometry, material )
+    scene.add( mesh )
+  }
+
+
+
   //#######################  LIGHTS #############################
 
   def addAmbientLight(color: Int) = {
