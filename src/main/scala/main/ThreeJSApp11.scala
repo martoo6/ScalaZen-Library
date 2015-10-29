@@ -13,22 +13,23 @@ class ThreeJSApp11 extends JSApp with PerlinNoise with DrawingUtils with BasicCa
 
   Setup._3D.Center.asScene.noClear.withStats.withControls
 
-  val step = 10
+  val step = 5
   val cubes = for{
     x <- -20 to 20
     y <- -20 to 20
   }
     yield{
-      fill(new Color(noise(x*0.06+100,y*0.06).map(-1,1,0,1),0,0.5))
-      cube((x*step,-250,y*step-20*step-50),step)
+      fill(new Color(SimplexNoise.noise(x*0.06+100,y*0.06).map(-1,1,0,1),0,0.5))
+      cube((x*step,-250,y*step),step)
     }
 
 
   def render():Unit = {
     cubes.foreach { c =>
       val pos = c.position
-      c.material.asInstanceOf[MeshBasicMaterial].color.set(new Color(noise(pos.x * 0.005 + 100, pos.z * 0.005, frameCount * 0.01).map(-1,1,0,1), 0, 0.5))
-      pos.set(pos.x, map(noise(pos.x * 0.005 + 100, pos.z * 0.005, frameCount * 0.01), -1, 1, 0, 10), pos.z)
+      val n = SimplexNoise.noise(pos.x * 0.005, pos.z * 0.005, frameCount * 0.01)
+      c.material.asInstanceOf[MeshBasicMaterial].color.setRGB(n.map(-1,1,0,1), 0, 0.5)
+      pos.setY(map(n, -1, 1, 0, 100))
     }
   }
 

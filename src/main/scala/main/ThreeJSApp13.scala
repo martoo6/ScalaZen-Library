@@ -1,19 +1,15 @@
 package main
 
 import main.lib._
-import org.scalajs.dom
-import org.scalajs.dom._
 
-import scala.scalajs.js
 import scala.scalajs.js._
-import scala.scalajs.js.annotation.{JSName, JSExport}
+import scala.scalajs.js.annotation.JSExport
 
 //Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
-import java.lang.Math._
 //########################
 
 @JSExport
-class ThreeJSApp12 extends JSApp with PerlinNoise with DrawingUtils with BasicCanvas {
+class ThreeJSApp13 extends JSApp with PerlinNoise with DrawingUtils with BasicCanvas {
 
   Setup._2D.LeftBottom.asScene.withStats
 
@@ -23,7 +19,7 @@ class ThreeJSApp12 extends JSApp with PerlinNoise with DrawingUtils with BasicCa
     y <- 0 until height
   } yield (new Vector3(x,y,0), new Color(((x+y*height)*0.01)%1,0,0))
 
-  val geo = point2(data:_*).geometry
+  val geo = point3(data:_*).geometry
 
   def render():Unit = {
 //    if(a) point2(data:_*) else point3(data:_*)

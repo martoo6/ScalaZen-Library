@@ -3,7 +3,7 @@ package main.lib
 import org.scalajs.dom.raw._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSBracketAccess, JSName}
+import scala.scalajs.js.annotation.{ScalaJSDefined, JSBracketAccess, JSName}
 import scala.scalajs.js.typedarray.Float32Array
 
 //package object ThreeTyped{
@@ -555,13 +555,16 @@ import scala.scalajs.js.typedarray.Float32Array
     def this(data: js.Any, itemSize: Double) = this()
   }
 
+
+
+
   @js.native
   @JSName("THREE.BufferGeometry")
-  class BufferGeometry extends js.Object {
-    var id: Double = js.native
-    var uuid: String = js.native
-    var name: String = js.native
-    var `type`: String = js.native
+  class BufferGeometry extends Object3D {
+//    var id: Double = js.native
+//    var uuid: String = js.native
+//    var name: String = js.native
+//    var `type`: String = js.native
     var attributes: js.Array[BufferAttribute] = js.native
     var attributesKeys: js.Array[String] = js.native
     var drawcalls: js.Array[js.Any] = js.native
@@ -572,7 +575,7 @@ import scala.scalajs.js.typedarray.Float32Array
     def addAttribute(name: String, array: js.Any, itemSize: Double): js.Dynamic = js.native
     def getAttribute(name: String): js.Dynamic = js.native
     def addDrawCall(start: Double, count: Double, index: Double): Unit = js.native
-    def applyMatrix(matrix: Matrix4): Unit = js.native
+//    def applyMatrix(matrix: Matrix4): Unit = js.native
     def center(): Vector3 = js.native
     def fromGeometry(geometry: Geometry, settings: js.Any = ???): BufferGeometry = js.native
     def computeBoundingBox(): Unit = js.native
@@ -584,12 +587,12 @@ import scala.scalajs.js.typedarray.Float32Array
     def merge(geometry: BufferGeometry, offset: Double): BufferGeometry = js.native
     def normalizeNormals(): Unit = js.native
     def reorderBuffers(indexBuffer: Double, indexMap: js.Array[Double], vertexCount: Double): Unit = js.native
-    def toJSON(): js.Dynamic = js.native
+//    def toJSON(): js.Dynamic = js.native
     def dispose(): Unit = js.native
-    def addEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
-    def hasEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
-    def removeEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
-    def dispatchEvent(event: js.Any): Unit = js.native
+//    def addEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
+//    def hasEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
+//    def removeEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
+//    def dispatchEvent(event: js.Any): Unit = js.native
   }
 
   @js.native
@@ -666,59 +669,6 @@ import scala.scalajs.js.typedarray.Float32Array
   }
 
   @js.native
-  @JSName("THREE.Geometry")
-  class Geometry extends js.Object {
-    var id: Double = js.native
-    var uuid: String = js.native
-    var name: String = js.native
-    var `type`: String = js.native
-    var vertices: js.Array[Vector3] = js.native
-    var colors: js.Array[Color] = js.native
-    var faces: js.Array[Face3] = js.native
-    var faceVertexUvs: js.Array[js.Array[js.Array[Vector2]]] = js.native
-    var morphTargets: js.Array[MorphTarget] = js.native
-    var morphColors: js.Array[MorphColor] = js.native
-    var morphNormals: js.Array[MorphNormals] = js.native
-    var skinWeights: js.Array[Double] = js.native
-    var skinIndices: js.Array[Double] = js.native
-    var lineDistances: js.Array[Double] = js.native
-    var boundingBox: Box3 = js.native
-    var boundingSphere: BoundingSphere = js.native
-    var hasTangents: Boolean = js.native
-    var dynamic: Boolean = js.native
-    var verticesNeedUpdate: Boolean = js.native
-    var elementsNeedUpdate: Boolean = js.native
-    var uvsNeedUpdate: Boolean = js.native
-    var normalsNeedUpdate: Boolean = js.native
-    var tangentsNeedUpdate: Boolean = js.native
-    var colorsNeedUpdate: Boolean = js.native
-    var lineDistancesNeedUpdate: Boolean = js.native
-    var groupsNeedUpdate: Boolean = js.native
-    def applyMatrix(matrix: Matrix4): Unit = js.native
-    def fromBufferGeometry(geometry: BufferGeometry): Geometry = js.native
-    def center(): Vector3 = js.native
-    def computeFaceNormals(): Unit = js.native
-    def computeVertexNormals(areaWeighted: Boolean = ???): Unit = js.native
-    def computeMorphNormals(): Unit = js.native
-    def computeTangents(): Unit = js.native
-    def computeLineDistances(): Unit = js.native
-    def computeBoundingBox(): Unit = js.native
-    def computeBoundingSphere(): Unit = js.native
-    def merge(geometry: Geometry, matrix: Matrix, materialIndexOffset: Double): Unit = js.native
-    def mergeMesh(mesh: Mesh): Unit = js.native
-    def mergeVertices(): Double = js.native
-    def toJSON(): js.Dynamic = js.native
-    def dispose(): Unit = js.native
-    var bones: js.Array[Bone] = js.native
-    var animation: AnimationData = js.native
-    var animations: js.Array[AnimationData] = js.native
-    def addEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
-    def hasEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
-    def removeEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
-    def dispatchEvent(event: js.Any): Unit = js.native
-  }
-
-  @js.native
   @JSName("THREE.Object3D")
   class Object3D extends js.Object {
     var id: Double = js.native
@@ -784,6 +734,59 @@ import scala.scalajs.js.typedarray.Float32Array
     def removeEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
     def dispatchEvent(event: js.Any): Unit = js.native
   }
+
+@js.native
+@JSName("THREE.Geometry")
+class Geometry extends Object3D {
+//  var id: Double = js.native
+//  var uuid: String = js.native
+//  var name: String = js.native
+//  var `type`: String = js.native
+  var vertices: js.Array[Vector3] = js.native
+  var colors: js.Array[Color] = js.native
+  var faces: js.Array[Face3] = js.native
+  var faceVertexUvs: js.Array[js.Array[js.Array[Vector2]]] = js.native
+  var morphTargets: js.Array[MorphTarget] = js.native
+  var morphColors: js.Array[MorphColor] = js.native
+  var morphNormals: js.Array[MorphNormals] = js.native
+  var skinWeights: js.Array[Double] = js.native
+  var skinIndices: js.Array[Double] = js.native
+  var lineDistances: js.Array[Double] = js.native
+  var boundingBox: Box3 = js.native
+  var boundingSphere: BoundingSphere = js.native
+  var hasTangents: Boolean = js.native
+  var dynamic: Boolean = js.native
+  var verticesNeedUpdate: Boolean = js.native
+  var elementsNeedUpdate: Boolean = js.native
+  var uvsNeedUpdate: Boolean = js.native
+  var normalsNeedUpdate: Boolean = js.native
+  var tangentsNeedUpdate: Boolean = js.native
+  var colorsNeedUpdate: Boolean = js.native
+  var lineDistancesNeedUpdate: Boolean = js.native
+  var groupsNeedUpdate: Boolean = js.native
+//  def applyMatrix(matrix: Matrix4): Unit = js.native
+  def fromBufferGeometry(geometry: BufferGeometry): Geometry = js.native
+  def center(): Vector3 = js.native
+  def computeFaceNormals(): Unit = js.native
+  def computeVertexNormals(areaWeighted: Boolean = ???): Unit = js.native
+  def computeMorphNormals(): Unit = js.native
+  def computeTangents(): Unit = js.native
+  def computeLineDistances(): Unit = js.native
+  def computeBoundingBox(): Unit = js.native
+  def computeBoundingSphere(): Unit = js.native
+  def merge(geometry: Geometry, matrix: Matrix, materialIndexOffset: Double): Unit = js.native
+  def mergeMesh(mesh: Mesh): Unit = js.native
+  def mergeVertices(): Double = js.native
+//  def toJSON(): js.Dynamic = js.native
+  def dispose(): Unit = js.native
+  var bones: js.Array[Bone] = js.native
+  var animation: AnimationData = js.native
+  var animations: js.Array[AnimationData] = js.native
+//  def addEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
+//  def hasEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
+//  def removeEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
+//  def dispatchEvent(event: js.Any): Unit = js.native
+}
 
   @js.native
   @JSName("THREE.Object3D")
@@ -1415,28 +1418,6 @@ import scala.scalajs.js.typedarray.Float32Array
     var sizeAttenuation: Boolean = js.native
     var vertexColors: Colors = js.native
     var fog: Boolean = js.native
-  }
-
-  @js.native
-  @JSName("THREE.PointCloudMaterial")
-  class PointCloudMaterial extends Material {
-    def this(parameters: PointCloudMaterialParameters = ???) = this()
-    var color: Color = js.native
-    var map: Texture = js.native
-    var size: Double = js.native
-    var sizeAttenuation: Boolean = js.native
-    var vertexColors: Boolean = js.native
-    var fog: Boolean = js.native
-  }
-
-  @js.native
-  @JSName("THREE.ParticleBasicMaterial")
-  class ParticleBasicMaterial extends PointCloudMaterial {
-  }
-
-  @js.native
-  @JSName("THREE.ParticleSystemMaterial")
-  class ParticleSystemMaterial extends PointCloudMaterial {
   }
 
   @js.native
@@ -2296,15 +2277,6 @@ import scala.scalajs.js.typedarray.Float32Array
     def playAnimation(label: String, fps: Double): Unit = js.native
     def updateAnimation(delta: Double): Unit = js.native
     def interpolateTargets(a: Double, b: Double, t: Double): Unit = js.native
-  }
-
-  @js.native
-  @JSName("THREE.PointCloud")
-  class PointCloud extends Object3D {
-    def this(geometry: Geometry, material: PointCloudMaterial = ???) = this()
-    var geometry: Geometry = js.native
-    var material: Material = js.native
-    def raycast(raycaster: Raycaster, intersects: js.Any): Unit = js.native
   }
 
   @js.native
@@ -3777,5 +3749,5 @@ class PointsMaterial extends js.Object{
 
 @js.native
 @JSName("THREE.Points")
-class Points(var geometry: Geometry, var material:PointsMaterial) extends Object3D{
+class Points[T <: Object3D](var geometry: T, var material:PointsMaterial) extends Object3D{
 }

@@ -150,15 +150,24 @@ trait Canvas extends JSApp with WorldCoordinates{
 
   def render():Unit
 
+  val minFrameRate = 1
+  var times = 0
   def renderLoop(timestamp: Double){
-    delta = clock.getDelta()
+
+    delta = clock.getDelta() //seconds
     frameCount+=1
 
     //Should replace for function/s that execute whats needed instead of ugly ifs
     if(withControlsRender) controls.update()
     if(withStatsRender) stats.update()
-    clearObjectsAction()
+    if(delta>1/minFrameRate && frameCount>60){
+      times+=1
+      if(times > 15) throw new Error(s"Im preventing your machine from exploding, optimize your code! Last delta was: $delta")
+    } else {
+      times=0
+    }
 
+    clearObjectsAction()
 
     dom.requestAnimationFrame(renderLoop _)
     render

@@ -38,4 +38,29 @@ trait MathUtils {
     else value
   }
 
+  val precision = 360
+  lazy val fSinArr = (0 until precision).map(_*(TWO_PI/precision)).map(sin).toArray
+  def fSin(num:Double) = {fSinArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+
+  lazy val fCosArr = (0 until precision).map(_*(TWO_PI/precision)).map(cos).toArray
+  def fCos(num:Double) = {fCosArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+
+  lazy val fTanArr = (0 until precision).map(_*(TWO_PI/precision)).map(tan).toArray
+  def fTan(num:Double) = {fTanArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+
+  lazy val fASinArr = (0 until precision).map(_*(TWO_PI/precision)).map(asin).toArray
+  def fASin(num:Double) = {fASinArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+
+  lazy val fACosArr = (0 until precision).map(_*(TWO_PI/precision)).map(acos).toArray
+  def fACos(num:Double) = {fACosArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+
+  lazy val fATanArr = (0 until precision).map(_*(TWO_PI/precision)).map(atan).toArray
+  def fATan(num:Double) = {fATanArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+
+  lazy val fpSinArr = (0 until precision).map(_*(TWO_PI/precision)).map(sin).map(_*0.5+0.5).toArray
+  def fpSin(num:Double) = {fpSinArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+
+  lazy val fpCosArr = (0 until precision).map(_*(TWO_PI/precision)).map(cos).map(_*0.5+0.5).toArray
+  def fpCos(num:Double) = {fpCosArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+
 }

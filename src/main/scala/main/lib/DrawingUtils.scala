@@ -1,6 +1,7 @@
 package main.lib
 
 import scala.scalajs.js
+import scala.scalajs.js.typedarray.Float32Array
 
 /**
  * Created by martin on 07/10/15.
@@ -167,8 +168,69 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     scene.add( mesh )
   }
 
+  //Check for options
+  val pMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= 1, sizeAttenuation= false, transparent= false))
+
+  def point2(data: (Vector3,Color)*) ={
+    val geometry = new Geometry()
+
+    data.foreach{ case (pos,col) =>
+      geometry.vertices.push(pos)
+      geometry.colors.push(col)
+    }
+
+    val mesh = new Points( geometry, pMaterial )
+    scene.add( mesh )
+    mesh
+  }
+
+  def point3(data: (Vector3,Color)*) ={
 
 
+    val positions = new Float32Array( data.length * 3 )
+    val colors = new Float32Array( data.length * 3 )
+    //val size = new Float32Array( data.length)
+
+
+    //geometry.addAttribute( "size", new BufferAttribute( sizes, 1 ) );
+
+    data.zipWithIndex.foreach{ case ((pos,col),i) =>
+      //size(i) = 1
+      positions(i*3) = pos.x.toFloat
+      positions(i*3+1) = pos.y.toFloat
+      positions(i*3+2) = pos.z.toFloat
+      colors(i*3) = col.r.toFloat
+      colors(i*3+1) = col.g.toFloat
+      colors(i*3+2) = col.b.toFloat
+    }
+
+    val geo = new BufferGeometry()
+
+    geo.addAttribute( "position", new BufferAttribute( positions, 3 ) )
+    geo.addAttribute( "color", new BufferAttribute( colors, 3 ) )
+    //geo.addAttribute( "size", new BufferAttribute( size, 1 ) )
+
+    geo.computeBoundingSphere()
+
+    val mesh = new Points( geo, pMaterial )
+    scene.add( mesh )
+    mesh
+  }
+
+  def point4(data: (Vector3,Color)*) ={
+    val geometry = new Geometry()
+
+    data.foreach{ case (pos,col) =>
+      geometry.vertices.push(pos)
+      geometry.colors.push(col)
+    }
+
+    val geo = new BufferGeometry().fromGeometry(geometry)
+
+    val mesh = new Points( geo, pMaterial )
+    scene.add( mesh )
+    mesh
+  }
   //#######################  LIGHTS #############################
 
   def addAmbientLight(color: Int) = {
