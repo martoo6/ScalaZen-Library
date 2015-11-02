@@ -1142,7 +1142,22 @@ class Geometry extends Object3D {
     def hasEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
     def removeEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
     def dispatchEvent(event: js.Any): Unit = js.native
+//    def setColor(color:Color): Unit ={
+//      this match{
+//        case m:MeshBasicMaterial => m.color.set(color)
+//        case m:MeshLambertMaterial => m.color.set(color)
+//        case _ =>
+//      }
+//    }
+//    def getColor:Option[Color]={
+//      this match{
+//        case m:MeshBasicMaterial => Some(m.color)
+//        case m:MeshLambertMaterial => Some(m.color)
+//        case _ => None
+//      }
+//    }
   }
+
 
   @js.native
   trait LineBasicMaterialParameters extends MaterialParameters {

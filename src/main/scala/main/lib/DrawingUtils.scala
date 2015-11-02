@@ -99,6 +99,24 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     addMeshInPlace(geometry, origin)
   }
 
+
+  implicit class RichMaterial(material: Material){
+    def setColor(color:Color): Unit ={
+      material match{
+        case m:MeshBasicMaterial => m.color.set(color)
+        case m:MeshLambertMaterial => m.color.set(color)
+        case _ =>
+      }
+    }
+    def getColor:Option[Color]={
+      material match{
+        case m:MeshBasicMaterial => Some(m.color)
+        case m:MeshLambertMaterial => Some(m.color)
+        case _ => None
+      }
+    }
+  }
+
   //############# STROKE AND FILL ##################
 
   def lineWeight(weight: Double) = {

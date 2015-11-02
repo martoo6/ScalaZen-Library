@@ -1,5 +1,7 @@
 package main.lib
 
+import scala.util.Random
+
 /**
  * Created by martin on 09/10/15.
  */
@@ -10,9 +12,17 @@ trait MathUtils {
   val HALF_PI = PI/2
   val QUARTER_PI = PI/4
 
-  def random(Min: Double, Max: Double) = Min + (Math.random * (Max - Min + 1))
+  private val randomGen = new Random()
 
-  def random(ceil: Double) = Math.random * ceil
+  def random(low: Double, high: Double):Double = {
+    if (low >= high)  low else random(high - low) + low
+  }
+
+  def random(ceil: Double):Double = randomGen.nextDouble() * ceil
+
+  def random:Double = randomGen.nextDouble()
+
+  def randomSeed(seed:Long) = randomGen.setSeed(seed)
 
   def lerp(v1:Double,v2:Double,amount:Double) = (v1+v2)/amount
 
