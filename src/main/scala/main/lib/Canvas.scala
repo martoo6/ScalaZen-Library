@@ -67,7 +67,7 @@ trait Canvas extends JSApp with WorldCoordinates{
         (0 to l).reverse.foreach{ i=>
           val c = scene.children(i)
           c match{
-            case m:Mesh=>
+            case m:Mesh[_]=>
               m.material.dispose()
               m.geometry.dispose()
             case _ =>
@@ -124,7 +124,6 @@ trait Canvas extends JSApp with WorldCoordinates{
   val canvasData: CanvasData
 
   var lineMaterial: LineBasicMaterial
-  var meshMaterial: Material
   var scene:Scene
   var camera: Camera
   var renderer: WebGLRenderer

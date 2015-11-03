@@ -17,8 +17,7 @@ class ThreeJSApp7 extends JSApp with BasicCanvas with DrawingUtils with PerlinNo
   val perlin = Perlin(-15,15)
 
   val circles = (0 to 1000).map{ i=>
-    fill(Palette.iDemandPancake.getRandom)
-    circle(random2D, 5, 15)
+    circle(random2D, 5, 15).fill(Palette.iDemandPancake.getRandom)
   }
 
   def render():Unit = {

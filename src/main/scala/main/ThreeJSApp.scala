@@ -21,6 +21,8 @@ class ThreeJSApp extends BasicCanvas with DrawingUtils with PerlinNoise{
   val n2 = Perlin(-500,500)
   val n3 = Perlin(-500,500)
 
+  var i = 0
+
   def render():Unit = {
     stroke(Palette.iDemandPancake.getRandom)
 
@@ -35,8 +37,9 @@ class ThreeJSApp extends BasicCanvas with DrawingUtils with PerlinNoise{
     val dest = (x,y,z)
     line(origin,dest)
 
-    fillLambert(Palette.iDemandPancake.getRandom)
-
-    sphere(dest,size, 5)
+    if(i<40) {
+      fillLambert(Palette.iDemandPancake.getRandom){sphere(dest,size, 5)}
+      i+=1
+    }
   }
 }

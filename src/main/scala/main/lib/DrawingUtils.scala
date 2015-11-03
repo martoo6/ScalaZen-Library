@@ -52,21 +52,20 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   //    scene.add(plane)
   //  }
 
-  def rect(x:Double, y:Double, width:Double, height:Double):Mesh =  rect(new Vector3(x,y,0),width,height)
 
-  def rect(x:Double, y:Double, z:Double, width:Double, height:Double):Mesh =  rect(new Vector3(x,y,z),width,height)
-
-  def rect(pos: Vector3, width:Double):Mesh = rect(pos,width,width)
-
-  def rect(pos:(Double, Double), width:Double, height:Double):Mesh = rect(new Vector3(pos._1,pos._2,0),width,height)
-
-  def rect(pos:(Double, Double, Double), width:Double, height:Double):Mesh = rect(new Vector3(pos._1,pos._2,pos._3),width,height)
-
-  def rect(pos:Vector3, width:Double, height:Double):Mesh = {
+  def rect[RT <: Material](pos:Vector3, width:Double, height:Double)(implicit material: RT):Mesh[RT] = {
 
     //val geo = addMeshInPlace(new PlaneBufferGeometry(width, height), pos)
-    val mesh = addMeshInPlace(new PlaneGeometry(width, height), pos)
+    val mesh = addMeshInPlace(new PlaneGeometry(width, height), pos, material)
     mesh.geometry.vertices = mesh.geometry.vertices.map(x=>RectMode.rectMode(x, (width, height)))
+    mesh
+  }
+
+  def rect[RT <: Material](pos:Vector3, width:Double)(implicit material: RT):Mesh[RT] = {
+
+    //val geo = addMeshInPlace(new PlaneBufferGeometry(width, height), pos)
+    val mesh = addMeshInPlace(new PlaneGeometry(width, width), pos, material)
+    mesh.position = RectMode.rectMode(mesh.position, (width, width))
     mesh
   }
 
@@ -83,22 +82,42 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   //########################   Circle   ############################
 
 
-  def circle(pos:Vector3, radius:Double, segments:Int = 8): Mesh = {
-    addMeshInPlace(new CircleGeometry(radius, segments), pos)
+  def circle[CT <: Material](pos:Vector3, radius:Double, segments:Int = 8)(implicit material: CT ): Mesh[CT] = {
+    addMeshInPlace(new CircleGeometry(radius, segments), pos, material)
   }
 
   //########################   Triangle   ############################
 
-  def triangle(pos1:Vector3, pos2:Vector3, pos3:Vector3): Mesh = {
+  def triangle[TT <: Material](pos1:Vector3, pos2:Vector3, pos3:Vector3)(implicit material:TT ): Mesh[TT] = {
     val geometry = new Geometry()
     geometry.vertices.push(pos1)
     geometry.vertices.push(pos2)
     geometry.vertices.push(pos3)
 
     geometry.faces.push(new Face3(0, 2, 1))
-    addMeshInPlace(geometry, origin)
+    addMeshInPlace(geometry, origin, material)
   }
 
+
+  // WONT WORK !
+  //  implicit class RichMesh[T <: Material](m: T => Mesh[T]){
+  //    def fill(color:Color): Mesh[T] ={
+  //      m(new MeshBasicMaterial(js.Dynamic.literal(color = color)))
+  //    }
+  //  }
+
+    implicit class RichMesh(m: Mesh[MeshBasicMaterial]){
+      def fill(color:Color): Mesh[MeshBasicMaterial] ={
+        m.material.color.set(color)
+        m
+      }
+    }
+
+  implicit class RichColor(color: Color){
+    def materialize  = new MeshBasicMaterial(js.Dynamic.literal(color = color))
+    def materializeL = new MeshLambertMaterial(js.Dynamic.literal(color = color))
+    def materializeP = new MeshPhongMaterial(js.Dynamic.literal(color = color))
+  }
 
   implicit class RichMaterial(material: Material){
     def setColor(color:Color): Unit ={
@@ -130,40 +149,46 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   }
 
   //Should check default attributes for world (3D, 2D)
-  def fill(color:Color) = {
-    val nMeshMaterial = meshMaterial.clone().asInstanceOf[MeshBasicMaterial]
-    nMeshMaterial.color = color
-    meshMaterial = nMeshMaterial
+
+
+  //NOT WORKING EITHER
+  def fill[FT](color:Color)(f: =>FT):FT = {
+    implicit val material = new MeshBasicMaterial(js.Dynamic.literal(color = color))
+    f
   }
 
-  def fillLambert(color:Color) = {
-    val nMeshMaterial = new MeshLambertMaterial(js.Dynamic.literal(color = color))
-    meshMaterial = nMeshMaterial
+  def fillLambert[FT](color:Color)(f: =>FT):FT = {
+    implicit val material = new MeshLambertMaterial(js.Dynamic.literal(color = color))
+    f
   }
+
+//  def fillLambert(color:Color) = {
+//    val nMeshMaterial = new MeshLambertMaterial(js.Dynamic.literal(color = color))
+//    meshMaterial = nMeshMaterial
+//  }
 
   //#######################  CUBE #############################
 
-  def cube(pos:Vector3, sideSize:Double)={
-    addMeshInPlace(new BoxGeometry(sideSize, sideSize, sideSize), pos)
+  def cube[ST <: Material](pos:Vector3, width:Double)(implicit material:ST )={
+    addMeshInPlace(new BoxGeometry(width, width, width), pos, material)
   }
-
-  def cube(pos:Vector3, width:Double, height:Double, deep:Double)={
-    addMeshInPlace(new BoxGeometry(width, height, deep), pos)
+  
+  def cube[ST <: Material](pos:Vector3, width:Double, height:Double, deep:Double)(implicit material:ST )={
+    addMeshInPlace(new BoxGeometry(width, height, deep), pos, material)
   }
 
   //#######################  SPHERE #############################
 
-  def sphere(pos:Vector3, radius:Double): Mesh ={
-    addMeshInPlace(new SphereGeometry(radius), pos)
+  def sphere[ST <: Material](pos:Vector3, radius:Double)(implicit material:ST ): Mesh[ST] ={
+    addMeshInPlace(new SphereGeometry(radius), pos, material)
   }
 
-  def sphere(pos:Vector3, radius:Double, segments: Int): Mesh ={
-    addMeshInPlace(new SphereGeometry(radius, segments, segments), pos)
+  def sphere[ST <: Material](pos:Vector3, radius:Double, segments: Int)(implicit material:ST ): Mesh[ST] ={
+    addMeshInPlace(new SphereGeometry(radius, segments, segments), pos, material)
   }
 
-  def addMeshInPlace(geometry: Geometry, pos:Vector3) = {
-    //geometry.vertices = geometry.vertices.map(_.add(pos))
-    val mesh = new Mesh(geometry, meshMaterial)
+  def addMeshInPlace[MT <: Material](geometry: Geometry, pos:Vector3, material:MT): Mesh[MT] = {
+    val mesh = new Mesh(geometry, material)
     mesh.position.add(pos)
     scene.add(mesh)
     mesh
@@ -250,6 +275,13 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     mesh
   }
   //#######################  LIGHTS #############################
+
+  def addHemisphereLight(skyColorHex: Int, groundColorHex: Int, intensity: Double) = {
+    val light = new HemisphereLight(skyColorHex, groundColorHex, intensity)
+    scene.add( light )
+    light
+  }
+
 
   def addAmbientLight(color: Int) = {
     val light = new AmbientLight(color)

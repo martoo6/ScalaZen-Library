@@ -13,6 +13,9 @@ object DefaultCanvas{
 
   val renderer = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true))
 
+  //Check if i can force other renderers for better quality or other uses
+  //val renderer = new CanvasRenderer(js.Dynamic.literal(preserveDrawingBuffer=true))
+
   renderer.setSize(width, height)
   val e =renderer.domElement
 

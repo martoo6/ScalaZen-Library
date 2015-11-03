@@ -28,9 +28,11 @@ class ThreeJSApp15 extends JSApp with SimplexNoise with DrawingUtils with BasicC
   geo.computeBoundingSphere()
   geo.computeFaceNormals()
 
-  fill(new Color(1,0,0))
-  val mesh = new Mesh(geo, meshMaterial)
-  scene.add(mesh)
+  fill(new Color(1,0,0)){
+    val mesh = new Mesh(geo, meshMaterial)
+    scene.add(mesh)
+  }
+
 
   def render():Unit = {
 

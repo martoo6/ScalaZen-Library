@@ -17,8 +17,7 @@ class ThreeJSApp6 extends JSApp with BasicCanvas with DrawingUtils with PerlinNo
 
 
   val circles = (0 to 1000).map{ i=>
-    fill(blueSaddness.getRandom)
-    circle(random2D, random(2,6))
+    circle(random2D, random(2,6))(blueSaddness.getRandom.materialize)
   }
 
   def render():Unit = {

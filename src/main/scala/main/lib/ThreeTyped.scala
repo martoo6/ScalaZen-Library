@@ -172,7 +172,7 @@ import scala.scalajs.js.typedarray.Float32Array
     var clear: Boolean = js.native
     var camera: Camera = js.native
     var scene: Scene = js.native
-    var quad: Mesh = js.native
+    var quad: Mesh[_] = js.native
     def render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget, delta: Double): Unit = js.native
   }
 
@@ -775,7 +775,7 @@ class Geometry extends Object3D {
   def computeBoundingBox(): Unit = js.native
   def computeBoundingSphere(): Unit = js.native
   def merge(geometry: Geometry, matrix: Matrix, materialIndexOffset: Double): Unit = js.native
-  def mergeMesh(mesh: Mesh): Unit = js.native
+  def mergeMesh(mesh: Mesh[_]): Unit = js.native
   def mergeVertices(): Double = js.native
 //  def toJSON(): js.Dynamic = js.native
   def dispose(): Unit = js.native
@@ -838,20 +838,6 @@ class Geometry extends Object3D {
   @JSName("THREE.AmbientLight")
   class AmbientLight extends Light {
     def this(hex: Double = ???) = this()
-  }
-
-  @js.native
-  @JSName("THREE.AreaLight")
-  class AreaLight extends Light {
-    def this(hex: Double, intensity: Double = ???) = this()
-    var normal: Vector3 = js.native
-    var right: Vector3 = js.native
-    var intensity: Double = js.native
-    var width: Double = js.native
-    var height: Double = js.native
-    var constantAttenuation: Double = js.native
-    var linearAttenuation: Double = js.native
-    var quadraticAttenuation: Double = js.native
   }
 
   @js.native
@@ -1142,20 +1128,6 @@ class Geometry extends Object3D {
     def hasEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
     def removeEventListener(`type`: String, listener: js.Function1[js.Any, Unit]): Unit = js.native
     def dispatchEvent(event: js.Any): Unit = js.native
-//    def setColor(color:Color): Unit ={
-//      this match{
-//        case m:MeshBasicMaterial => m.color.set(color)
-//        case m:MeshLambertMaterial => m.color.set(color)
-//        case _ =>
-//      }
-//    }
-//    def getColor:Option[Color]={
-//      this match{
-//        case m:MeshBasicMaterial => Some(m.color)
-//        case m:MeshLambertMaterial => Some(m.color)
-//        case _ => None
-//      }
-//    }
   }
 
 
@@ -1230,9 +1202,9 @@ class Geometry extends Object3D {
 
   @js.native
   @JSName("THREE.MeshBasicMaterial")
-  class MeshBasicMaterial extends Material {
+  class MeshBasicMaterial(parameters: js.Dynamic = ???) extends Material {
     //def this(parameters: MeshBasicMaterialParameters = ???) = this()
-    def this(parameters: js.Dynamic = ???) = this()
+    //def this(parameters: js.Dynamic = ???) = this()
     var color: Color = js.native
     var map: Texture = js.native
     var lightMap: Texture = js.native
@@ -1351,7 +1323,8 @@ class Geometry extends Object3D {
   @js.native
   @JSName("THREE.MeshNormalMaterial")
   class MeshNormalMaterial extends Material {
-    def this(parameters: MeshNormalMaterialParameters = ???) = this()
+    //def this(parameters: MeshNormalMaterialParameters = ???) = this()
+    def this(parameters: js.Dynamic = ???) = this()
     var wireframe: Boolean = js.native
     var wireframeLinewidth: Double = js.native
     var morphTargets: Boolean = js.native
@@ -1393,7 +1366,8 @@ class Geometry extends Object3D {
   @js.native
   @JSName("THREE.MeshPhongMaterial")
   class MeshPhongMaterial extends Material {
-    def this(parameters: MeshPhongMaterialParameters = ???) = this()
+    //def this(parameters: MeshPhongMaterialParameters = ???) = this()
+    def this(parameters: js.Dynamic = ???) = this()
     var color: Color = js.native
     var emissive: Color = js.native
     var specular: Color = js.native
@@ -2261,10 +2235,10 @@ class Geometry extends Object3D {
 
   @js.native
   @JSName("THREE.Mesh")
-  class Mesh extends Object3D {
-    def this(geometry: Geometry = ???, material: Material = ???) = this()
-    var geometry: Geometry = js.native
-    var material: Material = js.native
+  class Mesh[MT <: Material](var geometry: Geometry = ???,var material: MT = ???) extends Object3D {
+//    def this(geometry: Geometry = ???, material: Material = ???) = this()
+//    var geometry: Geometry = js.native
+//    var material: Material = js.native
     def updateMorphTargets(): Unit = js.native
     def getMorphTargetIndexByName(name: String): Double = js.native
     def raycast(raycaster: Raycaster, intersects: js.Any): Unit = js.native
@@ -2796,7 +2770,7 @@ class Geometry extends Object3D {
   @js.native
   @JSName("THREE.GeometryUtils")
   object GeometryUtils extends js.Object {
-    def merge(geometry1: Geometry, object2: Mesh, materialIndexOffset: Double = ???): Unit = js.native
+    def merge(geometry1: Geometry, object2: Mesh[_], materialIndexOffset: Double = ???): Unit = js.native
     def center(geometry: Geometry): Vector3 = js.native
   }
 
@@ -2844,8 +2818,8 @@ class Geometry extends Object3D {
   @js.native
   @JSName("THREE.Animation")
   class Animation extends js.Object {
-    def this(root: Mesh, data: AnimationData) = this()
-    var root: Mesh = js.native
+    def this(root: Mesh[_], data: AnimationData) = this()
+    var root: Mesh[_] = js.native
     var data: AnimationData = js.native
     var hierarchy: js.Array[Bone] = js.native
     var currentTime: Double = js.native
@@ -2871,7 +2845,7 @@ class Geometry extends Object3D {
     var CATMULLROM_FORWARD: Double = js.native
     var animations: js.Array[js.Any] = js.native
     def init(data: AnimationData): AnimationData = js.native
-    def parse(root: Mesh): js.Array[Object3D] = js.native
+    def parse(root: Mesh[_]): js.Array[Object3D] = js.native
     def play(animation: Animation): Unit = js.native
     def stop(animation: Animation): Unit = js.native
     def update(deltaTimeMS: Double): Unit = js.native
@@ -2881,7 +2855,7 @@ class Geometry extends Object3D {
   @JSName("THREE.KeyFrameAnimation")
   class KeyFrameAnimation extends js.Object {
     def this(data: js.Any) = this()
-    var root: Mesh = js.native
+    var root: Mesh[_] = js.native
     var data: AnimationData = js.native
     var hierarchy: js.Array[KeyFrames] = js.native
     var currentTime: Double = js.native
@@ -2899,8 +2873,8 @@ class Geometry extends Object3D {
   @js.native
   @JSName("THREE.MorphAnimation")
   class MorphAnimation extends js.Object {
-    def this(mesh: Mesh) = this()
-    var mesh: Mesh = js.native
+    def this(mesh: Mesh[_]) = this()
+    var mesh: Mesh[_] = js.native
     var frames: Double = js.native
     var currentTime: Double = js.native
     var duration: Double = js.native
@@ -3331,7 +3305,7 @@ class Geometry extends Object3D {
   class ArrowHelper extends Object3D {
     def this(dir: Vector3, origin: Vector3 = ???, length: Double = ???, hex: Double = ???, headLength: Double = ???, headWidth: Double = ???) = this()
     var line: Line = js.native
-    var cone: Mesh = js.native
+    var cone: Mesh[_] = js.native
     def setDirection(dir: Vector3): Unit = js.native
     def setLength(length: Double, headLength: Double = ???, headWidth: Double = ???): Unit = js.native
     def setColor(hex: Double): Unit = js.native
@@ -3410,7 +3384,7 @@ class Geometry extends Object3D {
     def this(light: Light, sphereSize: Double) = this()
     var light: Light = js.native
     var colors: js.Array[Color] = js.native
-    var lightSphere: Mesh = js.native
+    var lightSphere: Mesh[_] = js.native
     def dispose(): Unit = js.native
     def update(): Unit = js.native
   }
@@ -3439,7 +3413,7 @@ class Geometry extends Object3D {
   class SpotLightHelper extends Object3D {
     def this(light: Light, sphereSize: Double, arrowLength: Double) = this()
     var light: Light = js.native
-    var cone: Mesh = js.native
+    var cone: Mesh[_] = js.native
     def dispose(): Unit = js.native
     def update(): Unit = js.native
   }
@@ -3724,8 +3698,9 @@ class Geometry extends Object3D {
 
   @js.native
   @JSName("THREE.CanvasRenderer")
-  class CanvasRenderer extends Renderer {
-    def this(parameters: CanvasRendererParameters = ???) = this()
+  class CanvasRenderer() extends Renderer {
+    def this(parameters: js.Dynamic = ???) = this()
+    //def this(parameters: CanvasRendererParameters = ???) = this()
     var autoClear: Boolean = js.native
     var sortObjects: Boolean = js.native
     var sortElements: Boolean = js.native

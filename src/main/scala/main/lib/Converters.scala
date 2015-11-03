@@ -1,5 +1,7 @@
 package main.lib
 
+import scala.scalajs.js
+
 /**
  * Created by martin on 10/17/15.
  */
@@ -63,4 +65,12 @@ trait Converters {
   implicit def SeqIntToColor(lst:Seq[Int]): Seq[Color] = lst.map{new Color(_)}
 
   implicit def IntToColor(value:Int): Color = new Color(value)
+
+  //############# Materials ###################
+
+  //NOT WORKING !
+//  implicit def ColorToMeshBasicMaterial(color:Color): MeshBasicMaterial = {
+//    val m = new MeshBasicMaterial(js.Dynamic.literal(color = color))
+//    m
+//  }
 }

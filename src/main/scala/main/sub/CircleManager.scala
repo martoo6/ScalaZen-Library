@@ -11,8 +11,7 @@ class CircleManager extends BasicCanvas with DrawingUtils{
   val perlin = Perlin(PI)
 
   val circles = (0 to 1000).map{ i=>
-    fill(iDemandPancake.getRandom)
-    val c = circle((randomWidth, randomHeight, random(500)), 5)
+    val c = circle((randomWidth, randomHeight, random(500)), 5)(iDemandPancake.getRandom.materialize)
     c.rotateX(random(PI))
     c.rotateY(random(PI))
     c.rotateZ(random(PI))
