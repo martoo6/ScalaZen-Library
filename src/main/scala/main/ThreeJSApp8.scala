@@ -19,12 +19,10 @@ class ThreeJSApp8 extends JSApp with BasicCanvas with DrawingUtils with PerlinNo
   val perlin = Perlin(PI)
 
   val circles = (0 to 1000).map{ i=>
-    val c = fill(Palette.iDemandPancake.getRandom){
-      circle((randomWidth, randomHeight, random(500)), 5, 15)
-    }
-    c.rotateX(random(PI))
-    c.rotateY(random(PI))
-    c.rotateZ(random(PI))
+    val c =  circle((randomWidth, randomHeight, rand(500)), 5, 15).fill(Palette.iDemandPancake.getRandom)
+    c.rotateX(rand(PI))
+    c.rotateY(rand(PI))
+    c.rotateZ(rand(PI))
     c
   }
 

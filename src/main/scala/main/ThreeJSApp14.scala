@@ -24,7 +24,7 @@ class ThreeJSApp14 extends JSApp with PerlinNoise with DrawingUtils with BasicCa
   def render():Unit = {
     val rr = iDemandPancake.getRandom
 
-    for(i <- (0 until geo.colors.size by random(50,100).toInt).flatMap(x=> x to x + random(10).toInt)){
+    for(i <- (0 until geo.colors.size by rand(50,100).toInt).flatMap(x=> x to x + rand(10).toInt)){
     //for(i <- 0 until geo.colors.size by random(40).toInt){
       geo.colors(i).setRGB(rr.r, rr.g, rr.b)
     }

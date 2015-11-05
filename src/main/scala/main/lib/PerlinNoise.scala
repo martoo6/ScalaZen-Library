@@ -9,7 +9,7 @@ trait PerlinNoise extends MathUtils{
   //======================================================================
   // Private Constants for some reason it doesnt work if they are not lazy
   //val permutation = Array.fill(300){ random(255).toInt }
-  val permutation = (1 to 300).map(_=>random(255).toInt)
+  val permutation = (1 to 300).map(_=>rand(255).toInt)
 
   // Initialize the p array with two copies of the permutation array.
   val p = permutation++permutation

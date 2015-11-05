@@ -15,18 +15,10 @@ class ThreeJSApp4 extends JSApp with BasicCanvas with DrawingUtils with PerlinNo
   RectMode.leftBottom
 
   def render():Unit = {
-    fill(Palette.iDemandPancake(0)){
-      triangle(leftTop,rightTop,(mouseX,mouseY))
-    }
-    fill(Palette.iDemandPancake(1)){
-      triangle(leftBottom,rightBottom,(mouseX,mouseY))
-    }
-    fill(Palette.iDemandPancake(2)){
-      triangle(leftTop,leftBottom,(mouseX,mouseY))
-    }
-    fill(Palette.iDemandPancake(3)){
-      triangle(rightTop,rightBottom,(mouseX,mouseY))
-    }
+      triangle(leftTop,rightTop,(mouseX,mouseY)).fill(Palette.iDemandPancake(0))
+      triangle(leftBottom,rightBottom,(mouseX,mouseY)).fill(Palette.iDemandPancake(1))
+      triangle(leftTop,leftBottom,(mouseX,mouseY)).fill(Palette.iDemandPancake(2))
+      triangle(rightTop,rightBottom,(mouseX,mouseY)).fill(Palette.iDemandPancake(3))
   }
 
 

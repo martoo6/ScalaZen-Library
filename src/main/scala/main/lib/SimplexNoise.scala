@@ -92,7 +92,7 @@ trait SimplexNoise extends MathUtils{
   //    115, 121, 50, 45, 127,  4, 150, 254, 138, 236, 205, 93, 222, 114, 67,
   //    29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180)
 
-  private val halfPerm = (1 to 300).map(_=>random(255).toInt)
+  private val halfPerm = (1 to 300).map(_=>rand(255).toInt)
 
   private val perm: Array[Int] = new Array[Int](halfPerm.length*2)
 

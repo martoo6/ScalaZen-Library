@@ -15,10 +15,10 @@ class ThreeJSApp3 extends JSApp with BasicCanvas with DrawingUtils with PerlinNo
   RectMode.leftBottom
 
 
-  val t1 = triangle(leftTop,rightTop,(mouseX,mouseY))(Palette.iDemandPancake(0).materialize)
-  val t2 = triangle(leftBottom,rightBottom,(mouseX,mouseY))(Palette.iDemandPancake(1).materialize)
-  val t3 = triangle(leftTop,leftBottom,(mouseX,mouseY))(Palette.iDemandPancake(2).materialize)
-  val t4 = triangle(rightTop,rightBottom,(mouseX,mouseY))(Palette.iDemandPancake(3).materialize)
+  val t1 = triangle(leftTop,rightTop,(mouseX,mouseY))(Palette.iDemandPancake(0).materialize())
+  val t2 = triangle(leftBottom,rightBottom,(mouseX,mouseY))(Palette.iDemandPancake(1).materialize())
+  val t3 = triangle(leftTop,leftBottom,(mouseX,mouseY))(Palette.iDemandPancake(2).materialize())
+  val t4 = triangle(rightTop,rightBottom,(mouseX,mouseY))(Palette.iDemandPancake(3).materialize())
 
   val lst = t1::t2::t3::t4::Nil
 

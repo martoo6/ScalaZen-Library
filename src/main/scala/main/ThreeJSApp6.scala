@@ -17,14 +17,14 @@ class ThreeJSApp6 extends JSApp with BasicCanvas with DrawingUtils with PerlinNo
 
 
   val circles = (0 to 1000).map{ i=>
-    circle(random2D, random(2,6))(blueSaddness.getRandom.materialize)
+    circle(random2D, rand(2,6))(blueSaddness.getRandom.materialize())
   }
 
   def render():Unit = {
     val mult = map(Math.sin(frameCount*0.01),-1,1,0.00001,0.01)
     circles.foreach{ c=>
       val pos = c.position
-      pos.add((noise(pos.x*mult, pos.y*mult, frameCount*0.01),-random(1)))
+      pos.add((noise(pos.x*mult, pos.y*mult, frameCount*0.01),-rand(1)))
       if(pos.x < 0) pos.add((width,0,0))
       if(pos.x > width) pos.add((-width,0,0))
       if(pos.y < 0) pos.add((0,height,0))

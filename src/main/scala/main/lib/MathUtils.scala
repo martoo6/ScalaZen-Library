@@ -5,6 +5,8 @@ import scala.util.Random
 /**
  * Created by martin on 09/10/15.
  */
+object MathUtils extends MathUtils
+
 trait MathUtils {
   import Math._
 
@@ -14,13 +16,13 @@ trait MathUtils {
 
   private val randomGen = new Random()
 
-  def random(low: Double, high: Double):Double = {
-    if (low >= high)  low else random(high - low) + low
+  def rand(low: Double, high: Double):Double = {
+    if (low >= high)  low else rand(high - low) + low
   }
 
-  def random(ceil: Double):Double = randomGen.nextDouble() * ceil
+  def rand(ceil: Double):Double = randomGen.nextDouble() * ceil
 
-  def random:Double = randomGen.nextDouble()
+  def rand:Double = randomGen.nextDouble()
 
   def randomSeed(seed:Long) = randomGen.setSeed(seed)
 

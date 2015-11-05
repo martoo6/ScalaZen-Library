@@ -26,7 +26,7 @@ class ThreeJSApp extends BasicCanvas with DrawingUtils with PerlinNoise{
   def render():Unit = {
     stroke(Palette.iDemandPancake.getRandom)
 
-    val size = random(2,5)
+    val size = rand(2,5)
     lineWeight(size*2)
 
     val fc = frameCount*0.02

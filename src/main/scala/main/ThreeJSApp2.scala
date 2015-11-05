@@ -17,7 +17,7 @@ class ThreeJSApp2 extends BasicCanvas with DrawingUtils with PerlinNoise with Co
   def render():Unit = {
     val pos = (mouseX - (mouseX % 50), 0)
     //Wold be great to reeplace materialize with implicit conversion
-    rect(pos,50,height)(Palette.iDemandPancake.getRandom.materialize)
+    rect(pos,50,height)(Palette.iDemandPancake.getRandom.materialize())
   }
 
 }

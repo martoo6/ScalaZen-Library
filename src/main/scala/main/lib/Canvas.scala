@@ -15,6 +15,7 @@ trait Canvas extends JSApp with WorldCoordinates{
     renderLoop(System.currentTimeMillis())
   }
 
+  var faceSide: Side = THREE.FrontSide
   val center = new Vector3(0,0,500)
   val leftBottomPosition = new Vector3(width / 2, height / 2, 1000)
   var position = center
@@ -42,12 +43,15 @@ trait Canvas extends JSApp with WorldCoordinates{
     def _3D = {
       //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
       camera = new PerspectiveCamera( 45, width / height, 1, 1000 )
+      faceSide = THREE.DoubleSide
       resetPosition
       this
     }
     def _2D = {
       //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00))
+      renderer.sortObjects = false
       camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
+      faceSide = THREE.FrontSide
       resetPosition
       this
     }

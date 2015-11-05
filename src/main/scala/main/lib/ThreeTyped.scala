@@ -1541,6 +1541,22 @@ class Geometry extends Object3D {
     var l: Double = js.native
   }
 
+  object Gray{
+    def apply(v:Double) = new Color(v,v,v)
+  }
+
+  object Rgb{
+    def apply(r:Double, g:Double, b:Double) = new Color(r,g,b)
+  }
+
+  object Hsl{
+    def apply(h:Double = 0, s:Double = 1, l:Double = 1) = new Color().setHSL(h,s,l)
+  }
+
+  object Hex{
+    def apply(hex:Int) = new Color().setHex(hex)
+  }
+
   @js.native
   @JSName("THREE.Color")
   class Color(var r: Double = js.native, var g: Double = js.native, var b: Double = js.native) extends js.Object {
@@ -3021,8 +3037,8 @@ class Geometry extends Object3D {
 
   @js.native
   @JSName("THREE.Shape")
-  class Shape extends Path {
-    def this(points: js.Array[Vector2] = ???) = this()
+  class Shape(points: js.Array[Vector2] = ???) extends Path {
+    //def this(points: js.Array[Vector2] = ???) = this()
     var holes: js.Array[Path] = js.native
     def extrude(options: js.Any = ???): ExtrudeGeometry = js.native
     def makeGeometry(options: js.Any = ???): ShapeGeometry = js.native
@@ -3722,7 +3738,7 @@ class Geometry extends Object3D {
     def clearDepth(): Unit = js.native
     def clearStencil(): Unit = js.native
   //}
-  
+
 }
 
 @js.native
