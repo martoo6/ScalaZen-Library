@@ -18,7 +18,7 @@ class ThreeJSApp17 extends JSApp with BasicCanvas with DrawingUtils with Simplex
     for(i<- 0 to 100){
       //fill(Palette.giantGoldfish.getRandom)
 
-      val m = circle(pos,40,30)
+      val m = circle(pos,40)
 
       m.material.asInstanceOf[MeshBasicMaterial].color
 

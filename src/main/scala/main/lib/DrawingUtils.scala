@@ -46,50 +46,30 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
 
   //########################   RECT   ############################
 
-  //  def rect(width:Double, height:Double, x:Double, y:Double, z:Double=0)(implicit material: Material, scene:Scene):Unit = {
-  //    val geometry  = new PlaneGeometry(width, height)
-  //    //val material  = new MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} )
-  //    geometry.vertices = geometry.vertices.map{v3 => v3.add(new Vector3(x,y,z))}
-  //    val plane     = new Mesh( geometry, material.clone() )
-  //    scene.add(plane)
-  //  }
-
   val planeGeometry =   new PlaneGeometry(1, 1)
 
-  def rect[RT <: Material](pos:Vector3, width:Double, height:Double)(implicit material: RT):Mesh[RT] = {
-
-    //val geo = addMeshInPlace(new PlaneBufferGeometry(width, height), pos)
-    val mesh = addMeshInPlace(planeGeometry, pos, material)
-    mesh.scale.set(width,height,0)
-    mesh.position.add(RectMode.rectMode(mesh.position, (width, width)))
+  def rect[RT <: Material](pos:Vector3, _width:Double, _height:Double)(implicit material: RT):Mesh[RT] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _height)), material)
+    mesh.scale.set(_width, _height, 1)
     mesh
   }
 
-  def rect[RT <: Material](pos:Vector3, width:Double)(implicit material: RT):Mesh[RT] = {
-
-    //val geo = addMeshInPlace(new PlaneBufferGeometry(width, height), pos)
-    val mesh = addMeshInPlace(planeGeometry, pos, material)
-    mesh.scale.set(width,width,0)
-    //Should change
-    mesh.position.add(RectMode.rectMode(mesh.position, (width, width)))
+  def rect[RT <: Material](pos:Vector3, _width:Double)(implicit material: RT):Mesh[RT] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _width)), material)
+    mesh.scale.set(_width, _width, 1)
     mesh
   }
 
-  def rectXZ[RT <: Material](pos:Vector3, width:Double, height:Double)(implicit material: RT):Mesh[RT] = {
-
-    //val geo = addMeshInPlace(new PlaneBufferGeometry(width, height), pos)
-    val mesh = addMeshInPlace(new PlaneGeometry(width, height), pos, material)
-    mesh.position.add(RectMode.rectMode(mesh.position, (width, width)))
+  def rectXZ[RT <: Material](pos:Vector3, _width:Double, _height:Double)(implicit material: RT):Mesh[RT] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _height)), material)
+    mesh.scale.set(_width, _height, 1)
     mesh.rotateX(HALF_PI)
     mesh
   }
 
-  def rectXZ[RT <: Material](pos:Vector3, width:Double)(implicit material: RT):Mesh[RT] = {
-
-    //val geo = addMeshInPlace(new PlaneBufferGeometry(width, height), pos)
-    val mesh = addMeshInPlace(new PlaneGeometry(width, width), pos, material)
-    //Should change
-    mesh.position.add(RectMode.rectMode(mesh.position, (width, width)))
+  def rectXZ[RT <: Material](pos:Vector3, _width:Double)(implicit material: RT):Mesh[RT] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _width)), material)
+    mesh.scale.set(_width, _width, 1)
     mesh.rotateX(HALF_PI)
     mesh
   }
@@ -107,10 +87,18 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   //########################   Circle   ############################
 
   //Create several geometries depending on size of circle or create on demand
-  val circleGeometry =  new CircleGeometry(1, 16)
+  val circleGeometries =  (1 to 8).map(x=> new CircleGeometry(1, Math.pow(2,x))).toArray
 
-  def circle[CT <: Material](pos:Vector3, radius:Double, segments:Int = 8)(implicit material: CT ): Mesh[CT] = {
-    val mm = addMeshInPlace(circleGeometry, pos, material)
+  def circle[CT <: Material](pos:Vector3, radius:Double)(implicit material: CT ): Mesh[CT] = {
+    val s = radius.mapContrain(0,1920,4,circleGeometries.length).toInt
+    val mm = addMeshInPlace(circleGeometries(s), pos, material)
+    mm.scale.set(radius,radius,radius)
+    mm
+  }
+
+  def circle[CT <: Material](pos:Vector3, radius:Double, segments:Int)(implicit material: CT ): Mesh[CT] = {
+    val s = segments.toDouble.mapContrain(2,256,0,circleGeometries.length).toInt
+    val mm = addMeshInPlace(circleGeometries(s), pos, material)
     mm.scale.set(radius,radius,radius)
     mm
   }

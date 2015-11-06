@@ -41,6 +41,13 @@ trait MathUtils {
     def constrain(min:Double,max:Double):Double = {
       constrain(value,min,max)
     }
+    def mapContrain(in_min:Double,in_max:Double,out_min:Double,out_max:Double):Double = {
+      mapContrain(value,in_min,in_max,out_min,out_max)
+    }
+  }
+
+  def mapContrain(value:Double, in_min:Double,in_max:Double,out_min:Double,out_max:Double): Double ={
+    constrain(map(value, in_min, in_max, out_min, out_max), out_min, out_max)
   }
 
   def constrain(value:Double, min:Double, max:Double) = {
