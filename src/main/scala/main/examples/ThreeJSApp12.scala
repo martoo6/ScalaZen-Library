@@ -1,15 +1,11 @@
-package main
+package main.examples
 
 import main.lib._
-import org.scalajs.dom
-import org.scalajs.dom._
 
-import scala.scalajs.js
 import scala.scalajs.js._
-import scala.scalajs.js.annotation.{JSName, JSExport}
+import scala.scalajs.js.annotation.JSExport
 
 //Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
-import java.lang.Math._
 //########################
 
 @JSExport

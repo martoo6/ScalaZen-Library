@@ -10,16 +10,19 @@ class Shaders {
 
 }
 
+@js.native
 class TDiffuse extends js.Object{
   var `type` :String = js.native
   var value  :String = js.native
 }
 
+@js.native
 class Resolution extends js.Object{
   var `type` :String = js.native
   var value:Vector2 = js.native
 }
 
+@js.native
 class FXAAShaderUniforms extends js.Object{
   var tDiffuse:TDiffuse = js.native
   var resolution:Resolution = js.native

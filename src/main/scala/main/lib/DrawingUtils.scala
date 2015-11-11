@@ -1,9 +1,8 @@
 package main.lib
 
-import main.lib.SphereGeometry
-
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.Float32Array
+import js.JSConverters._
 
 /**
  * Created by martin on 07/10/15.
@@ -20,28 +19,41 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
 
   def vecXYAngle(angle:Double, size:Double=1) = new Vector3(size,0,0).applyAxisAngle(zAxis, angle)
 
+
+
+
   //########################   LINE   ############################
 
-  def line(vertexes :Vector3*):Geometry = {
+
+  //Not working goddamit..
+  case class LineMaterial[T <: Material](wrappedMaterial :T)
+  def basicLineMaterialToLineMaterial(lineBasicMaterial: LineBasicMaterial): LineMaterial[_] = LineMaterial(lineBasicMaterial)
+  def dashedLineMaterialToLineMaterial(dashedMaterial: LineDashedMaterial): LineMaterial[_] =  LineMaterial(dashedMaterial)
+
+  implicit var lineMaterial: LineMaterial[LineBasicMaterial] = new LineMaterial(new LineBasicMaterial(js.Dynamic.literal(color = 0xFFFFFF, side= THREE.DoubleSide)))
+
+  def line[LM <: Material](vertexes :Vector3*)(implicit material: LineMaterial[LM]):Geometry = {
     val geometry = new Geometry()
-    geometry.vertices.push(vertexes:_*)
+    geometry.vertices = vertexes.toJSArray
     //geometry.vertices.push(vertex2)
     //new THREE.Vector3( -10, 0, 0 )
-    val l = new Line(geometry, lineMaterial)
+    val l = new Line(geometry, material.wrappedMaterial)
     scene.add(l)
     geometry
   }
 
-  //  def line[X: ClassTag](vertexes: vec3Double*)(implicit material: Material, scene:Scene):Unit = {
-  //    line(vertexes.map(x=>new Vector3(x._1, x._2, x._3)):_*)
-  //  }
-  //
-  //  def line[X: ClassTag, Y: ClassTag](vertexes: vec2Double*)(implicit material: Material, scene:Scene):Unit = {
-  //    line(vertexes.map(x=>new Vector3(x._1, x._2, 0)):_*)
-  //  }
+  //########################   SPLINE ############################
 
-  def line(origX: Double,origY: Double,origZ: Double,destX: Double,destY: Double,destZ: Double):Unit = {
-    line(new Vector3(origX, origY, origZ), new Vector3(destX, destY, destZ))
+
+  def spline[LM <: Material](points: Vector3*)(implicit lineMaterial: LineMaterial[LM]) = {
+    val curve = new SplineCurve3(points.toJSArray)
+    val geometry = new Geometry()
+    //TODO: look at divisions, what the heck ?
+    geometry.vertices = curve.getPoints(500)
+    //Create the final Object3d to add to the scene
+    val splineObject = new Line(geometry, lineMaterial.wrappedMaterial)
+    scene.add(splineObject)
+    splineObject
   }
 
   //########################   RECT   ############################
@@ -105,7 +117,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
 
   //########################   Triangle   ############################
 
-  def triangle[TT <: Material](pos1:Vector3, pos2:Vector3, pos3:Vector3)(implicit material:TT ): Mesh[TT] = {
+  def triangle[TT <: Material](pos1:Vector3, pos2:Vector3, pos3:Vector3)(implicit material:TT): Mesh[TT] = {
     val geometry = new Geometry()
     geometry.vertices.push(pos1)
     geometry.vertices.push(pos2)
@@ -113,16 +125,20 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
 
     geometry.faces.push(new Face3(0, 1, 2))
 
-    addMeshInPlace(geometry, origin, material)
+    addMeshInPlace(geometry, center, material)
   }
 
 
   // WONT WORK !
-  //  implicit class RichMesh[T <: Material](m: T => Mesh[T]){
-  //    def fill(color:Color): Mesh[T] ={
-  //      m(new MeshBasicMaterial(js.Dynamic.literal(color = color)))
-  //    }
-  //  }
+//    implicit class RichMesh2(m: Material => Mesh[Material]){
+//      def FILLL(color:Color): Mesh[MeshBasicMaterial] ={
+//        m(new MeshBasicMaterial(js.Dynamic.literal(color = color))).asInstanceOf[Mesh[MeshBasicMaterial]]
+//      }
+//      def FILLLM(color:Color): Mesh[MeshLambertMaterial] ={
+//        m(new MeshLambertMaterial(js.Dynamic.literal(color = color))).asInstanceOf[Mesh[MeshLambertMaterial]]
+//      }
+//    }
+
 
     implicit class RichMesh(m: Mesh[MeshBasicMaterial]){
       def fill(color:Color, side:Side = faceSide): Mesh[MeshBasicMaterial] ={
@@ -147,13 +163,13 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   //############# STROKE AND FILL ##################
 
   def lineWeight(weight: Double) = {
-    lineMaterial = lineMaterial.clone().asInstanceOf[LineBasicMaterial]
-    lineMaterial.linewidth = weight
+    lineMaterial = new LineMaterial(lineMaterial.wrappedMaterial.clone().asInstanceOf[LineBasicMaterial])
+    lineMaterial.wrappedMaterial.linewidth = weight
   }
 
   def stroke(color:Color) = {
-    lineMaterial = lineMaterial.clone().asInstanceOf[LineBasicMaterial]
-    lineMaterial.color = color
+    lineMaterial = new LineMaterial(lineMaterial.wrappedMaterial.clone().asInstanceOf[LineBasicMaterial])
+    lineMaterial.wrappedMaterial.color = color
   }
 
   //Should check default attributes for world (3D, 2D)
@@ -184,7 +200,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     m.scale.set(width,width,width)
     m
   }
-  
+
   def cube[ST <: Material](pos:Vector3, width:Double, height:Double, deep:Double)(implicit material:ST )={
     val m = addMeshInPlace(boxGeometry, pos, material)
     m.scale.set(width, height, deep)
@@ -219,9 +235,11 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   def point(positions:Vector3*): Unit ={
     val geometry = new Geometry()
 
+    val c = lineMaterial.wrappedMaterial.color
+
     positions.foreach{ pos =>
       geometry.vertices.push( pos )
-      geometry.colors.push(lineMaterial.color)
+      geometry.colors.push(c)
     }
 
     //Check for options

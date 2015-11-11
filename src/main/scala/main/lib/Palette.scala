@@ -1,7 +1,5 @@
 package main.lib
 
-import main.lib.Color
-
 import scala.util.Random
 
 /**

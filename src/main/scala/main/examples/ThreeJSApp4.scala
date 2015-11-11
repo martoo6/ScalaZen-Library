@@ -1,6 +1,6 @@
-package main
+package main.examples
 
-import main.lib.{Palette, BasicCanvas, DrawingUtils, PerlinNoise}
+import main.lib.{BasicCanvas, DrawingUtils, Palette, PerlinNoise}
 
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport

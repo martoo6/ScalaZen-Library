@@ -1,4 +1,4 @@
-package main
+package main.examples
 
 import main.lib._
 

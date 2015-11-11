@@ -1,9 +1,7 @@
-package main
-
+package main.examples
 
 import main.lib._
 
-import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
 //Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
@@ -35,7 +33,7 @@ class ThreeJSApp extends BasicCanvas with DrawingUtils with PerlinNoise{
     val z = n3.noise(fc)
 
     val dest = (x,y,z)
-    line(origin,dest)
+    line(center,dest)
 
     if(i<40) {
       fillLambert(Palette.iDemandPancake.getRandom){sphere(dest,size, 5)}

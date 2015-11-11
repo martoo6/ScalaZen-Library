@@ -1,4 +1,4 @@
-package main
+package main.examples
 
 import main.lib._
 
@@ -32,18 +32,19 @@ class ThreeJSApp18 extends JSApp with BasicCanvas with DrawingUtils with Simplex
   val geo = new SphereGeometry(50,10,10)
 
   def render():Unit = {
+    scene = new Scene()
     val g = new Group()
 
     for(i<- 0 to 500){
       val mesh = new Mesh(geo, material)
       //val r = (rand(-width/2,width/2), rand(-height/2,height/2))
       mesh.position.set(rand(-width/2,width/2), rand(-height/2,height/2), 100)
-      //g.add(mesh)
-      scene.add(mesh)
+      g.add(mesh)
+      //scene.add(mesh)
       //sphere(random2D, rand(10,50))
     }
 
-    //scene.add(g)
+    scene.add(g)
 
 //    rect((0,0),50).fill(Rgb(1,0,0))
 //    rect((width,0),50).fill(Rgb(1,0,0))

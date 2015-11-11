@@ -1,4 +1,4 @@
-package main.sub
+package main.examples.sub
 
 import main.lib.{PerlinNoise, DrawingUtils, BasicCanvas}
 

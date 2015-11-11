@@ -1168,7 +1168,8 @@ class Geometry extends Object3D {
   @js.native
   @JSName("THREE.LineDashedMaterial")
   class LineDashedMaterial extends Material {
-    def this(parameters: LineDashedMaterialParameters = ???) = this()
+    //def this(parameters: LineDashedMaterialParameters = ???) = this()
+    def this(parameters: js.Dynamic = ???) = this()
     var color: Color = js.native
     var linewidth: Double = js.native
     var scale: Double = js.native
@@ -2219,12 +2220,12 @@ class Geometry extends Object3D {
 
   @js.native
   @JSName("THREE.Line")
-  class Line extends Object3D {
+  class Line[LM <: Material](geometry: Geometry = ???, material: LM = ???, mode: Double = ???) extends Object3D {
     //def this(geometry: Geometry = ???, material: LineDashedMaterial = ???, mode: Double = ???) = this()
-    def this(geometry: Geometry = ???, material: Material = ???, mode: Double = ???) = this()
-    var geometry: js.Any = js.native
-    var material: Material = js.native
-    var mode: LineMode = js.native
+    //def this(geometry: Geometry = ???, material: Material = ???, mode: Double = ???) = this()
+//    var geometry: js.Any = js.native
+//    var material: Material = js.native
+//    var mode: LineMode = js.native
     def raycast(raycaster: Raycaster, intersects: js.Any): Unit = js.native
   }
 
@@ -3139,9 +3140,8 @@ class Geometry extends Object3D {
 
   @js.native
   @JSName("THREE.SplineCurve3")
-  class SplineCurve3 extends Curve[Vector3] {
-    def this(points: js.Array[Vector3] = ???) = this()
-    var points: js.Array[Vector3] = js.native
+  class SplineCurve3(points: js.Array[Vector3] = ???) extends Curve[Vector3] {
+    //var points: js.Array[Vector3] = js.native
   }
 
   @js.native
@@ -3320,7 +3320,7 @@ class Geometry extends Object3D {
   @JSName("THREE.ArrowHelper")
   class ArrowHelper extends Object3D {
     def this(dir: Vector3, origin: Vector3 = ???, length: Double = ???, hex: Double = ???, headLength: Double = ???, headWidth: Double = ???) = this()
-    var line: Line = js.native
+    var line: Line[_] = js.native
     var cone: Mesh[_] = js.native
     def setDirection(dir: Vector3): Unit = js.native
     def setLength(length: Double, headLength: Double = ???, headWidth: Double = ???): Unit = js.native
@@ -3363,8 +3363,8 @@ class Geometry extends Object3D {
   class DirectionalLightHelper extends Object3D {
     def this(light: Light, size: Double = ???) = this()
     var light: Light = js.native
-    var lightPlane: Line = js.native
-    var targetLine: Line = js.native
+    var lightPlane: Line[_] = js.native
+    var targetLine: Line[_] = js.native
     def dispose(): Unit = js.native
     def update(): Unit = js.native
   }

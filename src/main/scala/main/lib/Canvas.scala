@@ -16,9 +16,9 @@ trait Canvas extends JSApp with WorldCoordinates{
   }
 
   var faceSide: Side = THREE.FrontSide
-  val center = new Vector3(0,0,500)
+  val _center = new Vector3(0,0,500)
   val leftBottomPosition = new Vector3(width / 2, height / 2, 1000)
-  var position = center
+  var position = _center
 
   var renderAction: Unit => Unit = {_=>renderer.render(scene, camera, forceClear = !canvasStyle)}
   var clearObjectsAction: Unit => Unit = {_=>}
@@ -31,12 +31,14 @@ trait Canvas extends JSApp with WorldCoordinates{
     private def resetPosition = camera.position.set(position.x, position.y, position.z)
 
     def Center= {
-      position = center
+      position = _center
+      worldCoordinates = CenterCoordiantes
       resetPosition
       this
     }
     def LeftBottom={
       position = leftBottomPosition
+      worldCoordinates = LeftBottomCoordiantes
       resetPosition
       this
     }
@@ -67,17 +69,18 @@ trait Canvas extends JSApp with WorldCoordinates{
     }
     def autoClear = {
       clearObjectsAction = { _ =>
-        val l = scene.children.length
-        (0 to l).reverse.foreach{ i=>
-          val c = scene.children(i)
-          c match{
-            case m:Mesh[_]=>
-              m.material.dispose()
-              m.geometry.dispose()
-            case _ =>
-          }
-          scene.remove(c)
-        }
+//        val l = scene.children.length
+//        (0 to l).reverse.foreach{ i=>
+//          val c = scene.children(i)
+//          c match{
+//            case m:Mesh[_]=>
+//              m.material.dispose()
+//              m.geometry.dispose()
+//            case _ =>
+//          }
+//          scene.remove(c)
+//        }
+        scene = new Scene()
       }
       this
     }
@@ -107,7 +110,7 @@ trait Canvas extends JSApp with WorldCoordinates{
     def withControls={
       controls = new OrbitControls(camera , renderer.domElement)
       withControlsRender = true
-      controls.center = origin
+      controls.center = _center
       this
     }
     def antialiasing = {
@@ -127,7 +130,7 @@ trait Canvas extends JSApp with WorldCoordinates{
 
   val canvasData: CanvasData
 
-  var lineMaterial: LineBasicMaterial
+  //var lineMaterial: LineBasicMaterial
   var scene:Scene
   var camera: Camera
   var renderer: WebGLRenderer
@@ -174,6 +177,7 @@ trait Canvas extends JSApp with WorldCoordinates{
 
     dom.requestAnimationFrame(renderLoop _)
     render
+    scene.add(scene)
     renderAction()
     camera.updateMatrix()
   }

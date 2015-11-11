@@ -17,6 +17,8 @@ object DefaultCanvas{
   //val renderer = new CanvasRenderer(js.Dynamic.literal(preserveDrawingBuffer=true))
 
   renderer.setSize(width, height)
+  //renderer.setPixelRatio( dom.window.devicePixelRatio )
+
   val e =renderer.domElement
 
   val body: dom.Node = dom.document.body

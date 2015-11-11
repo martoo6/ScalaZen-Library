@@ -1,4 +1,4 @@
-package main
+package main.examples
 
 import main.lib.{BasicCanvas, DrawingUtils, PerlinNoise}
 
@@ -13,6 +13,7 @@ import java.lang.Math._
 class ThreeJSApp10 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
 
   Setup._3D.Center.asScene.autoClear
+
   stroke(0xFFFFFF)
 
   def render():Unit = {

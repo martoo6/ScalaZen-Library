@@ -1,4 +1,4 @@
-package main.sub
+package main.examples.sub
 
 import java.lang.Math._
 
