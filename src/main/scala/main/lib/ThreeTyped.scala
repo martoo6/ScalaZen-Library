@@ -8,10 +8,11 @@ import scala.scalajs.js.typedarray.Float32Array
 
 //package object ThreeTyped{
 
-  //@JSName("importedjs")
-  package object importedjs extends js.GlobalScope {
-    var Detector: DetectorStatic = js.native
-  }
+//  @js.native
+//  @JSName("importedjs")
+//  object importedjs extends js.GlobalScope {
+//    var Detector: DetectorStatic = js.native
+//  }
 
   @js.native
   @JSName("THREE")

@@ -26,7 +26,7 @@ class ThreeJSApp11 extends JSApp with PerlinNoise with DrawingUtils with BasicCa
     y <- -cant/2 to cant/2
   }
     yield{
-      cube((x*step,-250,y*step),step)(materials(rand(materials.size).toInt))
+      cube((x*step,-250,y*step),step, materials(rand(materials.size).toInt))
     }
 
 

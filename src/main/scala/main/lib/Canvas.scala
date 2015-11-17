@@ -177,7 +177,7 @@ trait Canvas extends JSApp with WorldCoordinates{
 
     dom.requestAnimationFrame(renderLoop _)
     render
-    scene.add(scene)
+    //scene.add(scene)
     renderAction()
     camera.updateMatrix()
   }

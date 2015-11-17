@@ -17,7 +17,7 @@ class ThreeJSApp5 extends BasicCanvas with DrawingUtils with PerlinNoise{
   val perlin = Perlin(-15,15)
 
   val circles = (0 to 1000).map{ i=>
-    circle(random2D, 5)(Palette.iDemandPancake.getRandom.materialize())
+    circle(random2D, 5, Palette.iDemandPancake.getRandom)
   }
 
 

@@ -19,7 +19,7 @@ class ThreeJSApp17 extends JSApp with BasicCanvas with DrawingUtils with Simplex
     circle(rightTop, 10)
     circle(leftTop, 10)
     circle(rightBottom, 10)
-    rect(center, 30)
+    square(center, 30)
   }
 
 

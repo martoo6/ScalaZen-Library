@@ -1,7 +1,8 @@
 package main.examples
 
-import main.lib.{BasicCanvas, DrawingUtils, PerlinNoise}
+import main.lib._
 
+import scala.scalajs.js
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
@@ -20,8 +21,10 @@ class ThreeJSApp10 extends JSApp with BasicCanvas with DrawingUtils with PerlinN
     val div = mouseX.map(0,width,5,30).toInt
 
     val lst = (1 to div).map(_*TWO_PI/div).toList ::: (1 to div).map(_*TWO_PI/div).toList.take(div)
+    val m = new LineDashedMaterial()
+    m.color.setRGB(1,0,1)
     for(x<-lst.sliding(div+1); y<-x.drop(1)){
-        line((sin(x.head)*200, cos(x.head)*200), (sin(y)*200, cos(y)*200))
+        line((sin(x.head)*200, cos(x.head)*200), (sin(y)*200, cos(y)*200), m)
     }
   }
 

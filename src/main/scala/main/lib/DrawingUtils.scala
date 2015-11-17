@@ -20,67 +20,118 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   def vecXYAngle(angle:Double, size:Double=1) = new Vector3(size,0,0).applyAxisAngle(zAxis, angle)
 
 
+  //#######################  MATERIALS #########################
+  //TODO: Might include an optional service that searches for cached colors, textures, etc. ?
 
+
+  var defaultLineMaterial: LineBasicMaterial = new LineBasicMaterial(js.Dynamic.literal(color = 0xFFFFFF, side= faceSide))
+
+  trait LineMaterialTypeClass[T, W <: Material]{
+    def toLineMaterial(t:T): W
+  }
+
+  implicit object ColorToLineMaterial extends LineMaterialTypeClass[Color, LineBasicMaterial]{
+    override def toLineMaterial(t: Color): LineBasicMaterial = new LineBasicMaterial(js.Dynamic.literal(color = t, side= faceSide))
+  }
+
+  implicit object LineBasicMaterialToLineMaterial extends LineMaterialTypeClass[LineBasicMaterial, LineBasicMaterial]{
+    override def toLineMaterial(t: LineBasicMaterial): LineBasicMaterial = t
+  }
+
+  implicit object LineDashedMaterialToLineMaterial extends LineMaterialTypeClass[LineDashedMaterial, LineDashedMaterial]{
+    override def toLineMaterial(t: LineDashedMaterial): LineDashedMaterial = t
+  }
+
+
+  var defaultMeshMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = 0xFFFFFF, side = faceSide))
+
+  trait MeshMaterialTypeClass[T, W <: Material]{
+    def toMeshMaterial(t:T): W
+  }
+
+  implicit object ColorToMeshMaterial extends MeshMaterialTypeClass[Color, MeshBasicMaterial]{
+    override def toMeshMaterial(t: Color): MeshBasicMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = t, side= faceSide))
+  }
+
+  implicit object MeshBasicMaterialToLineMaterial extends MeshMaterialTypeClass[MeshBasicMaterial, MeshBasicMaterial]{
+    override def toMeshMaterial(t: MeshBasicMaterial): MeshBasicMaterial = t
+  }
+
+  implicit object MeshLambertMaterialToLineMaterial extends MeshMaterialTypeClass[MeshLambertMaterial, MeshLambertMaterial]{
+    override def toMeshMaterial(t: MeshLambertMaterial): MeshLambertMaterial = t
+  }
+
+  implicit object MeshPhongMaterialToLineMaterial extends MeshMaterialTypeClass[MeshPhongMaterial, MeshPhongMaterial]{
+    override def toMeshMaterial(t: MeshPhongMaterial): MeshPhongMaterial = t
+  }
 
   //########################   LINE   ############################
 
+  def line[LM, W <: Material](start: Vector3, end: Vector3, material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
+    val geometry = new Geometry()
+    geometry.vertices.push(start)
+    geometry.vertices.push(end)
+    val l = new Line(geometry, lineMaterialTypeClass.toLineMaterial(material))
+    scene.add(l)
+    l
+  }
 
-  //Not working goddamit..
-  case class LineMaterial[T <: Material](wrappedMaterial :T)
-  def basicLineMaterialToLineMaterial(lineBasicMaterial: LineBasicMaterial): LineMaterial[_] = LineMaterial(lineBasicMaterial)
-  def dashedLineMaterialToLineMaterial(dashedMaterial: LineDashedMaterial): LineMaterial[_] =  LineMaterial(dashedMaterial)
-
-  implicit var lineMaterial: LineMaterial[LineBasicMaterial] = new LineMaterial(new LineBasicMaterial(js.Dynamic.literal(color = 0xFFFFFF, side= THREE.DoubleSide)))
-
-  def line[LM <: Material](vertexes :Vector3*)(implicit material: LineMaterial[LM]):Geometry = {
+  def mline[LM, W <: Material](vertexes :Iterable[Vector3], material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
     val geometry = new Geometry()
     geometry.vertices = vertexes.toJSArray
-    //geometry.vertices.push(vertex2)
-    //new THREE.Vector3( -10, 0, 0 )
-    val l = new Line(geometry, material.wrappedMaterial)
+    val l = new Line(geometry, lineMaterialTypeClass.toLineMaterial(material))
     scene.add(l)
-    geometry
+    l
   }
 
   //########################   SPLINE ############################
 
-
-  def spline[LM <: Material](points: Vector3*)(implicit lineMaterial: LineMaterial[LM]) = {
-    val curve = new SplineCurve3(points.toJSArray)
+  def spline[LM, W <: Material](first: Vector3, second: Vector3, third: Vector3, fourth: Vector3, material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
+    val curve = new SplineCurve3(List(first, second, third, fourth).toJSArray)
     val geometry = new Geometry()
     //TODO: look at divisions, what the heck ?
     geometry.vertices = curve.getPoints(500)
     //Create the final Object3d to add to the scene
-    val splineObject = new Line(geometry, lineMaterial.wrappedMaterial)
+    val splineObject = new Line(geometry, lineMaterialTypeClass.toLineMaterial(material))
     scene.add(splineObject)
     splineObject
   }
 
+  def mspline[LM, W <: Material](vertexes :Iterable[Vector3], material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
+    val curve = new SplineCurve3(vertexes.toJSArray)
+    val geometry = new Geometry()
+    //TODO: look at divisions, what the heck ?
+    geometry.vertices = curve.getPoints(500)
+    //Create the final Object3d to add to the scene
+    val splineObject = new Line(geometry, lineMaterialTypeClass.toLineMaterial(material))
+    scene.add(splineObject)
+    splineObject
+  }
   //########################   RECT   ############################
 
   val planeGeometry =   new PlaneGeometry(1, 1)
 
-  def rect[RT <: Material](pos:Vector3, _width:Double, _height:Double)(implicit material: RT):Mesh[RT] = {
-    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _height)), material)
+  def rect[MM, W <: Material](pos:Vector3, _width:Double, _height:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _height)), meshMaterialTypeClass.toMeshMaterial(material))
     mesh.scale.set(_width, _height, 1)
     mesh
   }
 
-  def rect[RT <: Material](pos:Vector3, _width:Double)(implicit material: RT):Mesh[RT] = {
-    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _width)), material)
+  def square[MM, W <: Material](pos:Vector3, _width:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _width)), meshMaterialTypeClass.toMeshMaterial(material))
     mesh.scale.set(_width, _width, 1)
     mesh
   }
 
-  def rectXZ[RT <: Material](pos:Vector3, _width:Double, _height:Double)(implicit material: RT):Mesh[RT] = {
-    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _height)), material)
+  def rectXZ[MM, W <: Material](pos:Vector3, _width:Double, _height:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _height)), meshMaterialTypeClass.toMeshMaterial(material))
     mesh.scale.set(_width, _height, 1)
     mesh.rotateX(HALF_PI)
     mesh
   }
 
-  def rectXZ[RT <: Material](pos:Vector3, _width:Double)(implicit material: RT):Mesh[RT] = {
-    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _width)), material)
+  def squareXZ[MM, W <: Material](pos:Vector3, _width:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _width)), meshMaterialTypeClass.toMeshMaterial(material))
     mesh.scale.set(_width, _width, 1)
     mesh.rotateX(HALF_PI)
     mesh
@@ -101,23 +152,24 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   //Create several geometries depending on size of circle or create on demand
   val circleGeometries =  (1 to 8).map(x=> new CircleGeometry(1, Math.pow(2,x))).toArray
 
-  def circle[CT <: Material](pos:Vector3, radius:Double)(implicit material: CT ): Mesh[CT] = {
+  
+  def circle[MM, W <: Material](pos:Vector3, radius:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
     val s = radius.mapContrain(0,1920,4,circleGeometries.length).toInt
-    val mm = addMeshInPlace(circleGeometries(s), pos, material)
+    val mm = addMeshInPlace(circleGeometries(s), pos, meshMaterialTypeClass.toMeshMaterial(material))
     mm.scale.set(radius,radius,radius)
     mm
   }
 
-  def circle[CT <: Material](pos:Vector3, radius:Double, segments:Int)(implicit material: CT ): Mesh[CT] = {
+  def segCircle[MM, W <: Material](pos:Vector3, radius:Double, segments:Int, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
     val s = segments.toDouble.mapContrain(2,256,0,circleGeometries.length).toInt
-    val mm = addMeshInPlace(circleGeometries(s), pos, material)
+    val mm = addMeshInPlace(circleGeometries(s), pos, meshMaterialTypeClass.toMeshMaterial(material))
     mm.scale.set(radius,radius,radius)
     mm
   }
 
   //########################   Triangle   ############################
 
-  def triangle[TT <: Material](pos1:Vector3, pos2:Vector3, pos3:Vector3)(implicit material:TT): Mesh[TT] = {
+  def triangle[MM, W <: Material](pos1:Vector3, pos2:Vector3, pos3:Vector3, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
     val geometry = new Geometry()
     geometry.vertices.push(pos1)
     geometry.vertices.push(pos2)
@@ -125,7 +177,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
 
     geometry.faces.push(new Face3(0, 1, 2))
 
-    addMeshInPlace(geometry, center, material)
+    addMeshInPlace(geometry, center, meshMaterialTypeClass.toMeshMaterial(material))
   }
 
 
@@ -163,62 +215,45 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   //############# STROKE AND FILL ##################
 
   def lineWeight(weight: Double) = {
-    lineMaterial = new LineMaterial(lineMaterial.wrappedMaterial.clone().asInstanceOf[LineBasicMaterial])
-    lineMaterial.wrappedMaterial.linewidth = weight
+    //Cannot assure it's LineBasicMaterial
+    //lm = lm.clone().asInstanceOf[LineBasicMaterial]
+    defaultLineMaterial.linewidth = weight
   }
 
   def stroke(color:Color) = {
-    lineMaterial = new LineMaterial(lineMaterial.wrappedMaterial.clone().asInstanceOf[LineBasicMaterial])
-    lineMaterial.wrappedMaterial.color = color
+    defaultLineMaterial = new LineBasicMaterial(js.Dynamic.literal(color = color, side= faceSide))
   }
 
   //Should check default attributes for world (3D, 2D)
-
-
-  //NOT WORKING EITHER
-  def fill[FT](color:Color)(f: =>FT):FT = {
-    implicit val material = new MeshBasicMaterial(js.Dynamic.literal(color = color))
-    f
-  }
-
-  def fillLambert[FT](color:Color)(f: =>FT):FT = {
-    implicit val material = new MeshLambertMaterial(js.Dynamic.literal(color = color))
-    f
-  }
-
-//  def fillLambert(color:Color) = {
-//    val nMeshMaterial = new MeshLambertMaterial(js.Dynamic.literal(color = color))
-//    meshMaterial = nMeshMaterial
-//  }
 
   //#######################  CUBE #############################
 
   val boxGeometry = new BoxGeometry(1, 1, 1)
 
-  def cube[ST <: Material](pos:Vector3, width:Double)(implicit material:ST )={
-    val m = addMeshInPlace(boxGeometry, pos, material)
+  def cube[MM, W <: Material](pos:Vector3, width:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+    val m = addMeshInPlace(boxGeometry, pos, meshMaterialTypeClass.toMeshMaterial(material))
     m.scale.set(width,width,width)
     m
   }
 
-  def cube[ST <: Material](pos:Vector3, width:Double, height:Double, deep:Double)(implicit material:ST )={
-    val m = addMeshInPlace(boxGeometry, pos, material)
+  def hyperrectangle[MM, W <: Material](pos:Vector3, width:Double, height:Double, deep:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+    val m = addMeshInPlace(boxGeometry, pos, meshMaterialTypeClass.toMeshMaterial(material))
     m.scale.set(width, height, deep)
     m
   }
 
   //#######################  SPHERE #############################
 
-  def sphere[ST <: Material](pos:Vector3, radius:Double)(implicit material:ST ): Mesh[ST] ={
-    val m = addMeshInPlace(SphereGeometry, pos, material)
+  val sphereGeometry = new SphereGeometry(1, 16, 16)
+    
+  def sphere[MM, W <: Material](pos:Vector3, radius:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+    val m = addMeshInPlace(sphereGeometry, pos, meshMaterialTypeClass.toMeshMaterial(material))
     m.scale.set(radius,radius,radius)
     m
   }
 
-  val SphereGeometry = new SphereGeometry(1, 16, 16)
-
-  def sphere[ST <: Material](pos:Vector3, radius:Double, segments: Int)(implicit material:ST ): Mesh[ST] ={
-    val m = addMeshInPlace(SphereGeometry, pos, material)
+  def segSphere[MM, W <: Material](pos:Vector3, radius:Double, segments: Int, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+    val m = addMeshInPlace(sphereGeometry, pos, meshMaterialTypeClass.toMeshMaterial(material))
     m.scale.set(radius,radius,radius)
     m
   }
@@ -235,7 +270,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   def point(positions:Vector3*): Unit ={
     val geometry = new Geometry()
 
-    val c = lineMaterial.wrappedMaterial.color
+    val c = defaultLineMaterial.color
 
     positions.foreach{ pos =>
       geometry.vertices.push( pos )
