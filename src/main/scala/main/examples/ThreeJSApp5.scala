@@ -4,10 +4,9 @@ import main.lib._
 
 import scala.scalajs.js.annotation.JSExport
 
-//Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
-//########################
-//########################
-
+/**
+ * Perlin
+ */
 
 @JSExport
 class ThreeJSApp5 extends BasicCanvas with DrawingUtils with PerlinNoise{

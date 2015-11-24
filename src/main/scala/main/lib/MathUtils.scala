@@ -14,6 +14,9 @@ trait MathUtils {
   val HALF_PI = PI/2
   val QUARTER_PI = PI/4
 
+
+  //########## RANDOM #############
+
   private val randomGen = new Random()
 
   def rand(low: Double, high: Double):Double = {
@@ -25,6 +28,14 @@ trait MathUtils {
   def rand:Double = randomGen.nextDouble()
 
   def randomSeed(seed:Long) = randomGen.setSeed(seed)
+
+  def randInt(low: Int, high: Int):Double = {
+    if (low >= high)  low else randInt(high - low) + low
+  }
+
+  def randInt(ceil: Int):Double = randomGen.nextInt() * ceil
+
+  def randInt:Double = randomGen.nextInt()
 
   def lerp(v1:Double,v2:Double,amount:Double) = (v1+v2)/amount
 
@@ -57,7 +68,9 @@ trait MathUtils {
     else value
   }
 
-  val precision = 360
+  //Half degree precision
+  //TODO: make a builder for custom precision
+  val precision = 360 * 2
   lazy val fSinArr = (0 until precision).map(_*(TWO_PI/precision)).map(sin).toArray
   def fSin(num:Double) = {fSinArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
 
@@ -82,4 +95,23 @@ trait MathUtils {
   lazy val fpCosArr = (0 until precision).map(_*(TWO_PI/precision)).map(cos).map(_*0.5+0.5).toArray
   def fpCos(num:Double) = {fpCosArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
 
+
+  //So you don't have to import java.Math._
+
+  def sin(num: Double) = Math.sin(num)
+  def asin(num: Double) = Math.asin(num)
+  def sinh(num: Double) = Math.sinh(num)
+
+  def cos(num: Double)  = Math.cos(num)
+  def acos(num: Double) = Math.acos(num)
+  def cosh(num: Double) = Math.cosh(num)
+
+  def tan(num: Double)  = Math.tan(num)
+  def atan(num: Double) = Math.atan(num)
+  def atan2(num: Double, num2: Double) = Math.atan2(num, num2)
+  def tanh(num: Double) = Math.tanh(num)
+
+  def abs(num: Double) = Math.abs(num)
+  def abs(num: Int) = Math.abs(num)
+  def abs(num: Long) = Math.abs(num)
 }

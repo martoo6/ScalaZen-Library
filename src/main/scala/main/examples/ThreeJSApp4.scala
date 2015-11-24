@@ -5,9 +5,9 @@ import main.lib.{BasicCanvas, DrawingUtils, Palette, PerlinNoise}
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
-//Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
-//########################
-//########################
+/**
+ * Triangles (Not working, must fix)
+ */
 
 @JSExport
 class ThreeJSApp4 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{

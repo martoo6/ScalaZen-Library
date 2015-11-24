@@ -1,5 +1,7 @@
 package main.lib
 
+import org.scalajs.dom
+
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.Float32Array
 import js.JSConverters._
@@ -220,8 +222,8 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     defaultLineMaterial.linewidth = weight
   }
 
-  def stroke(color:Color) = {
-    defaultLineMaterial = new LineBasicMaterial(js.Dynamic.literal(color = color, side= faceSide))
+  def stroke(color:Color, lineWidth:Double = 1) = {
+    defaultLineMaterial = new LineBasicMaterial(js.Dynamic.literal(color = color, side= faceSide, linewidth = lineWidth))
   }
 
   //Should check default attributes for world (3D, 2D)
@@ -258,7 +260,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     m
   }
 
-  def addMeshInPlace[MT <: Material](geometry: Geometry, pos:Vector3, material:MT): Mesh[MT] = {
+  def addMeshInPlace[MT <: Material, G <: Geometry](geometry: G, pos:Vector3, material:MT): Mesh[MT] = {
     val mesh = new Mesh(geometry, material)
     mesh.position.add(pos)
     scene.add(mesh)
@@ -368,4 +370,8 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     scene.add(directionalLight)
     directionalLight
   }
+
+  //########################   SAVE     ########################
+
+  def saveImg = dom.window.open(renderer.domElement.toDataURL("image/png"))
 }

@@ -10,6 +10,11 @@ import scala.scalajs.js.annotation.JSExport
 //########################
 import java.lang.Math._
 
+/**
+ * Line Dashed Material (Not working)
+ * Scala Collections Functions (Sliding)
+ */
+
 @JSExport
 class ThreeJSApp10 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
 

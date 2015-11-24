@@ -4,9 +4,10 @@ import main.lib._
 
 import scala.scalajs.js.annotation.JSExport
 
-//Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
-//########################
-//########################
+/**
+ * Rect
+ * Mouse Position
+ */
 
 @JSExport
 class ThreeJSApp2 extends BasicCanvas with DrawingUtils with PerlinNoise with Converters{

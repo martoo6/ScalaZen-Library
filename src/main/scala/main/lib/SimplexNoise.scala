@@ -32,7 +32,13 @@ package main.lib
 
 
 case class Simplex(min:Double, max: Double) extends SimplexNoise with MathUtils{
-  override def noise(x: Double, y: Double = 0, z: Double = 0): Double = {
+  override def noise(x: Double): Double = {
+    map(super.noise(x),-1,1,min,max)
+  }
+  override def noise(x: Double, y: Double): Double = {
+    map(super.noise(x,y),-1,1,min,max)
+  }
+  override def noise(x: Double, y: Double, z: Double): Double = {
     map(super.noise(x,y,z),-1,1,min,max)
   }
 }

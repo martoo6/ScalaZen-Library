@@ -5,9 +5,9 @@ import main.lib._
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
-//Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
-//########################
-//########################
+/**
+ * Oscillators (In progress)
+ */
 
 @JSExport
 class ThreeJSApp18 extends JSApp with BasicCanvas with DrawingUtils with SimplexNoise{

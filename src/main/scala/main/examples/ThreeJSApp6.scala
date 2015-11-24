@@ -5,9 +5,9 @@ import main.lib.{BasicCanvas, DrawingUtils, PerlinNoise}
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
-//Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
-//########################
-//########################
+/**
+ * Antialiasing
+ */
 
 @JSExport
 class ThreeJSApp6 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
@@ -21,7 +21,7 @@ class ThreeJSApp6 extends JSApp with BasicCanvas with DrawingUtils with PerlinNo
   }
 
   def render():Unit = {
-    val mult = map(Math.sin(frameCount*0.01),-1,1,0.00001,0.01)
+    val mult = map(sin(frameCount*0.01),-1,1,0.00001,0.01)
     circles.foreach{ c=>
       val pos = c.position
       pos.add((noise(pos.x*mult, pos.y*mult, frameCount*0.01),-rand(1)))

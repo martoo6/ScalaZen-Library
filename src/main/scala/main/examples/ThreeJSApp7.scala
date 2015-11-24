@@ -5,9 +5,14 @@ import main.lib._
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.JSExport
 
-//Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
-//########################
-//########################
+/**
+ * Antialias
+ * Palette
+ * Canvas Mode
+ * No Clear
+ * RectMode
+ * Custom Perlin
+ */
 
 @JSExport
 class ThreeJSApp7 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
@@ -17,7 +22,7 @@ class ThreeJSApp7 extends JSApp with BasicCanvas with DrawingUtils with PerlinNo
   val perlin = Perlin(-15,15)
 
   val circles = (0 to 1000).map{ i=>
-    circle(random2D, 5).fill(Palette.iDemandPancake.getRandom)
+    circle(random2D, 5, Palette.iDemandPancake.getRandom)
   }
 
   def render():Unit = {
