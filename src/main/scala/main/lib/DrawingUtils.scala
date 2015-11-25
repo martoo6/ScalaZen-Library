@@ -246,16 +246,19 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
 
   //#######################  SPHERE #############################
 
-  val sphereGeometry = new SphereGeometry(1, 16, 16)
-    
+  //Create several geometries depending on size of sphere or create on demand
+  val sphereGeometries =  (1 to 8).map(x=> new SphereGeometry(1, Math.pow(2,x), Math.pow(2,x))).toArray
+
   def sphere[MM, W <: Material](pos:Vector3, radius:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
-    val m = addMeshInPlace(sphereGeometry, pos, meshMaterialTypeClass.toMeshMaterial(material))
+    val s = radius.mapContrain(0,1920,4,sphereGeometries.length).toInt
+    val m = addMeshInPlace(sphereGeometries(s), pos, meshMaterialTypeClass.toMeshMaterial(material))
     m.scale.set(radius,radius,radius)
     m
   }
 
   def segSphere[MM, W <: Material](pos:Vector3, radius:Double, segments: Int, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
-    val m = addMeshInPlace(sphereGeometry, pos, meshMaterialTypeClass.toMeshMaterial(material))
+    val s = segments.toDouble.mapContrain(2,256,0,sphereGeometries.length).toInt
+    val m = addMeshInPlace(sphereGeometries(s), pos, meshMaterialTypeClass.toMeshMaterial(material))
     m.scale.set(radius,radius,radius)
     m
   }
@@ -374,4 +377,15 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   //########################   SAVE     ########################
 
   def saveImg = dom.window.open(renderer.domElement.toDataURL("image/png"))
+
+  //########################   GROUPING     ########################
+
+  def grouped(lst: Seq[Object3D]) = {
+    val g = new Group()
+    //Must be added one by one in order to work, should check JS to understand behaviour
+    lst.foreach(g.add)
+    //g.children = lst.toJSArray
+    scene.add(g)
+    g
+  }
 }

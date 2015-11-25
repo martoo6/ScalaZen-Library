@@ -10,6 +10,7 @@ object MathUtils extends MathUtils
 trait MathUtils {
   import Math._
 
+  val PI = Math.PI/2
   val TWO_PI = PI*2
   val HALF_PI = PI/2
   val QUARTER_PI = PI/4
@@ -33,9 +34,7 @@ trait MathUtils {
     if (low >= high)  low else randInt(high - low) + low
   }
 
-  def randInt(ceil: Int):Double = randomGen.nextInt() * ceil
-
-  def randInt:Double = randomGen.nextInt()
+  def randInt(ceil: Int):Int = randomGen.nextInt(ceil)
 
   def lerp(v1:Double,v2:Double,amount:Double) = (v1+v2)/amount
 
