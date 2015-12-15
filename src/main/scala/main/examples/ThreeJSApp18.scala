@@ -10,7 +10,7 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp18 extends JSApp with BasicCanvas with DrawingUtils with SimplexNoise{
+class ThreeJSApp18 extends BasicCanvas with DrawingUtils with SimplexNoise{
   Setup._2D.asCanvas.withStats.autoClear
 
 //  val osc = pRampOsc().frequency(0.01)

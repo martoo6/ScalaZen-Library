@@ -11,7 +11,7 @@ import java.lang.Math._
 //########################
 
 @JSExport
-class ThreeJSApp8 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
+class ThreeJSApp8 extends BasicCanvas with DrawingUtils with PerlinNoise{
 
   Setup._3D.LeftBottom.asScene.noClear.withStats
   RectMode.leftBottom

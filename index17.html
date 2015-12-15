@@ -1,44 +1,21 @@
-
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>The Scala.js Tutorial</title>
-    <script src="./js/jquery-2.1.0.js"></script>
-    <script src="./js/three.js"></script>
-    <!-- Search for refernce on CDN or download it (even bettern) -->
-    <script src="./js/OrbitControls.js"></script>
-    <!-- Search for refernce on CDN or download it (even bettern) -->
-    <script src="./js/stats.min.js"></script>
-
-    <script src="./js/shaders/FXAAShader.js"></script>
-    <script src="./js/postprocessing/EffectComposer.js"></script>
-    <script src="./js/postprocessing/ShaderPass.js"></script>
-    <script src="./js/postprocessing/RenderPass.js"></script>
-    <script src="./js/postprocessing/MaskPass.js"></script>
-    <script src="./js/shaders/CopyShader.js"></script>
-    <script src="./js/shaders/FilmShader.js"></script>
-    <script src="./js/shaders/MirrorShader.js"></script>
-
-    <!-- Include JavaScript dependencies -->
-    <script type="text/javascript" src="./target/scala-2.11/threejscalajs-jsdeps.js"></script>
-    <!-- Include Scala.js compiled code -->
-    <!--<script type="text/javascript" src="./target/scala-2.11/scala-js-tutorial-opt.js"></script>-->
-    <script type="text/javascript" src="./target/scala-2.11/threejscalajs-fastopt.js"></script>
+    <title>FakeVyral</title>
     <style>
         body { margin: 0; overflow:hidden;}
         canvas { width: 100%; height: 100% }
     </style>
 </head>
 <body>
-
-
-
-
+<!-- Include JavaScript dependencies -->
+<script type="text/javascript" src="./target/scala-2.11/threejscalajs-jsdeps.js"></script>
+<!-- Include Scala.js compiled code -->
+<script type="text/javascript" src="./target/scala-2.11/threejscalajs-opt.js"></script>
 <!-- Run main object -->
-<!--<script type="text/javascript" src="./target/scala-2.11/scala-js-tutorial-launcher.js"></script>-->
+<script type="text/javascript" src="./target/scala-2.11/threejscalajs-launcher.js"></script>
 <script type="text/javascript">
-        var app =new main.examples.ThreeJSApp17();
-                app.main();
-    </script>
+    main.App().run(new main.examples.ThreeJSApp17());
+</script>
 </body>
 </html>

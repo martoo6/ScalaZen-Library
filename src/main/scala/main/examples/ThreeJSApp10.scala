@@ -16,7 +16,7 @@ import java.lang.Math._
  */
 
 @JSExport
-class ThreeJSApp10 extends JSApp with BasicCanvas with DrawingUtils with PerlinNoise{
+class ThreeJSApp10 extends BasicCanvas with DrawingUtils with PerlinNoise{
 
   Setup._3D.Center.asScene.autoClear
 

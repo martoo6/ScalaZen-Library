@@ -99,11 +99,12 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     splineObject
   }
 
-  def mspline[LM, W <: Material](vertexes :Iterable[Vector3], material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
+  def
+  mspline[LM, W <: Material](vertexes :Iterable[Vector3], divisions:Int = 0, material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
     val curve = new SplineCurve3(vertexes.toJSArray)
     val geometry = new Geometry()
     //TODO: look at divisions, what the heck ?
-    geometry.vertices = curve.getPoints(500)
+    geometry.vertices = curve.getPoints(if(divisions<=0) vertexes.size else divisions)
     //Create the final Object3d to add to the scene
     val splineObject = new Line(geometry, lineMaterialTypeClass.toLineMaterial(material))
     scene.add(splineObject)

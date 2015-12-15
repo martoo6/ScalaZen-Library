@@ -10,7 +10,7 @@ import scala.scalajs.js.annotation.JSExport
 //########################
 
 @JSExport
-class ThreeJSApp17 extends JSApp with BasicCanvas with DrawingUtils with SimplexNoise{
+class ThreeJSApp17 extends BasicCanvas with DrawingUtils with SimplexNoise{
   Setup._2D.asCanvas.withStats.autoClear
   val pos = random2D
 

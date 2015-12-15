@@ -10,7 +10,7 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp12 extends JSApp with PerlinNoise with DrawingUtils with BasicCanvas {
+class ThreeJSApp12 extends BasicCanvas with PerlinNoise with DrawingUtils {
 
   Setup._2D.LeftBottom.asScene.withStats
 

@@ -11,7 +11,7 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp16 extends JSApp with BasicCanvas with DrawingUtils with SimplexNoise{
+class ThreeJSApp16 extends BasicCanvas with DrawingUtils with SimplexNoise{
   Setup._2D.LeftBottom.asCanvas.noClear.withStats.antialiasing
   RectMode.leftBottom
 

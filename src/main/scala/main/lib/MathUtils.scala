@@ -44,6 +44,20 @@ trait MathUtils {
     ((value-in_min)/(in_max-in_min))*(out_max-out_min) + out_min
   }
 
+
+  //Change to typeclasses
+  implicit class RichInt(value:Int) extends MathUtils{
+    def map(in_min:Double,in_max:Double,out_min:Double,out_max:Double):Double = {
+      map(value,in_min,in_max,out_min,out_max)
+    }
+    def constrain(min:Double,max:Double):Double = {
+      constrain(value,min,max)
+    }
+    def mapContrain(in_min:Double,in_max:Double,out_min:Double,out_max:Double):Double = {
+      mapContrain(value,in_min,in_max,out_min,out_max)
+    }
+  }
+
   implicit class RichDouble(value:Double) extends MathUtils{
     def map(in_min:Double,in_max:Double,out_min:Double,out_max:Double):Double = {
        map(value,in_min,in_max,out_min,out_max)
@@ -64,6 +78,13 @@ trait MathUtils {
     //Faster than match ???
     if(value<min) min
     else if(value>max) max
+    else value
+  }
+
+  def constrainLoop(value:Double, min:Double, max:Double) = {
+    //Faster than match ???
+    if(value<min) max - (value % min)
+    else if(value>max) value % max
     else value
   }
 
@@ -113,4 +134,10 @@ trait MathUtils {
   def abs(num: Double) = Math.abs(num)
   def abs(num: Int) = Math.abs(num)
   def abs(num: Long) = Math.abs(num)
+
+  //Another known functions
+
+  def sinc(num: Double) = if(num==0) 1.0 else Math.sin(num)/num
+  def cycloid(num:Double) = abs(sin(num))
+  def weierstrass(num: Double, identity:Double = 7, octaves:Int = 10) = (1 to octaves).map(x=>pow((1+1.5*PI)/identity,x)*cos(pow(identity,x)*num)).sum
 }
