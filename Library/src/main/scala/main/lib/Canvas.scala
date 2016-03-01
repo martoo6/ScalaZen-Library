@@ -2,8 +2,8 @@ package main.lib
 
 import main.recorder.CCapture
 import org.scalajs.dom
-import org.scalajs.dom.MouseEvent
-import org.scalajs.dom.raw.{Location, KeyboardEvent}
+import org.scalajs.dom.{html, MouseEvent}
+import org.scalajs.dom.raw.{Node, Location, KeyboardEvent}
 
 import scala.scalajs.js
 import scala.scalajs.js.JSApp
@@ -151,7 +151,7 @@ trait Canvas extends WorldCoordinates{
   var mouseX = 0.0
   var mouseY = 0.0
 
-  dom.onmousemove = {
+  dom.window.onmousemove = {
     event:MouseEvent =>
       mouseX = event.clientX
       mouseY = dom.window.innerHeight - event.clientY
@@ -166,7 +166,7 @@ trait Canvas extends WorldCoordinates{
   val capturer = new CCapture(js.Dynamic.literal(format = "webm", verbose= true))
   var aaa = false
 
-  dom.onkeypress = { e: KeyboardEvent =>
+  dom.window.onkeypress = { e: KeyboardEvent =>
     aaa = !aaa
     if(aaa)
       capturer.start
@@ -193,7 +193,7 @@ trait Canvas extends WorldCoordinates{
 
     clearObjectsAction()
 
-    dom.requestAnimationFrame(renderLoop _)
+    dom.window.requestAnimationFrame(renderLoop _)
 
     render
     //scene.add(scene)

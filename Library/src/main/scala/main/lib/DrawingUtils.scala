@@ -180,7 +180,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
 
     geometry.faces.push(new Face3(0, 1, 2))
 
-    addMeshInPlace(geometry, center, meshMaterialTypeClass.toMeshMaterial(material))
+    addMeshInPlace(geometry, new Vector3(0.0,0.0,0.0), meshMaterialTypeClass.toMeshMaterial(material))
   }
 
 

@@ -11,7 +11,7 @@ lazy val Library =  project.
                     enablePlugins(ScalaJSPlugin).
                     settings(commonSettings: _*).
                     settings(
-                      libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.8.2",
+                      libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.0",
                       libraryDependencies += "org.webjars.bower" % "three.js" % "0.73.0",
                       jsDependencies += "org.webjars.bower" % "three.js" % "0.73.0" / "three.js" minified "three.min.js",
                       jsDependencies += ProvidedJS / "js/OrbitControls.js" dependsOn "three.js",
@@ -35,7 +35,7 @@ lazy val Library =  project.
 
                       assemblyMergeStrategy in assembly := {
                         case "JS_DEPENDENCIES"     => MergeStrategy.first
-                        //case "scalajs-dom_sjs0.6_2.11-0.8.2.jar"  => MergeStrategy.first
+                        //case "scalajs-dom_sjs0.6_2.11-0.9.0.jar"  => MergeStrategy.first
                         case x =>
                           val oldStrategy = (assemblyMergeStrategy in assembly).value
                           oldStrategy(x)

@@ -20,6 +20,10 @@ trait WorldCoordinates {
   def rightTop    = worldCoordinates.rightTop
   def leftBottom  = worldCoordinates.leftBottom
   def rightBottom = worldCoordinates.rightBottom
+  def topLeft     = worldCoordinates.leftTop
+  def topRight    = worldCoordinates.rightTop
+  def bottomLeft  = worldCoordinates.leftBottom
+  def bottomRight = worldCoordinates.rightBottom
 
   trait Coordinates{
     val center:      Vector3
@@ -32,10 +36,10 @@ trait WorldCoordinates {
   //Should re calculate acording to origin
   object CenterCoordiantes extends Coordinates{
     val center      = new Vector3(0.0,0.0,0.0)
-    val leftTop     = new Vector3(0.0,height,0.0)
-    val rightTop    = new Vector3(width,height,0.0)
-    val leftBottom  = new Vector3(0.0,0.0,0.0)
-    val rightBottom = new Vector3(width,0.0,0.0)
+    val leftTop     = new Vector3(-width/2,height/2,0.0)
+    val rightTop    = new Vector3(width/2,height/2,0.0)
+    val leftBottom  = new Vector3(-width/2,-height/2,0.0)
+    val rightBottom = new Vector3(width/2,-height/2,0.0)
   }
 
   object LeftBottomCoordiantes extends Coordinates{

@@ -8,7 +8,7 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 class ThreeJSApp17 extends BasicCanvas with DrawingUtils with SimplexNoise{
-  Setup._2D.asCanvas.withStats.autoClear
+  Setup._2D.asCanvas.withStats.autoClear.LeftBottom
   val pos = random2D
 
   def render():Unit = {

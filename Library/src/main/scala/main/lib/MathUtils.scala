@@ -10,7 +10,7 @@ object MathUtils extends MathUtils
 trait MathUtils {
   import Math._
 
-  val PI = Math.PI/2
+  val PI = Math.PI
   val TWO_PI = PI*2
   val HALF_PI = PI/2
   val QUARTER_PI = PI/4

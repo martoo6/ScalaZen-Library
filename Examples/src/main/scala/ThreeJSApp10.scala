@@ -19,7 +19,7 @@ class ThreeJSApp10 extends BasicCanvas with DrawingUtils with PerlinNoise{
   stroke(0xFFFFFF)
 
   def render():Unit = {
-    val div = mouseX.map(0,width,5,30).toInt
+    val div = mouseX.map(0,width,5,20).toInt
 
     val lst = (1 to div).map(_*TWO_PI/div).toList ::: (1 to div).map(_*TWO_PI/div).toList.take(div)
     val m = new LineDashedMaterial()
