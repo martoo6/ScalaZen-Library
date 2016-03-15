@@ -20,14 +20,14 @@ class ThreeJSApp12 extends BasicCanvas with PerlinNoise with DrawingUtils {
   val geo = point2(data:_*).geometry
 
   def render():Unit = {
-//    if(a) point2(data:_*) else point3(data:_*)
+    //if(a) point2(data:_*) else point3(data:_*)
 
 
-    //data.foreach{case (pos,_) => pos.setX(pos.x+1%width)}
-//    for(i <- 0 until geo.colors.size by random(40).toInt){
-//      geo.colors(i).r = (i-frameCount)*0.03%1
-//    }
-//    geo.colorsNeedUpdate=true
+    data.foreach{case (pos,_) => pos.setX(pos.x+1%width)}
+    for(i <- 0 until geo.colors.size by rand(40).toInt){
+      geo.colors(i).r = (i-frameCount)*0.03%1
+    }
+    geo.colorsNeedUpdate=true
   }
 
 

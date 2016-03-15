@@ -55,6 +55,31 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     override def toMeshMaterial(t: Color): MeshBasicMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = t, side= faceSide))
   }
 
+  implicit object Tuple4ToMeshMaterial extends MeshMaterialTypeClass[(Double,Double,Double,Double), MeshBasicMaterial]{
+    override def toMeshMaterial(t: (Double,Double,Double,Double)): MeshBasicMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = new Color(t._1, t._2, t._3), side= faceSide, transparent=true, opacity = t._4))
+  }
+
+  implicit object RgbToMeshMaterial extends MeshMaterialTypeClass[RGB, MeshBasicMaterial]{
+    override def toMeshMaterial(t: RGB): MeshBasicMaterial =  t match {
+      case RGB(r, g, b, 1) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color(r, g, b), side= faceSide))
+      case RGB(r, g, b, o) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color(r, g, b), side= faceSide, transparent=true, opacity = o))
+    }
+  }
+
+  implicit object HsbToMeshMaterial extends MeshMaterialTypeClass[HSB, MeshBasicMaterial]{
+    override def toMeshMaterial(t: HSB): MeshBasicMaterial =  t match {
+      case HSB(h, s, b, 1) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color().setHSL(h, s, b), side= faceSide))
+      case HSB(h, s, b, o) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color().setHSL(h, s, b), side= faceSide, transparent=true, opacity = o))
+    }
+  }
+
+  implicit object GryToMeshMaterial extends MeshMaterialTypeClass[GRY, MeshBasicMaterial]{
+    override def toMeshMaterial(t: GRY): MeshBasicMaterial =  t match {
+      case GRY(v, 1) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color(v, v, v), side= faceSide))
+      case GRY(v, o) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color(v, v, v), side= faceSide, transparent=true, opacity = o))
+    }
+  }
+
   implicit object MeshBasicMaterialToLineMaterial extends MeshMaterialTypeClass[MeshBasicMaterial, MeshBasicMaterial]{
     override def toMeshMaterial(t: MeshBasicMaterial): MeshBasicMaterial = t
   }
@@ -207,6 +232,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     def materialize(side:Side = faceSide)  = new MeshBasicMaterial(js.Dynamic.literal(color = color, side= side))
     def materializeL(side:Side = faceSide) = new MeshLambertMaterial(js.Dynamic.literal(color = color, side= side))
     def materializeP(side:Side = faceSide) = new MeshPhongMaterial(js.Dynamic.literal(color = color, side= side))
+    def opacity(amount :Double):RGB = RGB(color.r, color.g, color.b, amount)
   }
 
 
@@ -284,14 +310,18 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     }
 
     //Check for options
-    val material = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= 1, sizeAttenuation= false, transparent= false))
+    val material =
+      if(defaultLineMaterial.opacity >= 1)
+        new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false, transparent= false))
+      else
+        new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false))
 
     val mesh = new Points( geometry, material )
     scene.add( mesh )
   }
 
   //Check for options
-  val pMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= 1, sizeAttenuation= false, transparent= false))
+  val pMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false, transparent= false))
 
   def point2(data: (Vector3,Color)*) ={
     val geometry = new Geometry()
@@ -301,7 +331,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
       geometry.colors.push(col)
     }
 
-    val mesh = new Points( geometry, pMaterial )
+    val mesh = new Points( geometry, pMaterial)
     scene.add( mesh )
     mesh
   }
@@ -352,6 +382,53 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     val mesh = new Points( geo, pMaterial )
     scene.add( mesh )
     mesh
+  }
+
+  case class MetaPoints[T <: Object3D, G <: Material](points: Points[T,G], data: (Vector3,RGB)*)
+
+  val shader =
+    """
+      |varying vec3 vColor;
+      |varying float vAlpha;
+      |
+      |void main() {
+      | gl_FragColor = vec4( vColor, vAlpha );
+      |}
+    """.stripMargin
+
+  val vertexShader =
+    """
+      |attribute float alpha;
+      |attribute vec3 color;
+      |varying float vAlpha;
+      |varying vec3 vColor;
+      |
+      |
+      |void main() {
+      |    vAlpha = alpha;
+      |    vColor = color;
+      |    vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+      |    gl_PointSize = 1.0;
+      |    gl_Position = projectionMatrix * mvPosition;
+      |}
+    """.stripMargin
+
+  val sm = new ShaderMaterial(js.Dynamic.literal(fragmentShader=shader, vertexShader=vertexShader, transparent=true))
+
+  def point5(data: (Vector3,RGB)*) = {
+    //TODO: Need to dispose geometries !!!!
+    val geometry = new BufferGeometry()
+
+
+    geometry.addAttribute("alpha", new BufferAttribute( new Float32Array(data.map(_._2.o).toJSArray), 1 ) )
+    geometry.addAttribute("color", new BufferAttribute( new Float32Array(data.flatMap(x=> x._2.r :: x._2.g :: x._2.b :: Nil).toJSArray), 3 ) )
+    geometry.addAttribute("position", new BufferAttribute(new Float32Array(data.flatMap{ case (v,_) => v.x :: v.y :: v.z :: Nil}.toJSArray) , 3 ))
+
+    val mesh = new Points( geometry, sm)
+
+    scene.add( mesh )
+    //mesh
+    MetaPoints(mesh, data:_*)
   }
   //#######################  LIGHTS #############################
 

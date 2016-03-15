@@ -68,6 +68,8 @@ trait Converters {
 
   implicit def IntToColor(value:Int): Color = new Color(value)
 
+  implicit def ColorToRGB(color: Color): RGB = new RGB(color.r, color.g, color.b)
+
   //############# Materials ###################
 
   //NOT WORKING !

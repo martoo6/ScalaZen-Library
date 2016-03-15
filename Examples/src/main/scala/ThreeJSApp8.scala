@@ -17,7 +17,7 @@ class ThreeJSApp8 extends BasicCanvas with DrawingUtils with PerlinNoise{
   val perlin = Perlin(PI)
 
   val circles = (0 to 1000).map{ i=>
-    val c =  segCircle((randomWidth, randomHeight, rand(500)), 5, 100, Palette.iDemandPancake.getRandom)
+    val c =  segCircle((randomWidth, randomHeight, rand(500)), 5, 100, Palette.iDemandPancake.getRandom.opacity(0.3))
     c.rotateX(rand(PI))
     c.rotateY(rand(PI))
     c.rotateZ(rand(PI))

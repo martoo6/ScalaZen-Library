@@ -1439,7 +1439,8 @@ class Geometry extends Object3D {
   @js.native
   @JSName("THREE.ShaderMaterial")
   class ShaderMaterial extends Material {
-    def this(parameters: ShaderMaterialParameters = ???) = this()
+    //def this(parameters: ShaderMaterialParameters = ???) = this()
+    def this(parameters: js.Dynamic = ???) = this()
     var defines: js.Any = js.native
     var uniforms: js.Any = js.native
     var attributes: js.Any = js.native
@@ -3744,7 +3745,7 @@ class Geometry extends Object3D {
 
 @js.native
 @JSName("THREE.PointsMaterial")
-class PointsMaterial extends js.Object{
+class PointsMaterial extends Material{
   def this(parameters: js.Dynamic = ???) = this()
   var color: Color = js.native
   var map: Texture = js.native
@@ -3756,5 +3757,4 @@ class PointsMaterial extends js.Object{
 
 @js.native
 @JSName("THREE.Points")
-class Points[T <: Object3D](var geometry: T, var material:PointsMaterial) extends Object3D{
-}
+class Points[T <: Object3D, G <: Material](var geometry: T,var material:G) extends Object3D

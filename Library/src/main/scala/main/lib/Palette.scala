@@ -40,6 +40,11 @@ trait PaletteT extends Converters{
   val mellonBallSurprise  = Palette(0xD1F2A5 :: 0xEFFAB4 :: 0xFFC48C :: 0xFF9F80 :: 0xF56991 :: Nil :_*)
   val oceanFive           = Palette(0x00A0B0 :: 0x6A4A3C :: 0xCC333F :: 0xEB6841 :: 0xEDC951 :: Nil :_*)
   val iDemandPancake      = Palette(0x594F4F :: 0x547980 :: 0x45ADA8 :: 0x9DE0AD :: 0xE5FCC2 :: Nil :_*)
-
 }
 
+
+// May go away, conventions should be RGB equals (Double, Double, Double, Double)
+// GRY equals (Double, Double)
+case class RGB(var r :Double, var g :Double, var b :Double, var o:Double = 1)
+case class HSB(var h :Double, var s :Double, var b :Double, var o:Double = 1)
+case class GRY(var v :Double, var o:Double = 1) //Grayscale
