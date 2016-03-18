@@ -419,7 +419,6 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     //TODO: Need to dispose geometries !!!!
     val geometry = new BufferGeometry()
 
-
     geometry.addAttribute("alpha", new BufferAttribute( new Float32Array(data.map(_._2.o).toJSArray), 1 ) )
     geometry.addAttribute("color", new BufferAttribute( new Float32Array(data.flatMap(x=> x._2.r :: x._2.g :: x._2.b :: Nil).toJSArray), 3 ) )
     geometry.addAttribute("position", new BufferAttribute(new Float32Array(data.flatMap{ case (v,_) => v.x :: v.y :: v.z :: Nil}.toJSArray) , 3 ))
@@ -428,7 +427,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
 
     scene.add( mesh )
     //mesh
-    MetaPoints(mesh, data:_*)
+    //MetaPoints(mesh, data:_*)
   }
   //#######################  LIGHTS #############################
 

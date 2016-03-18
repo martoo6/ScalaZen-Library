@@ -12,8 +12,8 @@ lazy val Library =  project.
                     settings(commonSettings: _*).
                     settings(
                       libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.0",
-                      libraryDependencies += "org.webjars.bower" % "three.js" % "0.73.0",
-                      jsDependencies += "org.webjars.bower" % "three.js" % "0.73.0" / "three.js" minified "three.min.js",
+                      libraryDependencies += "org.webjars.bower" % "three.js" % "0.74.0",
+                      jsDependencies += "org.webjars.bower" % "three.js" % "0.74.0" / "three.js" minified "three.min.js",
                       jsDependencies += ProvidedJS / "js/OrbitControls.js" dependsOn "three.js",
                       jsDependencies += ProvidedJS / "js/stats.min.js",
                       jsDependencies += ProvidedJS / "js/shaders/FXAAShader.js",

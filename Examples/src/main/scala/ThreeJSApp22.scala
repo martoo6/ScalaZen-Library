@@ -9,14 +9,17 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 class ThreeJSApp22 extends BasicCanvas with DrawingUtils with SimplexNoise{
-  Setup._2D.LeftBottom.asCanvas.noClear.withStats.antialiasing
-  RectMode.leftBottom
+
+  override def setup: Unit ={
+    Setup._2D.LeftBottom.asCanvas.antialiasing.withStats
+    RectMode.leftBottom
+  }
 
   val perlin = Simplex(-15,15)
 
 
-  val dots = (0 to 1000).map{ i=>
-    (random2D ,Palette.iDemandPancake.getRandom.opacity(0.003))
+  val dots = (0 to 10000).map{ i=>
+    (random2D ,Palette.iDemandPancake.getRandom.opacity(0.6))
   }
 
   def render():Unit = {
