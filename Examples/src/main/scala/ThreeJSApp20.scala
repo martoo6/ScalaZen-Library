@@ -28,10 +28,10 @@ class ThreeJSApp20 extends BasicCanvas with DrawingUtils with SimplexNoise {
   var b = true
 
   def render(): Unit = {
-    if (frameCount == 1) {
-      capturer.start
-      b = false
-    }
+//    if (frameCount == 1) {
+//      capturer.start
+//      b = false
+//    }
     val time = map(frameCount, 0, 60 * 5, 0, TWO_PI)
     val t1 = time.toInt % coords.size
     val t2 = (time + 1).toInt % coords.size

@@ -1,6 +1,5 @@
 import main.lib._
-import org.scalajs.dom
-import org.scalajs.dom.raw.KeyboardEvent
+import main.recorder.{ManualSnapshotter, WebMRecorder}
 
 import scala.scalajs.js.annotation.JSExport
 
@@ -13,17 +12,20 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp extends BasicCanvas with DrawingUtils with PerlinNoise{
+class ThreeJSApp extends BasicCanvas with DrawingUtils with PerlinNoise with ManualSnapshotter with WebMRecorder{
   Setup._3D.Center.asScene.noClear.withStats.withControls
 
   addAmbientLight(0xFFFFFF)
   addDirectionalLight(0xFFFFFF, 0.9, (0,1,0))
 
+  override val frames = Some(120)
+
   val n1 = Simplex(-250,250)
   val n2 = Simplex(-250,250)
   val n3 = Simplex(-250,250)
 
-  dom.window.onkeypress = {e:KeyboardEvent => saveImg}
+  snapshotKeys+="s"
+  recorderKeys+="r"
 
   def render():Unit = {
     if(frameCount < 60*10) {

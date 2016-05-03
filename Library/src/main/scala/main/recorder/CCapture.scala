@@ -18,4 +18,5 @@ class CCapture(settings: js.Dynamic = ???) extends js.Object {
   def stop(): Unit = js.native
   def capture(canvas: HTMLCanvasElement): Unit = js.native
   def save(f: js.Function1[Location,_]):Unit = js.native
+  def save():Unit = js.native
 }

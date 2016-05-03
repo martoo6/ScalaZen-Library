@@ -163,18 +163,18 @@ trait Canvas extends WorldCoordinates{
   var times = 0
 
 
-  val capturer = new CCapture(js.Dynamic.literal(format = "webm", verbose= true))
-  var aaa = false
-
-  dom.window.onkeypress = { e: KeyboardEvent =>
-    aaa = !aaa
-    if(aaa)
-      capturer.start
-    else {
-      capturer.stop
-      capturer.save({blob:Location => dom.window.location = blob})
-    }
-  }
+//  val capturer = new CCapture(js.Dynamic.literal(format = "webm", verbose= true))
+//  var aaa = false
+//
+//  dom.window.onkeypress = { e: KeyboardEvent =>
+//    aaa = !aaa
+//    if(aaa)
+//      capturer.start
+//    else {
+//      capturer.stop
+//      capturer.save({blob:Location => dom.window.location = blob})
+//    }
+//  }
 
   def renderLoop(timestamp: Double){
 
@@ -197,7 +197,7 @@ trait Canvas extends WorldCoordinates{
 
     render
     //scene.add(scene)
-    if(aaa) capturer.capture(renderer.domElement)
+    //if(aaa) capturer.capture(renderer.domElement)
     renderAction()
 
 
