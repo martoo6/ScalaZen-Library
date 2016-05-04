@@ -5,7 +5,6 @@ import org.scalajs.dom
 import org.scalajs.dom.raw._
 
 import scala.scalajs.js
-import scala.scalajs.js.JSON
 
 /**
   * Created by martin on 03/05/16.
@@ -23,50 +22,47 @@ import scala.scalajs.js.JSON
 ////  frameLimit: 0,
 ////  autoSaveTime: 0,
 ////  onProgress: function( p ) { progress.style.width = ( p * 100 ) + '%' }
-//
-//
-//  //val capturer = new CCapture(js.Dynamic.literal(format = "webm", verbose= true))
-//  val capturer = new CCapture(js.Dynamic.literal(format = "webm"))
-//  var aaa = false
-//
-//  dom.window.onkeypress = { e: KeyboardEvent =>
-//    aaa = !aaa
-//    if(aaa)
-//      capturer.start
-//    else {
-//      capturer.stop
-//      capturer.save({blob:Location => dom.window.location = blob})
-//    }
-//  }
-//}
 
-//Simple snapshoter from keypress
-trait WebMRecorder extends BasicCanvas{
-  val recorderKeys = collection.mutable.HashSet[String]()
+case class RecorderConfig(
+                           recorderKeys: Seq[String],
+                           verbose: Boolean= false,
+                           display: Boolean= true,
+                           framerate: Int= 30,
+                           motionBlurFrames: Int= 0,
+                           quality: Int= 50,
+                           workersPath: String= "js/",
+                           timeLimit:Int = -1,
+                           frameLimit:Int = -1,
+                           autoSaveTime:Int = -1,
+                           onProgress: Int=>Any = { _ => Unit }
+                         )
 
-  val recorder = new CCapture(js.Dynamic.literal(format = "webm", verbose= true, display=true))
-  var start = 0
-  val frames:Option[Int] = None
+trait Recorder extends BasicCanvas{
+  //TODO: Support multiple configs and Recorders on the same sketch
+  val recorderConfig: RecorderConfig
+  def recorderBuilder:CCapture
+  private lazy val recorder = recorderBuilder
+  protected var start = 0
 
   dom.window.onkeypress = { e: KeyboardEvent =>
-    if(recorderKeys.contains(js.Dynamic.global.String.applyDynamic("fromCharCode")(e.charCode.asInstanceOf[js.Any]).asInstanceOf[String])){
+    if(recorderConfig.recorderKeys.contains(js.Dynamic.global.String.applyDynamic("fromCharCode")(e.charCode.asInstanceOf[js.Any]).asInstanceOf[String])){
       if(start==0) {
         start = 1
         recorder.start()
       }else{
-         start = -1
+        start = -1
       }
-
     }
   }
 
   override def renderLoop(timestamp: Double) ={
     super.renderLoop(timestamp)
+    //TODO: Get rid of IFs please
     if(start>0) {
       recorder.capture(renderer.domElement)
       start+=1
     }
-    if(frames.map(_==start).getOrElse(start == -1)){
+    if(start == recorderConfig.frameLimit || start == -1){
       recorder.stop()
       recorder.save({ blob:Location => dom.window.location = blob})
       start = 0
@@ -74,8 +70,75 @@ trait WebMRecorder extends BasicCanvas{
   }
 }
 
+
+trait WebMRecorder extends Recorder{
+  def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "webm",
+    verbose = recorderConfig.verbose,
+    display = recorderConfig.display,
+    framerate = recorderConfig.framerate,
+    motionBlurFrames = recorderConfig.motionBlurFrames,
+    quality = recorderConfig.quality,
+    workersPath = recorderConfig.workersPath,
+    timeLimit = recorderConfig.timeLimit,
+    frameLimit = recorderConfig.frameLimit,
+    autoSaveTime = recorderConfig.autoSaveTime,
+    onProgress = recorderConfig.onProgress
+  ))
+}
+
+//TODO: Not working with current CCapture version, check it out !
+
+//trait GifRecorder extends Recorder{
+//  //TODO: The gif does not download automatically, check that out
+//  println("[WARNING]: remember that GIF recorder takes some time to generate the GIF file.")
+//  def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "gif",
+//    verbose = recorderConfig.verbose,
+//    display = recorderConfig.display,
+//    framerate = recorderConfig.framerate,
+//    motionBlurFrames = recorderConfig.motionBlurFrames,
+//    quality = recorderConfig.quality,
+//    workersPath = recorderConfig.workersPath,
+//    timeLimit = recorderConfig.timeLimit,
+//    frameLimit = recorderConfig.frameLimit,
+//    autoSaveTime = recorderConfig.autoSaveTime,
+//    onProgress = recorderConfig.onProgress
+//  ))
+//}
+//
+//trait PNGRecorder extends Recorder{
+//  //TODO: The gif does not download automatically, check that out
+//  def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "png",
+//    verbose = recorderConfig.verbose,
+//    display = recorderConfig.display,
+//    framerate = recorderConfig.framerate,
+//    motionBlurFrames = recorderConfig.motionBlurFrames,
+//    quality = recorderConfig.quality,
+//    workersPath = recorderConfig.workersPath,
+//    timeLimit = recorderConfig.timeLimit,
+//    frameLimit = recorderConfig.frameLimit,
+//    autoSaveTime = recorderConfig.autoSaveTime,
+//    onProgress = recorderConfig.onProgress
+//  ))
+//}
+//
+//trait JPEGRecorder extends Recorder{
+//  //TODO: The gif does not download automatically, check that out
+//  def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "jpeg",
+//    verbose = recorderConfig.verbose,
+//    display = recorderConfig.display,
+//    framerate = recorderConfig.framerate,
+//    motionBlurFrames = recorderConfig.motionBlurFrames,
+//    quality = recorderConfig.quality,
+//    workersPath = recorderConfig.workersPath,
+//    timeLimit = recorderConfig.timeLimit,
+//    frameLimit = recorderConfig.frameLimit,
+//    autoSaveTime = recorderConfig.autoSaveTime,
+//    onProgress = recorderConfig.onProgress
+//  ))
+//}
+
 trait ManualSnapshotter extends BasicCanvas{
-  val snapshotKeys = collection.mutable.HashSet[String]()
+  val snapshotKeys: Seq[String]
 
   dom.window.onkeypress = { e: KeyboardEvent =>
     if(snapshotKeys.contains(js.Dynamic.global.String.applyDynamic("fromCharCode")(e.charCode.asInstanceOf[js.Any]).asInstanceOf[String])){

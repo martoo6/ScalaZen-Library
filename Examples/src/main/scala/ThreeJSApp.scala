@@ -1,6 +1,7 @@
 import main.lib._
-import main.recorder.{ManualSnapshotter, WebMRecorder}
+import main.recorder._
 
+import scala.collection.mutable
 import scala.scalajs.js.annotation.JSExport
 
 
@@ -9,23 +10,23 @@ import scala.scalajs.js.annotation.JSExport
  * Perlin Noise
  * Palettes
  * Stroke
+ * Recorder
  */
 
 @JSExport
 class ThreeJSApp extends BasicCanvas with DrawingUtils with PerlinNoise with ManualSnapshotter with WebMRecorder{
   Setup._3D.Center.asScene.noClear.withStats.withControls
 
+  val snapshotKeys = "s" :: Nil
+  val recorderConfig = RecorderConfig("r" :: Nil)
+
   addAmbientLight(0xFFFFFF)
   addDirectionalLight(0xFFFFFF, 0.9, (0,1,0))
-
-  override val frames = Some(120)
 
   val n1 = Simplex(-250,250)
   val n2 = Simplex(-250,250)
   val n3 = Simplex(-250,250)
 
-  snapshotKeys+="s"
-  recorderKeys+="r"
 
   def render():Unit = {
     if(frameCount < 60*10) {
