@@ -9,7 +9,7 @@ import js.JSConverters._
 /**
  * Created by martin on 07/10/15.
  */
-trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoordinates{
+trait DrawingUtils extends MathUtils with Converters with Materials with ColorsTypeclasses with PaletteT with WorldCoordinates{
   self:Canvas=>
 
   def now = System.currentTimeMillis()
@@ -20,77 +20,6 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   def randomHeight = rand(height)
 
   def vecXYAngle(angle:Double, size:Double=1) = new Vector3(size,0,0).applyAxisAngle(zAxis, angle)
-
-
-  //#######################  MATERIALS #########################
-  //TODO: Might include an optional service that searches for cached colors, textures, etc. ?
-
-
-  var defaultLineMaterial: LineBasicMaterial = new LineBasicMaterial(js.Dynamic.literal(color = 0xFFFFFF, side= faceSide))
-
-  trait LineMaterialTypeClass[T, W <: Material]{
-    def toLineMaterial(t:T): W
-  }
-
-  implicit object ColorToLineMaterial extends LineMaterialTypeClass[Color, LineBasicMaterial]{
-    override def toLineMaterial(t: Color): LineBasicMaterial = new LineBasicMaterial(js.Dynamic.literal(color = t, side= faceSide))
-  }
-
-  implicit object LineBasicMaterialToLineMaterial extends LineMaterialTypeClass[LineBasicMaterial, LineBasicMaterial]{
-    override def toLineMaterial(t: LineBasicMaterial): LineBasicMaterial = t
-  }
-
-  implicit object LineDashedMaterialToLineMaterial extends LineMaterialTypeClass[LineDashedMaterial, LineDashedMaterial]{
-    override def toLineMaterial(t: LineDashedMaterial): LineDashedMaterial = t
-  }
-
-
-  var defaultMeshMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = 0xFFFFFF, side = faceSide))
-
-  trait MeshMaterialTypeClass[T, W <: Material]{
-    def toMeshMaterial(t:T): W
-  }
-
-  implicit object ColorToMeshMaterial extends MeshMaterialTypeClass[Color, MeshBasicMaterial]{
-    override def toMeshMaterial(t: Color): MeshBasicMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = t, side= faceSide))
-  }
-
-  implicit object Tuple4ToMeshMaterial extends MeshMaterialTypeClass[(Double,Double,Double,Double), MeshBasicMaterial]{
-    override def toMeshMaterial(t: (Double,Double,Double,Double)): MeshBasicMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = new Color(t._1, t._2, t._3), side= faceSide, transparent=true, opacity = t._4))
-  }
-
-  implicit object RgbToMeshMaterial extends MeshMaterialTypeClass[RGB, MeshBasicMaterial]{
-    override def toMeshMaterial(t: RGB): MeshBasicMaterial =  t match {
-      case RGB(r, g, b, 1) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color(r, g, b), side= faceSide))
-      case RGB(r, g, b, o) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color(r, g, b), side= faceSide, transparent=true, opacity = o))
-    }
-  }
-
-  implicit object HsbToMeshMaterial extends MeshMaterialTypeClass[HSB, MeshBasicMaterial]{
-    override def toMeshMaterial(t: HSB): MeshBasicMaterial =  t match {
-      case HSB(h, s, b, 1) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color().setHSL(h, s, b), side= faceSide))
-      case HSB(h, s, b, o) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color().setHSL(h, s, b), side= faceSide, transparent=true, opacity = o))
-    }
-  }
-
-  implicit object GryToMeshMaterial extends MeshMaterialTypeClass[GRY, MeshBasicMaterial]{
-    override def toMeshMaterial(t: GRY): MeshBasicMaterial =  t match {
-      case GRY(v, 1) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color(v, v, v), side= faceSide))
-      case GRY(v, o) => new MeshBasicMaterial(js.Dynamic.literal(color = new Color(v, v, v), side= faceSide, transparent=true, opacity = o))
-    }
-  }
-
-  implicit object MeshBasicMaterialToLineMaterial extends MeshMaterialTypeClass[MeshBasicMaterial, MeshBasicMaterial]{
-    override def toMeshMaterial(t: MeshBasicMaterial): MeshBasicMaterial = t
-  }
-
-  implicit object MeshLambertMaterialToLineMaterial extends MeshMaterialTypeClass[MeshLambertMaterial, MeshLambertMaterial]{
-    override def toMeshMaterial(t: MeshLambertMaterial): MeshLambertMaterial = t
-  }
-
-  implicit object MeshPhongMaterialToLineMaterial extends MeshMaterialTypeClass[MeshPhongMaterial, MeshPhongMaterial]{
-    override def toMeshMaterial(t: MeshPhongMaterial): MeshPhongMaterial = t
-  }
 
   //########################   LINE   ############################
 
@@ -124,8 +53,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     splineObject
   }
 
-  def
-  mspline[LM, W <: Material](vertexes :Iterable[Vector3], divisions:Int = 0, material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
+  def mspline[LM, W <: Material](vertexes :Iterable[Vector3], divisions:Int = 0, material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
     val curve = new SplineCurve3(vertexes.toJSArray)
     val geometry = new Geometry()
     //TODO: look at divisions, what the heck ?
@@ -180,19 +108,28 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   //Create several geometries depending on size of circle or create on demand
   val circleGeometries =  (1 to 8).map(x=> new CircleGeometry(1, Math.pow(2,x))).toArray
 
-  
-  def circle[MM, W <: Material](pos:Vector3, radius:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+  def circle[MM, W <: Material](pos:Vector3, radius:Double, material: MM)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
     val s = radius.mapContrain(0,1920,4,circleGeometries.length).toInt
     val mm = addMeshInPlace(circleGeometries(s), pos, meshMaterialTypeClass.toMeshMaterial(material))
     mm.scale.set(radius,radius,radius)
     mm
   }
 
-  def segCircle[MM, W <: Material](pos:Vector3, radius:Double, segments:Int, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+  def circle[MM, W <: Material](pos:Vector3, radius:Double, segments:Int, material: MM)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+    //TODO: segments should be the amount. Period. Maybe we should make some system for geometry caching.
     val s = segments.toDouble.mapContrain(2,256,0,circleGeometries.length).toInt
     val mm = addMeshInPlace(circleGeometries(s), pos, meshMaterialTypeClass.toMeshMaterial(material))
     mm.scale.set(radius,radius,radius)
     mm
+  }
+
+  //Scala doesn't allow overloading and default parameters yet.
+  def circle(pos:Vector3, radius:Double): Mesh[MeshBasicMaterial] = {
+    circle(pos, radius, defaultMeshMaterial)
+  }
+
+  def circle(pos:Vector3, radius:Double, segments:Int): Mesh[MeshBasicMaterial] = {
+    circle(pos, radius, segments, defaultMeshMaterial)
   }
 
   //########################   Triangle   ############################
@@ -323,12 +260,13 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
   //Check for options
   val pMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false, transparent= false))
 
-  def point2(data: (Vector3,Color)*) ={
+  //TODO: Check if we can replace RGB by some kinf of Color Typeclass, yey !
+  def point[T](data: (Vector3,T)*)(implicit n :ColorTypeclass[T]) ={
     val geometry = new Geometry()
 
     data.foreach{ case (pos,col) =>
       geometry.vertices.push(pos)
-      geometry.colors.push(col)
+      geometry.colors.push(n.toColor(col))
     }
 
     val mesh = new Points( geometry, pMaterial)
@@ -336,57 +274,9 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     mesh
   }
 
-  def point3(data: (Vector3,Color)*) ={
+  case class MetaPoints[T <: Object3D, G <: Material, C](points: Points[T,G], data: (Vector3,C)*)(implicit n :ColorTypeclass[C])
 
-
-    val positions = new Float32Array( data.length * 3 )
-    val colors = new Float32Array( data.length * 3 )
-    //val size = new Float32Array( data.length)
-
-
-    //geometry.addAttribute( "size", new BufferAttribute( sizes, 1 ) );
-
-    data.zipWithIndex.foreach{ case ((pos,col),i) =>
-      //size(i) = 1
-      positions(i*3) = pos.x.toFloat
-      positions(i*3+1) = pos.y.toFloat
-      positions(i*3+2) = pos.z.toFloat
-      colors(i*3) = col.r.toFloat
-      colors(i*3+1) = col.g.toFloat
-      colors(i*3+2) = col.b.toFloat
-    }
-
-    val geo = new BufferGeometry()
-
-    geo.addAttribute( "position", new BufferAttribute( positions, 3 ) )
-    geo.addAttribute( "color", new BufferAttribute( colors, 3 ) )
-    //geo.addAttribute( "size", new BufferAttribute( size, 1 ) )
-
-    geo.computeBoundingSphere()
-
-    val mesh = new Points( geo, pMaterial )
-    scene.add( mesh )
-    mesh
-  }
-
-  def point4(data: (Vector3,Color)*) ={
-    val geometry = new Geometry()
-
-    data.foreach{ case (pos,col) =>
-      geometry.vertices.push(pos)
-      geometry.colors.push(col)
-    }
-
-    val geo = new BufferGeometry().fromGeometry(geometry)
-
-    val mesh = new Points( geo, pMaterial )
-    scene.add( mesh )
-    mesh
-  }
-
-  case class MetaPoints[T <: Object3D, G <: Material](points: Points[T,G], data: (Vector3,RGB)*)
-
-  val shader =
+  val pointsShader =
     """
       |varying vec3 vColor;
       |varying float vAlpha;
@@ -396,7 +286,7 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
       |}
     """.stripMargin
 
-  val vertexShader =
+  val pointsVertexShader =
     """
       |attribute float alpha;
       |attribute vec3 color;
@@ -413,16 +303,17 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
       |}
     """.stripMargin
 
-  val sm = new ShaderMaterial(js.Dynamic.literal(fragmentShader=shader, vertexShader=vertexShader, transparent=true))
+  val sm = new ShaderMaterial(js.Dynamic.literal(fragmentShader=pointsShader, vertexShader=pointsVertexShader, transparent=true))
 
-  def point5(data: (Vector3,RGB)*) = {
+  def pointShader[T](data: (Vector3,T)*)(implicit n :ColorTypeclass[T]) = {
     //TODO: Need to dispose geometries !!!!
     val geometry = new BufferGeometry()
 
-
-    geometry.addAttribute("alpha", new BufferAttribute( new Float32Array(data.map(_._2.o).toJSArray), 1 ) )
-    geometry.addAttribute("color", new BufferAttribute( new Float32Array(data.flatMap(x=> x._2.r :: x._2.g :: x._2.b :: Nil).toJSArray), 3 ) )
+    geometry.addAttribute("alpha", new BufferAttribute( new Float32Array(data.map(x=> n.alpha(x._2)).toJSArray), 1 ) )
+    //toColor isn't optimal, change with new r, g, b methods in ColorTypeclass
+    geometry.addAttribute("color", new BufferAttribute( new Float32Array(data.flatMap{x=> val xx= n.toColor(x._2); xx.r :: xx.g :: xx.b :: Nil}.toJSArray), 3 ) )
     geometry.addAttribute("position", new BufferAttribute(new Float32Array(data.flatMap{ case (v,_) => v.x :: v.y :: v.z :: Nil}.toJSArray) , 3 ))
+    //geometry.addAttribute( "size", new BufferAttribute( size, 1 ) )
 
     val mesh = new Points( geometry, sm)
 
@@ -438,7 +329,6 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     light
   }
 
-
   def addAmbientLight(color: Int) = {
     val light = new AmbientLight(color)
     scene.add( light )
@@ -451,10 +341,6 @@ trait DrawingUtils extends MathUtils with Converters with PaletteT with WorldCoo
     scene.add(directionalLight)
     directionalLight
   }
-
-  //########################   SAVE     ########################
-
-  def saveImg = dom.window.open(renderer.domElement.toDataURL("image/png"))
 
   //########################   GROUPING     ########################
 

@@ -19,7 +19,7 @@ class ThreeJSApp16 extends BasicCanvas with DrawingUtils with SimplexNoise{
     (random2D ,Palette.iDemandPancake.getRandom)
   }
 
-  val circles = point2(dots:_*).geometry
+  val circles = point(dots:_*).geometry
 
   def render():Unit = {
     circles.verticesNeedUpdate=true

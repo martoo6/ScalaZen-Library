@@ -24,13 +24,11 @@ class ThreeJSApp23 extends BasicCanvas with DrawingUtils with SimplexNoise{
     dots.foreach {
       case (c: Vector3, _) =>
         c.add(vecXYAngle(r).multiplyScalar(simplex2.noise(c.x * 0.001, c.y * 0.001)))
-        if (c.x < 0) c.set(randomWidth, randomHeight, 0)
-        if (c.x > width) c.set(randomWidth, randomHeight, 0)
-        if (c.y < 0) c.set(randomWidth, randomHeight, 0)
-        if (c.y > height) c.set(randomWidth, randomHeight, 0)
+        if (c.x < 0 || c.x > width) c.set(randomWidth, randomHeight, 0)
+        if (c.y < 0 || c.y > height) c.set(randomWidth, randomHeight, 0)
     }
 
-    point5(dots:_*)
+    pointShader(dots:_*)
   }
 
 

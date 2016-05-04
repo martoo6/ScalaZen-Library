@@ -30,7 +30,7 @@ class ThreeJSApp22 extends BasicCanvas with DrawingUtils with SimplexNoise{
         if (c.y > height) c.add((0, -height, 0))
     }
 
-    point5(dots:_*)
+    point(dots:_*)
   }
 
 

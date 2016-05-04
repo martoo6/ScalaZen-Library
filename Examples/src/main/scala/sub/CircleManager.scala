@@ -8,6 +8,7 @@ import main.lib.{Perlin, DrawingUtils, BasicCanvas}
  * Created by martin on 15/10/15.
  */
 class CircleManager extends BasicCanvas with DrawingUtils{
+  //TODO: So you can see there's a bug in here, as canvas thinks we are using single face shapes instead of double faces.
   val perlin = Perlin(PI)
 
   val circles = (0 to 1000).map{ i=>

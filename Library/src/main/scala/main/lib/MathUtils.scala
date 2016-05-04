@@ -21,7 +21,7 @@ trait MathUtils {
   private val randomGen = new Random()
 
   def rand(low: Double, high: Double):Double = {
-    if (low >= high)  low else rand(high - low) + low
+    if (low >= high) low else rand(high - low) + low
   }
 
   def rand(ceil: Double):Double = randomGen.nextDouble() * ceil
@@ -36,52 +36,41 @@ trait MathUtils {
 
   def randInt(ceil: Int):Int = randomGen.nextInt(ceil)
 
-  def lerp(v1:Double,v2:Double,amount:Double) = (v1+v2)/amount
+  def lerp[T1, T2](v1: T1, v2: T2, amount: Double)(implicit n1:Numeric[T1], n2:Numeric[T2]): Double = (n1.toDouble(v1)+n2.toDouble(v2))/amount
 
-  //Build LMap using typeclass for mapping efficiently over a list
-
-  def map(value:Double, in_min:Double, in_max: Double, out_min:Double, out_max: Double) = {
+  def map(value: Double, in_min: Double, in_max: Double, out_min: Double, out_max: Double): Double ={
     ((value-in_min)/(in_max-in_min))*(out_max-out_min) + out_min
   }
 
-
-  //Change to typeclasses
-  implicit class RichInt(value:Int) extends MathUtils{
-    def map(in_min:Double,in_max:Double,out_min:Double,out_max:Double):Double = {
-      map(value,in_min,in_max,out_min,out_max)
+  //By using Numeric Typeclass we have these method for any numeric type, yey !
+  implicit class RichNumeric[T](value: T)(implicit n:Numeric[T]) extends MathUtils{
+    def map(in_min: Double,in_max: Double,out_min: Double,out_max: Double): Double = {
+      map(n.toDouble(value),in_min,in_max,out_min,out_max)
     }
-    def constrain(min:Double,max:Double):Double = {
-      constrain(value,min,max)
+    def constrain(min: Double,max: Double): Double = {
+      constrain(n.toDouble(value), min, max)
     }
-    def mapContrain(in_min:Double,in_max:Double,out_min:Double,out_max:Double):Double = {
-      mapContrain(value,in_min,in_max,out_min,out_max)
+    def mapContrain(in_min: Double,in_max: Double,out_min: Double,out_max: Double): Double = {
+      mapContrain(n.toDouble(value),in_min,in_max,out_min,out_max)
     }
-  }
-
-  implicit class RichDouble(value:Double) extends MathUtils{
-    def map(in_min:Double,in_max:Double,out_min:Double,out_max:Double):Double = {
-       map(value,in_min,in_max,out_min,out_max)
-    }
-    def constrain(min:Double,max:Double):Double = {
-      constrain(value,min,max)
-    }
-    def mapContrain(in_min:Double,in_max:Double,out_min:Double,out_max:Double):Double = {
-      mapContrain(value,in_min,in_max,out_min,out_max)
+    def constrainLoop(min: Double, max: Double): Double = {
+      constrainLoop(n.toDouble(value), min, max)
     }
   }
+
 
   def mapContrain(value:Double, in_min:Double,in_max:Double,out_min:Double,out_max:Double): Double ={
     constrain(map(value, in_min, in_max, out_min, out_max), out_min, out_max)
   }
 
-  def constrain(value:Double, min:Double, max:Double) = {
+  def constrain(value:Double, min:Double, max:Double): Double = {
     //Faster than match ???
     if(value<min) min
     else if(value>max) max
     else value
   }
 
-  def constrainLoop(value:Double, min:Double, max:Double) = {
+  def constrainLoop(value:Double, min:Double, max:Double) :Double= {
     //Faster than match ???
     if(value<min) max - (value % min)
     else if(value>max) value % max

@@ -17,7 +17,7 @@ class ThreeJSApp14 extends BasicCanvas with PerlinNoise with DrawingUtils{
     y <- 0 until height
   } yield (new Vector3(x,y,0), new Color(((x+y*height)*0.01)%1,0,0))
 
-  val geo = point2(data:_*).geometry
+  val geo = point(data:_*).geometry
 
   def render():Unit = {
     val rr = iDemandPancake.getRandom

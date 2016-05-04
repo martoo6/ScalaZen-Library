@@ -27,9 +27,9 @@ class ThreeJSApp19 extends BasicCanvas with DrawingUtils with SimplexNoise {
   def render(): Unit = {
     all.foreach {
       case (sp, rp, s) =>
-        s.position.lerpVectors(sp, rp, sin(map(frameCount, 0, 60 * 5, 0, TWO_PI)).map(-1, 1, 0, 1))
+        s.position.lerpVectors(sp, rp, sin(frameCount.map(0, 60 * 5, 0, TWO_PI)).map(-1, 1, 0, 1))
     }
-    group.setRotationFromAxisAngle(yAxis, map(frameCount, 0, 60 * 5, 0, TWO_PI))
+    group.setRotationFromAxisAngle(yAxis, frameCount.map(0, 60 * 5, 0, TWO_PI))
   }
 
 }
