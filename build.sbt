@@ -24,11 +24,10 @@ lazy val Library =  project.
                       jsDependencies += ProvidedJS / "js/shaders/CopyShader.js",
                       jsDependencies += ProvidedJS / "js/shaders/FilmShader.js",
                       jsDependencies += ProvidedJS / "js/shaders/MirrorShader.js",
-                      jsDependencies += ProvidedJS / "js/recorder/CCapture.min.js",
-                      jsDependencies += ProvidedJS / "js/recorder/Whammy.js",
-                      jsDependencies += ProvidedJS / "js/recorder/gif.js",
+                      jsDependencies += ProvidedJS / "js/CCapture.all.min.js",
                       jsDependencies += ProvidedJS / "js/FileSaver.min.js",
                       jsDependencies += ProvidedJS / "js/CanvasToBlob.js",
+
 
                       test in assembly := {},
                       skip in packageJSDependencies := false,

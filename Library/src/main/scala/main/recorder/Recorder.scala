@@ -5,6 +5,8 @@ import org.scalajs.dom
 import org.scalajs.dom.raw._
 
 import scala.scalajs.js
+import scala.scalajs.js.PropertyDescriptor
+import scala.util.Try
 
 /**
   * Created by martin on 03/05/16.
@@ -31,41 +33,42 @@ case class RecorderConfig(
                            motionBlurFrames: Int= 0,
                            quality: Int= 50,
                            workersPath: String= "js/",
-                           timeLimit:Int = -1,
-                           frameLimit:Int = -1,
-                           autoSaveTime:Int = -1,
-                           onProgress: Int=>Any = { _ => Unit }
+                           timeLimit:Int = 0,
+                           frameLimit:Int = 0,
+                           autoSaveTime:Int = 0,
+                           onProgress: Float => Any = { _ => Unit }
                          )
 
 trait Recorder extends BasicCanvas{
   //TODO: Support multiple configs and Recorders on the same sketch
   val recorderConfig: RecorderConfig
   def recorderBuilder:CCapture
-  private lazy val recorder = recorderBuilder
+  lazy val recorder = recorderBuilder
   protected var start = 0
 
-  dom.window.onkeypress = { e: KeyboardEvent =>
+
+  dom.window.addEventListener("keypress", {e: KeyboardEvent =>
     if(recorderConfig.recorderKeys.contains(js.Dynamic.global.String.applyDynamic("fromCharCode")(e.charCode.asInstanceOf[js.Any]).asInstanceOf[String])){
       if(start==0) {
         start = 1
-        recorder.start()
+        Try(recorder.start())
       }else{
         start = -1
       }
     }
-  }
+  })
 
   override def renderLoop(timestamp: Double) ={
+    if(start == -1){
+      recorder.stop()
+      recorder.save()
+      start = 0
+    }
     super.renderLoop(timestamp)
     //TODO: Get rid of IFs please
     if(start>0) {
       recorder.capture(renderer.domElement)
       start+=1
-    }
-    if(start == recorderConfig.frameLimit || start == -1){
-      recorder.stop()
-      recorder.save({ blob:Location => dom.window.location = blob})
-      start = 0
     }
   }
 }
@@ -104,45 +107,44 @@ trait WebMRecorder extends Recorder{
 //    onProgress = recorderConfig.onProgress
 //  ))
 //}
-//
-//trait PNGRecorder extends Recorder{
-//  //TODO: The gif does not download automatically, check that out
-//  def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "png",
-//    verbose = recorderConfig.verbose,
-//    display = recorderConfig.display,
-//    framerate = recorderConfig.framerate,
-//    motionBlurFrames = recorderConfig.motionBlurFrames,
-//    quality = recorderConfig.quality,
-//    workersPath = recorderConfig.workersPath,
-//    timeLimit = recorderConfig.timeLimit,
-//    frameLimit = recorderConfig.frameLimit,
-//    autoSaveTime = recorderConfig.autoSaveTime,
-//    onProgress = recorderConfig.onProgress
-//  ))
-//}
-//
-//trait JPEGRecorder extends Recorder{
-//  //TODO: The gif does not download automatically, check that out
-//  def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "jpeg",
-//    verbose = recorderConfig.verbose,
-//    display = recorderConfig.display,
-//    framerate = recorderConfig.framerate,
-//    motionBlurFrames = recorderConfig.motionBlurFrames,
-//    quality = recorderConfig.quality,
-//    workersPath = recorderConfig.workersPath,
-//    timeLimit = recorderConfig.timeLimit,
-//    frameLimit = recorderConfig.frameLimit,
-//    autoSaveTime = recorderConfig.autoSaveTime,
-//    onProgress = recorderConfig.onProgress
-//  ))
-//}
+
+trait PNGRecorder extends Recorder{
+  def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "png",
+    verbose = recorderConfig.verbose,
+    display = recorderConfig.display,
+    framerate = recorderConfig.framerate,
+    motionBlurFrames = recorderConfig.motionBlurFrames,
+    quality = recorderConfig.quality,
+    workersPath = recorderConfig.workersPath,
+    timeLimit = recorderConfig.timeLimit,
+    frameLimit = recorderConfig.frameLimit,
+    autoSaveTime = recorderConfig.autoSaveTime,
+    onProgress = recorderConfig.onProgress
+  ))
+}
+
+trait JPEGRecorder extends Recorder{
+  def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "jpeg",
+    verbose = recorderConfig.verbose,
+    display = recorderConfig.display,
+    framerate = recorderConfig.framerate,
+    motionBlurFrames = recorderConfig.motionBlurFrames,
+    quality = recorderConfig.quality,
+    workersPath = recorderConfig.workersPath,
+    timeLimit = recorderConfig.timeLimit,
+    frameLimit = recorderConfig.frameLimit,
+    autoSaveTime = recorderConfig.autoSaveTime,
+    onProgress = recorderConfig.onProgress
+  ))
+}
 
 trait ManualSnapshotter extends BasicCanvas{
   val snapshotKeys: Seq[String]
 
-  dom.window.onkeypress = { e: KeyboardEvent =>
+  dom.window.addEventListener("keypress", {e: KeyboardEvent =>
     if(snapshotKeys.contains(js.Dynamic.global.String.applyDynamic("fromCharCode")(e.charCode.asInstanceOf[js.Any]).asInstanceOf[String])){
       FileSaver.saveAs(FileSaver.dataURLtoBlob(renderer.domElement.toDataURL("image/png")), "snapshot.png")
     }
-  }
+  })
+
 }
