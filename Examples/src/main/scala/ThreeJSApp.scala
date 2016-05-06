@@ -14,11 +14,11 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp extends BasicCanvas with DrawingUtils with PerlinNoise with ManualSnapshotter with WebMRecorder{
+class ThreeJSApp extends BasicCanvas with DrawingUtils with PerlinNoise with ManualSnapshotter with GifRecorder{
   Setup._3D.Center.asScene.noClear.withStats.withControls
 
   val snapshotKeys = "s" :: Nil
-  val recorderConfig = RecorderConfig("r" :: Nil, onProgress = i=> println(i))
+  val recorderConfig = RecorderConfig("r" :: Nil)
 
   addAmbientLight(0xFFFFFF)
   addDirectionalLight(0xFFFFFF, 0.9, (0,1,0))

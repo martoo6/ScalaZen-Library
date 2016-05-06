@@ -27,6 +27,7 @@ lazy val Library =  project.
                       jsDependencies += ProvidedJS / "js/CCapture.all.min.js",
                       jsDependencies += ProvidedJS / "js/FileSaver.min.js",
                       jsDependencies += ProvidedJS / "js/CanvasToBlob.js",
+                      jsDependencies += ProvidedJS / "js/gif.worker.js",
 
 
                       test in assembly := {},

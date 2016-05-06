@@ -32,7 +32,7 @@ case class RecorderConfig(
                            framerate: Int= 30,
                            motionBlurFrames: Int= 0,
                            quality: Int= 50,
-                           workersPath: String= "js/",
+                           workersPath: String= js.Dynamic.global.gifWorker.asInstanceOf[String],
                            timeLimit:Int = 0,
                            frameLimit:Int = 0,
                            autoSaveTime:Int = 0,
@@ -52,6 +52,7 @@ trait Recorder extends BasicCanvas{
       if(start==0) {
         start = 1
         Try(recorder.start())
+        println(recorderConfig.workersPath)
       }else{
         start = -1
       }
@@ -91,22 +92,22 @@ trait WebMRecorder extends Recorder{
 
 //TODO: Not working with current CCapture version, check it out !
 
-//trait GifRecorder extends Recorder{
-//  //TODO: The gif does not download automatically, check that out
-//  println("[WARNING]: remember that GIF recorder takes some time to generate the GIF file.")
-//  def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "gif",
-//    verbose = recorderConfig.verbose,
-//    display = recorderConfig.display,
-//    framerate = recorderConfig.framerate,
-//    motionBlurFrames = recorderConfig.motionBlurFrames,
-//    quality = recorderConfig.quality,
-//    workersPath = recorderConfig.workersPath,
-//    timeLimit = recorderConfig.timeLimit,
-//    frameLimit = recorderConfig.frameLimit,
-//    autoSaveTime = recorderConfig.autoSaveTime,
-//    onProgress = recorderConfig.onProgress
-//  ))
-//}
+trait GifRecorder extends Recorder{
+  //TODO: The gif does not download automatically, check that out
+  println("[WARNING]: remember that GIF recorder takes some time to generate the GIF file.")
+  def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "gif",
+    verbose = recorderConfig.verbose,
+    display = recorderConfig.display,
+    framerate = recorderConfig.framerate,
+    motionBlurFrames = recorderConfig.motionBlurFrames,
+    quality = recorderConfig.quality,
+    workersPath = recorderConfig.workersPath,
+    timeLimit = recorderConfig.timeLimit,
+    frameLimit = recorderConfig.frameLimit,
+    autoSaveTime = recorderConfig.autoSaveTime,
+    onProgress = recorderConfig.onProgress
+  ))
+}
 
 trait PNGRecorder extends Recorder{
   def recorderBuilder:CCapture = new CCapture(js.Dynamic.literal(format = "png",
