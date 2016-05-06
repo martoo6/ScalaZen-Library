@@ -2,7 +2,7 @@
 
 //Some IDEs will autmatically delete import java.lang.Math._   , try to keep it
 //########################
-import main.lib.{BasicCanvas, DrawingUtils, LineDashedMaterial, PerlinNoise}
+import main.lib._
 
 import scala.scalajs.js.annotation.JSExport
 
@@ -12,7 +12,7 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp10 extends BasicCanvas with DrawingUtils with PerlinNoise{
+class ThreeJSApp10 extends BasicCanvas with DrawingUtils with StatsDisplay with SimplexNoise{
 
   Setup._3D.Center.asScene.autoClear
 

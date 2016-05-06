@@ -8,10 +8,10 @@ import scala.util.Random
 object Palette extends PaletteT
 
 case class Palette(colors:Color*){
-  def apply(pos:Int) = colors(pos)
+  def apply(pos: Long) = colors(pos.toInt)
   def getRandom: Color = colors(Random.nextInt(colors.size))
   //Mayble use math to set it in range would be faster
-  def getRandom(amount: Int): Color = colors(Random.nextInt(if (amount>colors.size) colors.size else amount))
+  def getRandom(amount: Long): Color = colors(Random.nextInt(if (amount>colors.size) colors.size else amount.toInt))
 }
 
 /**

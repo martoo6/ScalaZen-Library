@@ -9,12 +9,12 @@ import scala.scalajs.js.annotation.JSExport
 //########################
 
 @JSExport
-class ThreeJSApp8 extends BasicCanvas with DrawingUtils with PerlinNoise{
+class ThreeJSApp8 extends BasicCanvas with DrawingUtils with StatsDisplay with SimplexNoise{
 
-  Setup._3D.LeftBottom.asScene.noClear.withStats
+  Setup._3D.LeftBottom.asScene.noClear
   RectMode.leftBottom
 
-  val perlin = Perlin(PI)
+  val perlin = Simplex(PI)
 
   val circles = (0 to 1000).map{ i=>
     val c =  circle((randomWidth, randomHeight, rand(500)), 5, 100, Palette.iDemandPancake.getRandom.opacity(0.3))
@@ -37,8 +37,6 @@ class ThreeJSApp8 extends BasicCanvas with DrawingUtils with PerlinNoise{
       if(pos.y < 0) pos.add((0,height,0))
       if(pos.y > height) pos.add((0,-height,0))
     }
-
-    stats.update()
   }
 
 

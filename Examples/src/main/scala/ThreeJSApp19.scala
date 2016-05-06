@@ -3,8 +3,8 @@ import main.lib._
 import scala.scalajs.js.annotation.JSExport
 
 @JSExport
-class ThreeJSApp19 extends BasicCanvas with DrawingUtils with SimplexNoise {
-  Setup._2D.asScene.withStats.withControls
+class ThreeJSApp19 extends BasicCanvas with DrawingUtils with StatsDisplay with SimplexNoise {
+  Setup._2D.asScene.withControls
 
   val radius = 100
 

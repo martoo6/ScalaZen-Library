@@ -1,4 +1,4 @@
-import main.lib.{BasicCanvas, DrawingUtils, Palette, PerlinNoise}
+import main.lib._
 
 import scala.scalajs.js.annotation.JSExport
 
@@ -8,8 +8,8 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp2 extends BasicCanvas with DrawingUtils with PerlinNoise{
-  Setup._2D.LeftBottom.asCanvas.withStats
+class ThreeJSApp2 extends BasicCanvas with DrawingUtils with StatsDisplay with SimplexNoise{
+  Setup._2D.LeftBottom.asCanvas
   RectMode.leftBottom
 
   def render():Unit = {

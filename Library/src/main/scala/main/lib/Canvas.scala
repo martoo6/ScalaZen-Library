@@ -26,7 +26,6 @@ trait Canvas extends WorldCoordinates{
   var renderAction: Unit => Unit = {_=>renderer.render(scene, camera, forceClear = !canvasStyle)}
   var clearObjectsAction: Unit => Unit = {_=>}
   var canvasStyle = false
-  var withStatsRender = false
   var withControlsRender = false
 
   object Setup
@@ -72,18 +71,24 @@ trait Canvas extends WorldCoordinates{
     }
     def autoClear = {
       clearObjectsAction = { _ =>
-//        val l = scene.children.length
-//        (0 to l).reverse.foreach{ i=>
-//          val c = scene.children(i)
-//          c match{
-//            case m:Mesh[_]=>
-//              m.material.dispose()
-//              m.geometry.dispose()
-//            case _ =>
-//          }
-//          scene.remove(c)
-//        }
-        scene = new Scene()
+        val l = scene.children.length
+        (0 to l).reverse.foreach{ i=>
+          val c = scene.children(i)
+          c match{
+            case m:Mesh[_]=>
+              m.material.dispose()
+              m.geometry.dispose()
+            case p:Points[_,_] =>
+              p.material.dispose()
+              p.geometry match{
+                case bg: BufferGeometry => bg.dispose();
+                case g: Geometry => g.dispose();
+              }
+            case _ =>
+          }
+          scene.remove(c)
+        }
+        //scene = new Scene()
       }
       this
     }
@@ -101,13 +106,6 @@ trait Canvas extends WorldCoordinates{
       canvasStyle=false
       renderer.autoClear = true
       renderer.autoClearColor = true
-      this
-    }
-    def withStats={
-      withStatsRender = true
-      stats.domElement.style.position = "absolute"
-      stats.domElement.style.top = "0px"
-      body.appendChild( stats.domElement )
       this
     }
     def withControls={
@@ -141,7 +139,6 @@ trait Canvas extends WorldCoordinates{
   var body: dom.Node
 
 
-  val stats = new Stats()
   var controls:OrbitControls = null
   val composer:EffectComposer
 
@@ -169,7 +166,6 @@ trait Canvas extends WorldCoordinates{
 
     //Should replace for function/s that execute whats needed instead of ugly ifs
     if(withControlsRender) controls.update()
-    if(withStatsRender) stats.update()
     if(delta>1/minFrameRate && frameCount>60){
       times+=1
       if(times > 15) throw new Error(s"Im preventing your machine from exploding, optimize your code! Last delta was: $delta")

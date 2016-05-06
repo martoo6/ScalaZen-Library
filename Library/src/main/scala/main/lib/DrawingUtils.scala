@@ -235,6 +235,8 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
   }
 
   //
+  val tPointMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false, transparent= false))
+  val nPointMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, sizeAttenuation= false))
 
   def point(positions:Vector3*): Unit ={
     val geometry = new Geometry()
@@ -247,12 +249,7 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
     }
 
     //Check for options
-    val material =
-      if(defaultLineMaterial.opacity >= 1)
-        new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false, transparent= false))
-      else
-        new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false))
-
+    val material = if(defaultLineMaterial.opacity >= 1) tPointMaterial else nPointMaterial
     val mesh = new Points( geometry, material )
     scene.add( mesh )
   }
@@ -276,7 +273,7 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
 
   case class MetaPoints[T <: Object3D, G <: Material, C](points: Points[T,G], data: (Vector3,C)*)(implicit n :ColorTypeclass[C])
 
-  val pointsShader =
+  private val pointsShader =
     """
       |varying vec3 vColor;
       |varying float vAlpha;
@@ -286,7 +283,7 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
       |}
     """.stripMargin
 
-  val pointsVertexShader =
+  private val pointsVertexShader =
     """
       |attribute float alpha;
       |attribute vec3 color;
@@ -303,16 +300,18 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
       |}
     """.stripMargin
 
-  val sm = new ShaderMaterial(js.Dynamic.literal(fragmentShader=pointsShader, vertexShader=pointsVertexShader, transparent=true))
+  private val sm = new ShaderMaterial(js.Dynamic.literal(fragmentShader=pointsShader, vertexShader=pointsVertexShader, transparent=true))
 
   def pointShader[T](data: (Vector3,T)*)(implicit n :ColorTypeclass[T]) = {
     //TODO: Need to dispose geometries !!!!
     val geometry = new BufferGeometry()
 
-    geometry.addAttribute("alpha", new BufferAttribute( new Float32Array(data.map(x=> n.alpha(x._2)).toJSArray), 1 ) )
+    val parData = data.toJSArray
+
+    geometry.addAttribute("alpha", new BufferAttribute( new Float32Array(parData.map(x=> n.alpha(x._2))), 1 ) )
     //toColor isn't optimal, change with new r, g, b methods in ColorTypeclass
-    geometry.addAttribute("color", new BufferAttribute( new Float32Array(data.flatMap{x=> val xx= n.toColor(x._2); xx.r :: xx.g :: xx.b :: Nil}.toJSArray), 3 ) )
-    geometry.addAttribute("position", new BufferAttribute(new Float32Array(data.flatMap{ case (v,_) => v.x :: v.y :: v.z :: Nil}.toJSArray) , 3 ))
+    geometry.addAttribute("color", new BufferAttribute( new Float32Array(parData.flatMap{ case (_,c) => val xx= n.toColor(c); xx.r :: xx.g :: xx.b :: Nil}), 3 ) )
+    geometry.addAttribute("position", new BufferAttribute(new Float32Array(parData.flatMap{ case (v,_) => v.x :: v.y :: v.z :: Nil}) , 3 ))
     //geometry.addAttribute( "size", new BufferAttribute( size, 1 ) )
 
     val mesh = new Points( geometry, sm)

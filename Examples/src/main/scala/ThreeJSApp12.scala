@@ -7,26 +7,24 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp12 extends BasicCanvas with PerlinNoise with DrawingUtils {
+class ThreeJSApp12 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay {
 
-  Setup._2D.LeftBottom.asScene.withStats
+  Setup._2D.LeftBottom.asScene
 
 
   val data = for{
     x <- 0 until width
     y <- 0 until height
-  } yield (new Vector3(x,y,0), new Color(((x+y*height)*0.01)%1,0,0))
+  } yield (new Vector3(x,y,0), new Color())
 
   val geo = point(data:_*).geometry
 
   def render():Unit = {
-    data.foreach{case (pos,_) => pos.setX(pos.x+1%width)}
-    for(i <- 0 until geo.colors.size by rand(40).toInt){
-      geo.colors(i).r = (i-frameCount)*0.03%1
+    for(i <- 0 until geo.colors.length){
+      geo.colors(i).g = i*.1%1
     }
     geo.colorsNeedUpdate=true
   }
-
 
 }
 
