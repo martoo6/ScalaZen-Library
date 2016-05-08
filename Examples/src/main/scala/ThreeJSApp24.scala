@@ -8,8 +8,8 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp24 extends BasicCanvas with DrawingUtils with StatsDisplay with SimplexNoise{
-  Setup._2D.LeftBottom.asCanvas.autoClear.antialiasing
+class ThreeJSApp24 extends BasicCanvas with DrawingUtils with StatsDisplay with SimplexNoise with AutoClear{
+  Setup._2D.LeftBottom.asCanvas.antialiasing
   RectMode.leftBottom
 
   val simplex = Simplex(0,1)

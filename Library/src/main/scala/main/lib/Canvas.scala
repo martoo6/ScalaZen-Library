@@ -24,7 +24,6 @@ trait Canvas extends WorldCoordinates{
   var position = _center
 
   var renderAction: Unit => Unit = {_=>renderer.render(scene, camera, forceClear = !canvasStyle)}
-  var clearObjectsAction: Unit => Unit = {_=>}
   var canvasStyle = false
   var withControlsRender = false
 
@@ -67,33 +66,6 @@ trait Canvas extends WorldCoordinates{
     def perspective = {
       camera = new PerspectiveCamera( 45, width / height, 1, 1000 )
       resetPosition
-      this
-    }
-    def autoClear = {
-      clearObjectsAction = { _ =>
-        val l = scene.children.length
-        (0 to l).reverse.foreach{ i=>
-          val c = scene.children(i)
-          c match{
-            case m:Mesh[_]=>
-              m.material.dispose()
-              m.geometry.dispose()
-            case p:Points[_,_] =>
-              p.material.dispose()
-              p.geometry match{
-                case bg: BufferGeometry => bg.dispose();
-                case g: Geometry => g.dispose();
-              }
-            case _ =>
-          }
-          scene.remove(c)
-        }
-        //scene = new Scene()
-      }
-      this
-    }
-    def noClear = {
-      clearObjectsAction = {_=>}
       this
     }
     def asCanvas={
@@ -161,31 +133,40 @@ trait Canvas extends WorldCoordinates{
 
   def renderLoop(timestamp: Double){
 
-    delta = clock.getDelta() //seconds
-    frameCount+=1
+    if(!isPaused) {
+      delta = clock.getDelta() //seconds
+      frameCount += 1
 
-    //Should replace for function/s that execute whats needed instead of ugly ifs
-    if(withControlsRender) controls.update()
-    if(delta>1/minFrameRate && frameCount>60){
-      times+=1
-      if(times > 15) throw new Error(s"Im preventing your machine from exploding, optimize your code! Last delta was: $delta")
-    } else {
-      times=0
+      //Should replace for function/s that execute whats needed instead of ugly ifs
+      if (withControlsRender) controls.update()
+      if (delta > 1 / minFrameRate && frameCount > 60) {
+        times += 1
+        if (times > 15) throw new Error(s"Im preventing your machine from exploding, optimize your code! Last delta was: $delta")
+      } else {
+        times = 0
+      }
     }
 
-    clearObjectsAction()
+      dom.window.requestAnimationFrame(renderLoop _)
 
-    dom.window.requestAnimationFrame(renderLoop _)
+    if(!isPaused) {
+      render
+      //scene.add(scene)
 
-    render
-    //scene.add(scene)
-
-    renderAction()
+      renderAction()
 
 
-    camera.updateMatrix()
+      camera.updateMatrix()
+    }
+
 
   }
 
+  var isPaused = false
 
+  def pause = isPaused = true
+
+  def resume = isPaused = false
+
+  def toogle = isPaused = !isPaused
 }

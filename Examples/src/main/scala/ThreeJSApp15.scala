@@ -12,8 +12,8 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp15 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay{
-  Setup._2D.asScene.withControls.autoClear
+class ThreeJSApp15 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay with AutoClear{
+  Setup._2D.asScene.withControls
 
 
   def render():Unit = {

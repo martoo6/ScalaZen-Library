@@ -8,7 +8,7 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 class ThreeJSApp3 extends BasicCanvas with DrawingUtils with StatsDisplay with SimplexNoise{
-  Setup._2D.LeftBottom.asScene.noClear
+  Setup._2D.LeftBottom.asScene
   RectMode.leftBottom
 
 

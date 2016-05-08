@@ -8,7 +8,7 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 class ThreeJSApp5 extends BasicCanvas with DrawingUtils with StatsDisplay with SimplexNoise{
-  Setup._2D.LeftBottom.asScene.noClear
+  Setup._2D.LeftBottom.asScene
   RectMode.leftBottom
 
   val perlin = Simplex(-15,15)

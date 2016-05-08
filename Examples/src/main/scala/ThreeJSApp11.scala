@@ -8,7 +8,7 @@ import scala.scalajs.js.annotation.JSExport
 @JSExport
 class ThreeJSApp11 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay{
 
-  Setup._3D.Center.asScene.noClear.withControls
+  Setup._3D.Center.asScene.withControls
 
   addHemisphereLight(0xFFFFFF, 0x05F5F5, 1.0)
   addDirectionalLight(0xFFFFFF, 0.4, (0,1,0)).target.lookAt(center)
