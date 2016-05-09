@@ -169,4 +169,17 @@ trait Canvas extends WorldCoordinates{
   def resume = isPaused = false
 
   def toogle = isPaused = !isPaused
+
+
+  def onKeyPress(f: String => Any): Unit ={
+    dom.window.addEventListener("keypress", {e:KeyboardEvent => f(fromCharCode(e.charCode))})
+  }
+
+  def onKeyPressEvent(f: KeyboardEvent => Any): Unit ={
+    dom.window.addEventListener("keypress", f)
+  }
+
+  private def fromCharCode(charCodes: Int*): String = {
+    js.Dynamic.global.String.applyDynamic("fromCharCode")(charCodes.asInstanceOf[Seq[js.Any]]: _*).asInstanceOf[String]
+  }
 }

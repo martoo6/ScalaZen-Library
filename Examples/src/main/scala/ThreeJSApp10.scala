@@ -20,9 +20,7 @@ class ThreeJSApp10 extends BasicCanvas with DrawingUtils with StatsDisplay with 
 
   stroke(0xFFFFFF)
 
-  dom.window.addEventListener("keypress", {e: KeyboardEvent =>
-    toogle
-  })
+  onKeyPress(_ => toogle)
 
   def render():Unit = {
     val div = mouseX.map(0,width,5,20).toInt
@@ -33,7 +31,6 @@ class ThreeJSApp10 extends BasicCanvas with DrawingUtils with StatsDisplay with 
     for(x<-lst.sliding(div+1); y<-x.drop(1)){
         line((fSin(x.head)*200, fCos(x.head)*200), (fSin(y)*200, fCos(y)*200), m)
     }
-
   }
 
 
