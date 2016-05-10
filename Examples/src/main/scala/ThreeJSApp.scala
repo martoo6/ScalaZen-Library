@@ -14,8 +14,8 @@ import scala.scalajs.js.annotation.JSExport
  */
 
 @JSExport
-class ThreeJSApp extends BasicCanvas with DrawingUtils with SimplexNoise with ManualSnapshotter with GifRecorder{
-  Setup._3D.Center.asScene.withControls
+class ThreeJSApp extends BasicCanvas with DrawingUtils with SimplexNoise with ManualSnapshotter with GifRecorder with CameraControls{
+  Setup._3D.Center.asScene
 
   val snapshotKeys = "s" :: Nil
   val recorderConfig = RecorderConfig("r" :: Nil)

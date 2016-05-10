@@ -42,8 +42,8 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
 
   //########################   SPLINE ############################
 
-  def spline[LM, W <: Material](first: Vector3, second: Vector3, third: Vector3, fourth: Vector3, material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
-    val curve = new SplineCurve3(List(first, second, third, fourth).toJSArray)
+  def spline[LM, W <: Material, V1, V2, V3, V4](first: V1, second: V2, third: V3, fourth: V4, material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W], v1: VectorTypeclass[V1], v2: VectorTypeclass[V2], v3: VectorTypeclass[V3], v4: VectorTypeclass[V4]): Line[W] = {
+    val curve = new SplineCurve3(js.Array(v1.toVector(first), v2.toVector(second), v3.toVector(third), v4.toVector(fourth)))
     val geometry = new Geometry()
     //TODO: look at divisions, what the heck ?
     geometry.vertices = curve.getPoints(500)
@@ -53,8 +53,8 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
     splineObject
   }
 
-  def mspline[LM, W <: Material](vertexes :Iterable[Vector3], divisions:Int = 0, material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
-    val curve = new SplineCurve3(vertexes.toJSArray)
+  def mspline[LM, W <: Material, V](vertexes :Iterable[V], divisions:Int = 0, material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W], vectorTypeclass: VectorTypeclass[V]): Line[W] = {
+    val curve = new SplineCurve3(vertexes.toJSArray.map(vectorTypeclass.toVector))
     val geometry = new Geometry()
     //TODO: look at divisions, what the heck ?
     geometry.vertices = curve.getPoints(if(divisions<=0) vertexes.size else divisions)
@@ -65,29 +65,29 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
   }
   //########################   RECT   ############################
 
-  val planeGeometry =   new PlaneGeometry(1, 1)
+  private val planeGeometry =   new PlaneGeometry(1, 1)
 
-  def rect[MM, W <: Material](pos:Vector3, _width:Double, _height:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
-    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _height)), meshMaterialTypeClass.toMeshMaterial(material))
+  def rect[MM, W <: Material, V](pos: V, _width:Double, _height:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W], vectorTypeclass: VectorTypeclass[V]): Mesh[W] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(vectorTypeclass.toVector(pos), (_width, _height)), meshMaterialTypeClass.toMeshMaterial(material))
     mesh.scale.set(_width, _height, 1)
     mesh
   }
 
-  def square[MM, W <: Material](pos:Vector3, _width:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
-    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _width)), meshMaterialTypeClass.toMeshMaterial(material))
+  def square[MM, W <: Material, V](pos: V, _width:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W], vectorTypeclass: VectorTypeclass[V]): Mesh[W] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(vectorTypeclass.toVector(pos), (_width, _width)), meshMaterialTypeClass.toMeshMaterial(material))
     mesh.scale.set(_width, _width, 1)
     mesh
   }
 
-  def rectXZ[MM, W <: Material](pos:Vector3, _width:Double, _height:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
-    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _height)), meshMaterialTypeClass.toMeshMaterial(material))
+  def rectXZ[MM, W <: Material, V](pos: V, _width:Double, _height:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W], vectorTypeclass: VectorTypeclass[V]): Mesh[W] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(vectorTypeclass.toVector(pos), (_width, _height)), meshMaterialTypeClass.toMeshMaterial(material))
     mesh.scale.set(_width, _height, 1)
     mesh.rotateX(HALF_PI)
     mesh
   }
 
-  def squareXZ[MM, W <: Material](pos:Vector3, _width:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
-    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(pos, (_width, _width)), meshMaterialTypeClass.toMeshMaterial(material))
+  def squareXZ[MM, W <: Material, V](pos: V, _width:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W], vectorTypeclass: VectorTypeclass[V]): Mesh[W] = {
+    val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(vectorTypeclass.toVector(pos), (_width, _width)), meshMaterialTypeClass.toMeshMaterial(material))
     mesh.scale.set(_width, _width, 1)
     mesh.rotateX(HALF_PI)
     mesh
@@ -106,30 +106,30 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
   //########################   Circle   ############################
 
   //Create several geometries depending on size of circle or create on demand
-  val circleGeometries =  (1 to 8).map(x=> new CircleGeometry(1, Math.pow(2,x))).toArray
+  private val circleGeometries =  (1 to 8).map(x=> new CircleGeometry(1, Math.pow(2,x))).toArray
 
-  def circle[MM, W <: Material](pos:Vector3, radius:Double, material: MM)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+  def circle[MM, W <: Material, V](pos:V, radius:Double, material: MM)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W], vectorTypeclass: VectorTypeclass[V]): Mesh[W] = {
     val s = radius.mapContrain(0,1920,4,circleGeometries.length).toInt
-    val mm = addMeshInPlace(circleGeometries(s), pos, meshMaterialTypeClass.toMeshMaterial(material))
+    val mm = addMeshInPlace(circleGeometries(s), vectorTypeclass.toVector(pos), meshMaterialTypeClass.toMeshMaterial(material))
     mm.scale.set(radius,radius,radius)
     mm
   }
 
-  def circle[MM, W <: Material](pos:Vector3, radius:Double, segments:Int, material: MM)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W]): Mesh[W] = {
+  def circle[MM, W <: Material, V](pos:V, radius:Double, segments:Int, material: MM)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W], vectorTypeclass: VectorTypeclass[V]): Mesh[W] = {
     //TODO: segments should be the amount. Period. Maybe we should make some system for geometry caching.
     val s = segments.toDouble.mapContrain(2,256,0,circleGeometries.length).toInt
-    val mm = addMeshInPlace(circleGeometries(s), pos, meshMaterialTypeClass.toMeshMaterial(material))
+    val mm = addMeshInPlace(circleGeometries(s), vectorTypeclass.toVector(pos), meshMaterialTypeClass.toMeshMaterial(material))
     mm.scale.set(radius,radius,radius)
     mm
   }
 
   //Scala doesn't allow overloading and default parameters yet.
-  def circle(pos:Vector3, radius:Double): Mesh[MeshBasicMaterial] = {
-    circle(pos, radius, defaultMeshMaterial)
+  def circle[V](pos:V, radius:Double)(implicit vectorTypeclass: VectorTypeclass[V]): Mesh[MeshBasicMaterial] = {
+    circle(vectorTypeclass.toVector(pos), radius, defaultMeshMaterial)
   }
 
-  def circle(pos:Vector3, radius:Double, segments:Int): Mesh[MeshBasicMaterial] = {
-    circle(pos, radius, segments, defaultMeshMaterial)
+  def circle[V](pos:V, radius:Double, segments:Int)(implicit vectorTypeclass: VectorTypeclass[V]): Mesh[MeshBasicMaterial] = {
+    circle(vectorTypeclass.toVector(pos), radius, segments, defaultMeshMaterial)
   }
 
   //########################   Triangle   ############################
@@ -194,7 +194,7 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
 
   //#######################  CUBE #############################
 
-  val boxGeometry = new BoxGeometry(1, 1, 1)
+  private val boxGeometry = new BoxGeometry(1, 1, 1)
 
   def cube[MM, W <: Material, V](pos: V, width:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W], vectorTypeclass: VectorTypeclass[V]): Mesh[W] = {
     val m = addMeshInPlace(boxGeometry, vectorTypeclass.toVector(pos), meshMaterialTypeClass.toMeshMaterial(material))
@@ -211,7 +211,7 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
   //#######################  SPHERE #############################
 
   //Create several geometries depending on size of sphere or create on demand
-  val sphereGeometries =  (1 to 8).map(x=> new SphereGeometry(1, Math.pow(2,x), Math.pow(2,x))).toArray
+  private val sphereGeometries =  (1 to 8).map(x=> new SphereGeometry(1, Math.pow(2,x), Math.pow(2,x))).toArray
 
   def sphere[MM, W <: Material, V](pos: V, radius:Double, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W], vectorTypeclass: VectorTypeclass[V]): Mesh[W] = {
     val s = radius.mapContrain(0,1920,4,sphereGeometries.length).toInt
@@ -234,9 +234,9 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
     mesh
   }
 
-  //
-  val tPointMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false, transparent= false))
-  val nPointMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, sizeAttenuation= false))
+
+  private val tPointMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false, transparent= false))
+  private val nPointMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, sizeAttenuation= false))
 
   def point[V](positions:V*)(implicit vectorTypeclass: VectorTypeclass[V]): Unit ={
     val geometry = new Geometry()
@@ -255,7 +255,7 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
   }
 
   //Check for options
-  val pMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false, transparent= false))
+  private val pMaterial = new PointsMaterial(js.Dynamic.literal(size= 1.0, vertexColors= THREE.VertexColors, depthTest= false, opacity= defaultLineMaterial.opacity, sizeAttenuation= false, transparent= false))
 
   //TODO: Check if we can replace RGB by some kinf of Color Typeclass, yey !
   def point[T, V](data: (V,T)*)(implicit vectorTypeclass: VectorTypeclass[V], n :ColorTypeclass[T]) ={
@@ -322,20 +322,20 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
   }
   //#######################  LIGHTS #############################
 
-  def addHemisphereLight(skyColorHex: Int, groundColorHex: Int, intensity: Double) = {
-    val light = new HemisphereLight(skyColorHex, groundColorHex, intensity)
+  def addHemisphereLight[C1, C2](skyColorHex: C1, groundColorHex: C2, intensity: Double)(implicit c1: ColorTypeclass[C1], c2: ColorTypeclass[C2]) = {
+    val light = new HemisphereLight(c1.toColor(skyColorHex).getHex(), c2.toColor(groundColorHex).getHex(), intensity)
     scene.add( light )
     light
   }
 
-  def addAmbientLight(color: Int) = {
-    val light = new AmbientLight(color)
+  def addAmbientLight[C](color: C)(implicit colorTypeclass: ColorTypeclass[C]) = {
+    val light = new AmbientLight(colorTypeclass.toColor(color).getHex())
     scene.add( light )
     light
   }
 
-  def addDirectionalLight[V](color:Int, intensity: Double, position: V)(implicit vectorTypeclass: VectorTypeclass[V])= {
-    val directionalLight = new DirectionalLight(color, intensity)
+  def addDirectionalLight[V, C](color: C, intensity: Double, position: V)(implicit vectorTypeclass: VectorTypeclass[V], colorTypeclass: ColorTypeclass[C])= {
+    val directionalLight = new DirectionalLight(colorTypeclass.toColor(color).getHex(), intensity)
     directionalLight.position.add(vectorTypeclass.toVector(position))
     scene.add(directionalLight)
     directionalLight

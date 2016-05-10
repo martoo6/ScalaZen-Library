@@ -2,10 +2,13 @@ package main.lib
 
 trait CameraControls extends BasicCanvas{
 
-  controls = new OrbitControls(camera , renderer.domElement)
-  withControlsRender = true
+  lazy val controls = {
+    val c = new OrbitControls(camera , renderer.domElement)
+    c.center = _center
+    c
+  }
   //TODO: this will fail as we change center mode
-  controls.center = _center
+
 
   override def renderLoop(timestamp: Double) ={
     controls.update()

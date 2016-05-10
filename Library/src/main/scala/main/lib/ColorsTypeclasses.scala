@@ -53,13 +53,9 @@ trait ColorsTypeclasses{
     def b(t: GRY):Double = t.v
   }
 
-//  //Same as Grayscale
-//
-//  //Same as RGB without ALPHA - Could Change with some king of color mode
-//
-//  //Same as RGB - Could Change with some king of color mode
 
 
+  //  //Same as Grayscale
   implicit def Tuple2ToColorTypeclass[T1, T2](implicit n1:Numeric[T1], n2:Numeric[T2]): ColorTypeclass[(T1,T2)] ={
     new ColorTypeclass[(T1, T2)] {
       def toColor(t: (T1, T2)): Color = new Color(n1.toDouble(t._1), n1.toDouble(t._1), n1.toDouble(t._1))
@@ -70,6 +66,7 @@ trait ColorsTypeclasses{
     }
   }
 
+  //  //Same as RGB without ALPHA - Could Change with some king of color mode
   implicit def Tuple3ToColorTypeclass[T1, T2, T3](implicit n1:Numeric[T1], n2:Numeric[T2], n3:Numeric[T3]): ColorTypeclass[(T1,T2,T3)] ={
     new ColorTypeclass[(T1,T2,T3)] {
       def toColor(t: (T1, T2, T3)): Color = new Color(n1.toDouble(t._1), n2.toDouble(t._2), n3.toDouble(t._3))
@@ -80,6 +77,7 @@ trait ColorsTypeclasses{
     }
   }
 
+  //Same as RGB - Could Change with some king of color mode
   implicit def Tuple4ToColorTypeclass[T1, T2, T3, T4](implicit n1:Numeric[T1], n2:Numeric[T2], n3:Numeric[T3], n4:Numeric[T4]): ColorTypeclass[(T1,T2,T3, T4)] ={
     new ColorTypeclass[(T1,T2,T3,T4)] {
       def toColor(t: (T1, T2, T3,T4)): Color = new Color(n1.toDouble(t._1), n2.toDouble(t._2), n3.toDouble(t._3))

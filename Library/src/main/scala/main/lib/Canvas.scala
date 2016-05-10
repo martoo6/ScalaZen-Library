@@ -25,7 +25,6 @@ trait Canvas extends WorldCoordinates{
 
   var renderAction: Unit => Unit = {_=>renderer.render(scene, camera, forceClear = !canvasStyle)}
   var canvasStyle = false
-  var withControlsRender = false
 
   object Setup
   {
@@ -80,12 +79,6 @@ trait Canvas extends WorldCoordinates{
       renderer.autoClearColor = true
       this
     }
-    def withControls={
-      controls = new OrbitControls(camera , renderer.domElement)
-      withControlsRender = true
-      controls.center = _center
-      this
-    }
     def antialiasing = {
       composer.addPass( new RenderPass( scene, camera ) )
 
@@ -110,8 +103,6 @@ trait Canvas extends WorldCoordinates{
   var clock: Clock
   var body: dom.Node
 
-
-  var controls:OrbitControls = null
   val composer:EffectComposer
 
   var delta:Double = 0
@@ -138,7 +129,6 @@ trait Canvas extends WorldCoordinates{
       frameCount += 1
 
       //Should replace for function/s that execute whats needed instead of ugly ifs
-      if (withControlsRender) controls.update()
       if (delta > 1 / minFrameRate && frameCount > 60) {
         times += 1
         if (times > 15) throw new Error(s"Im preventing your machine from exploding, optimize your code! Last delta was: $delta")

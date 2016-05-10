@@ -1,4 +1,4 @@
-import main.lib._
+import main.lib.{CameraControls, _}
 
 import scala.scalajs.js.annotation.JSExport
 
@@ -6,9 +6,9 @@ import scala.scalajs.js.annotation.JSExport
 //########################
 
 @JSExport
-class ThreeJSApp11 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay{
+class ThreeJSApp11 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay with CameraControls{
 
-  Setup._3D.Center.asScene.withControls
+  Setup._3D.Center.asScene
 
   addHemisphereLight(0xFFFFFF, 0x05F5F5, 1.0)
   addDirectionalLight(0xFFFFFF, 0.4, (0,1,0)).target.lookAt(center)
