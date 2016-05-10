@@ -52,7 +52,6 @@ trait Recorder extends BasicCanvas{
       if(start==0) {
         start = 1
         Try(recorder.start())
-        println(recorderConfig.workersPath)
       }else{
         start = -1
       }

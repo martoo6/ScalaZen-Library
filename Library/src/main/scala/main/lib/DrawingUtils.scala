@@ -54,7 +54,7 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
   }
 
   def mspline[LM, W <: Material](vertexes :Iterable[Vector3], divisions:Int = 0, material: LM = defaultLineMaterial)(implicit lineMaterialTypeClass: LineMaterialTypeClass[LM, W]): Line[W] = {
-    val curve = new SplineCurve3(vertexes.toJSArray)
+    val curve = new CatmullRomCurve3(vertexes.toJSArray)
     val geometry = new Geometry()
     //TODO: look at divisions, what the heck ?
     geometry.vertices = curve.getPoints(if(divisions<=0) vertexes.size else divisions)
@@ -343,7 +343,7 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
 
   //########################   GROUPING     ########################
 
-  def grouped(lst: Seq[Object3D]) = {
+  def group(lst: Iterable[Object3D]): Group = {
     val g = new Group()
     //Must be added one by one in order to work, should check JS to understand behaviour
     lst.foreach(g.add)

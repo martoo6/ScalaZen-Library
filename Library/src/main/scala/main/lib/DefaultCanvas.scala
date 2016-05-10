@@ -11,7 +11,7 @@ object DefaultCanvas{
   def width = dom.window.innerWidth
   def height = dom.window.innerHeight
 
-  val renderer = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true))
+  val renderer = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true, clearColor="0xFFFFFF"))
 
   //Check if i can force other renderers for better quality or other uses
   //val renderer = new CanvasRenderer(js.Dynamic.literal(preserveDrawingBuffer=true))
