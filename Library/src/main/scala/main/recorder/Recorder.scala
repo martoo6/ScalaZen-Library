@@ -42,35 +42,53 @@ case class RecorderConfig(
 }
 
 trait Recorder extends BasicCanvas{
+  sealed trait RecorderState
+  case object Recording extends RecorderState
+  case object Idle extends RecorderState
+  case object Stop extends RecorderState
+
   //TODO: Support multiple configs and Recorders on the same sketch
   val recorderConfig: RecorderConfig
   def recorderBuilder:CCapture
   lazy val recorder = recorderBuilder
-  protected var start = 0
+  protected var recorderState: RecorderState = Idle
+
+
 
 
   dom.window.addEventListener("keypress", {e: KeyboardEvent =>
     if(recorderConfig.recorderKeys.contains(js.Dynamic.global.String.applyDynamic("fromCharCode")(e.charCode.asInstanceOf[js.Any]).asInstanceOf[String])){
-      if(start==0) {
-        start = 1
-        Try(recorder.start())
-      }else{
-        start = -1
+      recorderState match{
+        case Idle => startRecording
+        case _    => recorderState = Stop
       }
     }
   })
 
   override def renderLoop(timestamp: Double) ={
-    if(start == -1){
+    if(recorderState.isInstanceOf[Stop.type]){
       recorder.stop()
       recorder.save()
-      start = 0
+      recorderState = Idle
     }
     super.renderLoop(timestamp)
-    //TODO: Get rid of IFs please
-    if(start>0) {
+    if(recorderState.isInstanceOf[Recording.type]) {
       recorder.capture(renderer.domElement)
-      start+=1
+    }
+  }
+
+  def startRecording = {
+    if(recorderState.isInstanceOf[Idle.type]) {
+      recorderState = Recording
+      Try(recorder.start())
+    }
+  }
+
+  def stopRecording = {
+    if(recorderState.isInstanceOf[Recording.type]) {
+      recorder.stop()
+      recorder.save()
+      recorderState = Idle
     }
   }
 }

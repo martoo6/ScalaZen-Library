@@ -20,12 +20,12 @@ class ThreeJSApp21 extends BasicCanvas with SimplexNoise with DrawingUtils with 
 
   val p = Palette(new Color(0x2D4059), new Color(0xFF5722), new Color(0xEEEEEE))
 
-  val scale = 5
+  val scale = 10
   val similarity = 0.01
 
   val stripLength = 100
 
-  val steps = (2 to stripLength).map(_*0.01).toArray
+  val steps = (2 to stripLength).map(_*0.04).toArray
 
   val list = for{
     i <- 0 to 50
@@ -39,14 +39,11 @@ class ThreeJSApp21 extends BasicCanvas with SimplexNoise with DrawingUtils with 
 
   //org.scalajs.dom.document.body.style.backgroundColor = "#222831"
 
+  startRecording
+
   def render(): Unit = {
     //org.scalajs.dom.document.body.style.backgroundColor = "#222831"
     rect((0, 0, -500), width*100, height*100, new Color(0x222831))
-
-    if(frameCount == 1){
-      start = 1
-      Try(recorder.start())
-    }
 
     val slice = fCos(TWO_PI*frameCount/(totalFrames)).map(-1,1,0,stripLength - 2).toInt
 
@@ -54,6 +51,7 @@ class ThreeJSApp21 extends BasicCanvas with SimplexNoise with DrawingUtils with 
       mspline(list(i).drop(slice), list(i).size-slice, p(i % p.colors.size))
     }
     group(g).setRotationFromAxisAngle(yAxis, frameCount.map(0, totalFrames, 0, TWO_PI))
+
+    if(frameCount==totalFrames) pause
   }
 }
-
