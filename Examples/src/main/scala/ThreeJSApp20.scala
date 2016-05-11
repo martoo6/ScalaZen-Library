@@ -31,7 +31,7 @@ class ThreeJSApp20 extends BasicCanvas with DrawingUtils with StatsDisplay with 
 
   val all = vals.zipWithIndex
 
-  val group = grouped(vals)
+  val g = group(vals)
 
   var a = true
   var b = true
@@ -46,7 +46,7 @@ class ThreeJSApp20 extends BasicCanvas with DrawingUtils with StatsDisplay with 
         pos.lerpVectors(coords(t1)(i), coords(t2)(i), time % 1)
         v.material.color.setRGB(pos.x * 0.01.constrain(0, 1), pos.y * 0.01.constrain(0, 1), pos.z * 0.01.constrain(0, 1))
     }
-    group.setRotationFromAxisAngle(yAxis, map(frameCount, 0, 60 * 5, 0, TWO_PI))
+    g.setRotationFromAxisAngle(yAxis, map(frameCount, 0, 60 * 5, 0, TWO_PI))
   }
 
 }

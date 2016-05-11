@@ -22,14 +22,14 @@ class ThreeJSApp19 extends BasicCanvas with DrawingUtils with StatsDisplay with 
 
   val all = (sPos, rPos, vals).zipped
 
-  val group = grouped(vals)
+  val g = group(vals)
 
   def render(): Unit = {
     all.foreach {
       case (sp, rp, s) =>
         s.position.lerpVectors(sp, rp, sin(frameCount.map(0, 60 * 5, 0, TWO_PI)).map(-1, 1, 0, 1))
     }
-    group.setRotationFromAxisAngle(yAxis, frameCount.map(0, 60 * 5, 0, TWO_PI))
+    g.setRotationFromAxisAngle(yAxis, frameCount.map(0, 60 * 5, 0, TWO_PI))
   }
 
 }

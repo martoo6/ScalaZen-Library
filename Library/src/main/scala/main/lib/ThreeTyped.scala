@@ -3147,6 +3147,12 @@ class Geometry extends Object3D {
   }
 
   @js.native
+  @JSName("THREE.CatmullRomCurve3")
+  class CatmullRomCurve3(points: js.Array[Vector3] = ???) extends Curve[Vector3] {
+    //var points: js.Array[Vector3] = js.native
+  }
+
+  @js.native
   @JSName("THREE.BoxGeometry")
   class BoxGeometry extends Geometry {
     def this(width: Double, height: Double, depth: Double, widthSegments: Double = ???, heightSegments: Double = ???, depthSegments: Double = ???) = this()

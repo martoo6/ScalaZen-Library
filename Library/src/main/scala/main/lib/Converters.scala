@@ -55,9 +55,6 @@ trait Converters {
   implicit def SeqVec2IntToVector3(lst: Seq[vec2Int]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
   implicit def SeqVec2DoubleIntToVector3(lst: Seq[vec2DoubleInt]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
   implicit def SeqVec2IntDoubleToVector3(lst: Seq[vec2IntDouble]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
-
-
-
 //
 //  implicit def SeqVec3IntDoubleIntToVector3(i: Seq[{val _1}]): Seq[Vector3] = new Vector3(i._1, i._2, i._3)
 

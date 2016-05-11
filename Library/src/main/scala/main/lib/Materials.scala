@@ -16,8 +16,16 @@ trait Materials {
     def toLineMaterial(t:T): W
   }
 
+  implicit object RGBToLineMaterial extends LineMaterialTypeClass[RGB, LineBasicMaterial]{
+    override def toLineMaterial(t: RGB): LineBasicMaterial = {
+      val l = new LineBasicMaterial(js.Dynamic.literal(color = t.toColor, side= faceSide, linewidth = defaultLineMaterial.linewidth))
+      l.opacity = t.o
+      l
+    }
+  }
+
   implicit object ColorToLineMaterial extends LineMaterialTypeClass[Color, LineBasicMaterial]{
-    override def toLineMaterial(t: Color): LineBasicMaterial = new LineBasicMaterial(js.Dynamic.literal(color = t, side= faceSide))
+    override def toLineMaterial(t: Color): LineBasicMaterial = new LineBasicMaterial(js.Dynamic.literal(color = t, side= faceSide, linewidth = defaultLineMaterial.linewidth))
   }
 
   implicit object LineBasicMaterialToLineMaterial extends LineMaterialTypeClass[LineBasicMaterial, LineBasicMaterial]{

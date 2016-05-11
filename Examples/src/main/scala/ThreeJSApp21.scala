@@ -1,27 +1,59 @@
 import main.lib._
+import main.recorder.{GifRecorder, RecorderConfig}
 
+import scala.scalajs.js.JSConverters
 import scala.scalajs.js.annotation.JSExport
+import JSConverters._
+import scala.util.Try
 
 /**
  */
 
 @JSExport
-class ThreeJSApp21 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay with AutoClear with CameraControls{
+class ThreeJSApp21 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay with AutoClear with CameraControls with GifRecorder{
   Setup._2D.asScene
 
-  def render(): Unit = {
+  val totalFrames = 30*10
+  val recorderConfig: RecorderConfig = RecorderConfig(Nil, frameLimit = totalFrames, motionBlurFrames = 4, quality = 20)
 
-    val list = 1 to (abs(sin(frameCount * 0.01)) * 100).toInt
+  lineWeight(3)
 
-    for (i <- 0 to 25) {
-      val res = list.foldLeft((0.0, 0.0, 0.0) :: Nil) { (lst, n) =>
-        val (x, y, z) = lst.head
-        val p = (noise(n * 0.01, i, 0) * 10 + x, noise(n * 0.01, i, 10) * 10 + y, noise(n * 0.01, i, 20) * 10 + z)
-        p :: lst
-      }
-      mspline(res, list.size * 5, Rgb(noise(i), 0, 1))
-    }
+  val p = Palette(new Color(0x2D4059), new Color(0xFF5722), new Color(0xEEEEEE))
+
+  val scale = 5
+  val similarity = 0.01
+
+  val stripLength = 100
+
+  val steps = (2 to stripLength).map(_*0.01).toArray
+
+  val list = for{
+    i <- 0 to 50
+    lineNoiseSeed = i *similarity
+  } yield {
+    steps.foldLeft(new Vector3(0.0, 0.0, 0.0) :: Nil) { (lst, n) =>
+      val v = lst.head
+      new Vector3(noise(n, lineNoiseSeed + 200) * scale + v.x, noise(n, lineNoiseSeed + 300) * scale + v.y, noise(n, lineNoiseSeed + 400) * scale + v.z) :: lst
+    }.toJSArray
   }
 
+  //org.scalajs.dom.document.body.style.backgroundColor = "#222831"
+
+  def render(): Unit = {
+    //org.scalajs.dom.document.body.style.backgroundColor = "#222831"
+    rect((0, 0, -500), width*100, height*100, new Color(0x222831))
+
+    if(frameCount == 1){
+      start = 1
+      Try(recorder.start())
+    }
+
+    val slice = fCos(TWO_PI*frameCount/(totalFrames)).map(-1,1,0,stripLength - 2).toInt
+
+    val g = list.indices.map { i =>
+      mspline(list(i).drop(slice), list(i).size-slice, p(i % p.colors.size))
+    }
+    group(g).setRotationFromAxisAngle(yAxis, frameCount.map(0, totalFrames, 0, TWO_PI))
+  }
 }
 

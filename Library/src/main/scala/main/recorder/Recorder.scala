@@ -37,7 +37,9 @@ case class RecorderConfig(
                            frameLimit:Int = 0,
                            autoSaveTime:Int = 0,
                            onProgress: Float => Any = { _ => Unit }
-                         )
+                         ){
+  def getFrameLimit = if(motionBlurFrames==0) frameLimit else frameLimit / motionBlurFrames
+}
 
 trait Recorder extends BasicCanvas{
   //TODO: Support multiple configs and Recorders on the same sketch
@@ -52,7 +54,6 @@ trait Recorder extends BasicCanvas{
       if(start==0) {
         start = 1
         Try(recorder.start())
-        println(recorderConfig.workersPath)
       }else{
         start = -1
       }
@@ -84,7 +85,7 @@ trait WebMRecorder extends Recorder{
     quality = recorderConfig.quality,
     workersPath = recorderConfig.workersPath,
     timeLimit = recorderConfig.timeLimit,
-    frameLimit = recorderConfig.frameLimit,
+    frameLimit = recorderConfig.getFrameLimit,
     autoSaveTime = recorderConfig.autoSaveTime,
     onProgress = recorderConfig.onProgress
   ))
@@ -103,7 +104,7 @@ trait GifRecorder extends Recorder{
     quality = recorderConfig.quality,
     workersPath = recorderConfig.workersPath,
     timeLimit = recorderConfig.timeLimit,
-    frameLimit = recorderConfig.frameLimit,
+    frameLimit = recorderConfig.getFrameLimit,
     autoSaveTime = recorderConfig.autoSaveTime,
     onProgress = recorderConfig.onProgress
   ))
@@ -118,7 +119,7 @@ trait PNGRecorder extends Recorder{
     quality = recorderConfig.quality,
     workersPath = recorderConfig.workersPath,
     timeLimit = recorderConfig.timeLimit,
-    frameLimit = recorderConfig.frameLimit,
+    frameLimit = recorderConfig.getFrameLimit,
     autoSaveTime = recorderConfig.autoSaveTime,
     onProgress = recorderConfig.onProgress
   ))
@@ -133,7 +134,7 @@ trait JPEGRecorder extends Recorder{
     quality = recorderConfig.quality,
     workersPath = recorderConfig.workersPath,
     timeLimit = recorderConfig.timeLimit,
-    frameLimit = recorderConfig.frameLimit,
+    frameLimit = recorderConfig.getFrameLimit,
     autoSaveTime = recorderConfig.autoSaveTime,
     onProgress = recorderConfig.onProgress
   ))
