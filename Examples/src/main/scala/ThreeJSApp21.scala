@@ -10,8 +10,8 @@ import scala.util.Try
  */
 
 @JSExport
-class ThreeJSApp21 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay with AutoClear with CameraControls with GifRecorder{
-  Setup._2D.asScene
+class ThreeJSApp21 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay with AutoClear with GifRecorder{
+  Setup._3D.asScene.size(500, 500)
 
   val totalFrames = 30*10
   val recorderConfig: RecorderConfig = RecorderConfig(Nil, frameLimit = totalFrames, motionBlurFrames = 4, quality = 20)

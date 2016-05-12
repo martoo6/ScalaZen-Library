@@ -19,7 +19,7 @@ object DefaultCanvas{
   renderer.setSize(width, height)
   //renderer.setPixelRatio( dom.window.devicePixelRatio )
 
-  val e =renderer.domElement
+  val e = renderer.domElement
 
   val body: dom.Node = dom.document.body
   body.appendChild(e)

@@ -1,12 +1,10 @@
 package main.lib
 
-import main.recorder.CCapture
 import org.scalajs.dom
-import org.scalajs.dom.{html, MouseEvent}
-import org.scalajs.dom.raw.{Node, Location, KeyboardEvent}
+import org.scalajs.dom.MouseEvent
+import org.scalajs.dom.raw.KeyboardEvent
 
 import scala.scalajs.js
-import scala.scalajs.js.JSApp
 
 /**
  * Created by martin on 20/10/15.
@@ -14,85 +12,15 @@ import scala.scalajs.js.JSApp
 trait Canvas extends WorldCoordinates{
   //self: Helpers=>
 
-  def run():Unit = {
-    renderLoop(System.currentTimeMillis())
-  }
+  //TODO: Replace everything possible with vals !
 
   var faceSide: Side = THREE.FrontSide
   val _center = new Vector3(0,0,500)
   val leftBottomPosition = new Vector3(width / 2, height / 2, 1000)
   var position = _center
 
-  var renderAction: Unit => Unit = {_=>renderer.render(scene, camera, forceClear = !canvasStyle)}
+  var renderAction: Unit => Unit = { _ => renderer.render(scene, camera, forceClear = !canvasStyle)}
   var canvasStyle = false
-
-  object Setup
-  {
-    private def resetPosition = camera.position.set(position.x, position.y, position.z)
-
-    def Center= {
-      position = _center
-      worldCoordinates = CenterCoordiantes
-      resetPosition
-      this
-    }
-    def LeftBottom={
-      position = leftBottomPosition
-      worldCoordinates = LeftBottomCoordiantes
-      resetPosition
-      this
-    }
-    def _3D = {
-      //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
-      camera = new PerspectiveCamera( 45, width / height, 1, 1000 )
-      faceSide = THREE.DoubleSide
-      resetPosition
-      this
-    }
-    def _2D = {
-      //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00))
-      renderer.sortObjects = false
-      camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
-      faceSide = THREE.FrontSide
-      resetPosition
-      this
-    }
-    def ortho = {
-      camera = new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 )
-      resetPosition
-      this
-    }
-    def perspective = {
-      camera = new PerspectiveCamera( 45, width / height, 1, 1000 )
-      resetPosition
-      this
-    }
-    def asCanvas={
-      canvasStyle=true
-      renderer.autoClear = false
-      renderer.autoClearColor = false
-      this
-    }
-    def asScene={
-      canvasStyle=false
-      renderer.autoClear = true
-      renderer.autoClearColor = true
-      this
-    }
-    def antialiasing = {
-      composer.addPass( new RenderPass( scene, camera ) )
-
-      val effect = new ShaderPass(FXAAShader)
-      effect.uniforms.resolution.value.set( 1.0 / width, 1.0 / height )
-
-      //TODO: render to screen should be the last one, check on that later
-      effect.renderToScreen = true
-      composer.addPass( effect )
-      renderAction = _ => composer.render(1)
-      this
-    }
-  }
-
 
   val canvasData: CanvasData
 
@@ -101,7 +29,6 @@ trait Canvas extends WorldCoordinates{
   var camera: Camera
   var renderer: WebGLRenderer
   var clock: Clock
-  var body: dom.Node
 
   val composer:EffectComposer
 
@@ -110,6 +37,161 @@ trait Canvas extends WorldCoordinates{
 
   var mouseX = 0.0
   var mouseY = 0.0
+
+  def run():Unit = {
+    println(width)
+    println(height)
+    Setup.configure()
+    renderLoop(System.currentTimeMillis())
+  }
+
+  object Setup {
+
+    case class SetupConfiguration(worldCoordinates: Coordinates,
+                                  position: Vector3,
+                                  faceSide: Side,
+                                  camera: (Int, Int) => Camera,
+                                  sortObjects: Boolean,
+                                  ortho: Boolean,
+                                  canvasStyle: Boolean,
+                                  autoClear: Boolean,
+                                  autoClearColor: Boolean,
+                                  antialiasing: Boolean)
+
+    var config: SetupConfiguration = SetupConfiguration(
+      CenterCoordiantes,
+      _center,
+      THREE.FrontSide,
+      getOrthograpicCamera,
+      sortObjects = false,
+      ortho = true,
+      canvasStyle = false,
+      autoClear = true,
+      autoClearColor = true,
+      antialiasing = false
+    )
+
+    //    sealed trait WorldCoordinates{
+    //      def position: Vector3
+    //      def coordinate: Coordinates
+    //    }
+    //    case object CenterCoordinate extends WorldCoordinates{
+    //      def position =_center
+    //      def coordinate = CenterCoordiantes
+    //    }
+    //    case object LeftBottomCoordinate extends WorldCoordinates{
+    //      def position = leftBottomPosition
+    //      def coordinate = LeftBottomCoordiantes
+    //    }
+    //
+    //    sealed trait Dimensions{
+    //      def position =
+    //      def coordinate =
+    //    }
+    //    case object _2Dimensions extends Dimensions
+    //    case object _3Dimensions extends Dimensions
+    //
+    //    sealed trait CameraPerspective
+    //    case object Perspective extends CameraPerspective
+    //    case object Orthogonal extends CameraPerspective
+    //
+    //    sealed trait RenderMode
+    //    case object Canvas extends RenderMode
+    //    case object Scene extends RenderMode
+    //
+    //    case class SetupConfiguration(
+    //                                   worldCoordinates: WorldCoordinates,
+    //                                   dimensions: Dimensions,
+    //                                   cameraPerspective: CameraPerspective,
+    //                                   renderMode: RenderMode,
+    //                                   antialiasing: Boolean
+    //                                 )
+    //    var config: SetupConfiguration = SetupConfiguration(CenterCoordinate, _2Dimensions, Orthogonal, Scene, antialiasing = false)
+
+    private def getOrthograpicCamera(width: Int, height:Int):Camera = new OrthographicCamera(width / -2, width / 2, height / 2, height / -2, -1000, 1000)
+    private def getPerspectiveCamera(width: Int, height:Int):Camera = new PerspectiveCamera(45, width / height, 1, 1000)
+
+    def Center = {
+      config.copy(position = _center)
+      config.copy(worldCoordinates = CenterCoordiantes)
+      this
+    }
+    def LeftBottom = {
+      config.copy(position = leftBottomPosition)
+      config.copy(worldCoordinates = LeftBottomCoordiantes)
+      this
+    }
+    def _3D = {
+      //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
+      config.copy(camera = getOrthograpicCamera)
+      config.copy(faceSide = THREE.DoubleSide)
+      this
+    }
+    def _2D = {
+      //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00))
+      config.copy(camera = getOrthograpicCamera)
+      config.copy(faceSide = THREE.FrontSide)
+      config.copy(sortObjects = false)
+      this
+    }
+    def ortho = {
+      config.copy(camera = getOrthograpicCamera)
+      this
+    }
+    def perspective = {
+      config.copy(camera = getPerspectiveCamera)
+      this
+    }
+    def asCanvas = {
+      config.copy(canvasStyle = true)
+      config.copy(autoClear = false)
+      config.copy(autoClearColor = false)
+      this
+    }
+    def asScene = {
+      config.copy(canvasStyle = false)
+      config.copy(autoClear = true)
+      config.copy(autoClearColor = true)
+      this
+    }
+    def antialiasing = {
+      config.copy(antialiasing = true)
+      this
+    }
+    def size(_width: Int, _height: Int) = {
+      width = _width
+      height = _height
+      this
+    }
+
+    def configure() = {
+      config match {
+        case SetupConfiguration(_worldCoordinates, _position, _faceSide, _camera, _sortObjects, _ortho, _canvasStyle, _autoClear, _autoClearColor, _antialiasing) =>
+          worldCoordinates = _worldCoordinates
+          position = _position
+          faceSide = _faceSide
+          camera = _camera(width, height)
+          renderer.sortObjects = _sortObjects
+          canvasStyle = _canvasStyle
+          renderer.autoClear = _autoClear
+          renderer.autoClearColor = _autoClearColor
+          if (_antialiasing) {
+            composer.addPass(new RenderPass(scene, camera))
+            val effect = new ShaderPass(FXAAShader)
+            effect.uniforms.resolution.value.set(1.0 / width, 1.0 / height)
+
+            //TODO: render to screen should be the last one, check on that later
+            effect.renderToScreen = true
+            composer.addPass(effect)
+            renderAction = _ => composer.render(1)
+          } else {
+            renderAction = { _ => renderer.render(scene, camera, forceClear = !canvasStyle)}
+          }
+          camera.position.set(position.x, position.y, position.z)
+          canvasData.renderer.setSize(width, height)
+      }
+    }
+  }
 
   dom.window.onmousemove = {
     event:MouseEvent =>
