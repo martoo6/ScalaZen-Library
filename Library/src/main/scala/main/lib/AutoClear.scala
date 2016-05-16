@@ -5,6 +5,8 @@ package main.lib
   */
 trait AutoClear extends BasicCanvas{
   override def renderLoop(timestamp: Double) = {
+    super.renderLoop(timestamp)
+
     (0 to scene.children.length).reverse.foreach{ i=>
       val c = scene.children(i)
       c match{
@@ -17,11 +19,13 @@ trait AutoClear extends BasicCanvas{
             case bg: BufferGeometry => bg.dispose();
             case g: Geometry => g.dispose();
           }
+        case l:Line[_] =>
+          l.material.dispose()
+          l.geometry.dispose()
         case _ =>
       }
       scene.remove(c)
     }
     //scene = new Scene()
-    super.renderLoop(timestamp)
   }
 }

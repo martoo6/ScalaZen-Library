@@ -2222,7 +2222,7 @@ class Geometry extends Object3D {
 
   @js.native
   @JSName("THREE.Line")
-  class Line[LM <: Material](geometry: Geometry = ???, material: LM = ???, mode: Double = ???) extends Object3D {
+  class Line[LM <: Material](var geometry: Geometry = ???,var material: LM = ???,var mode: Double = ???) extends Object3D {
     //def this(geometry: Geometry = ???, material: LineDashedMaterial = ???, mode: Double = ???) = this()
     //def this(geometry: Geometry = ???, material: Material = ???, mode: Double = ???) = this()
 //    var geometry: js.Any = js.native

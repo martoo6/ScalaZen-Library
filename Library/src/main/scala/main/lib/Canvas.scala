@@ -112,50 +112,44 @@ trait Canvas extends WorldCoordinates{
     private def getPerspectiveCamera(width: Int, height:Int):Camera = new PerspectiveCamera(45, width / height, 1, 1000)
 
     def Center = {
-      config.copy(position = _center)
-      config.copy(worldCoordinates = CenterCoordiantes)
+      config = config.copy(position = _center)
+      config = config.copy(worldCoordinates = CenterCoordiantes)
       this
     }
     def LeftBottom = {
-      config.copy(position = leftBottomPosition)
-      config.copy(worldCoordinates = LeftBottomCoordiantes)
+      config = config.copy(position = leftBottomPosition)
+      config = config.copy(worldCoordinates = LeftBottomCoordiantes)
       this
     }
     def _3D = {
       //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
-      config.copy(camera = getOrthograpicCamera)
-      config.copy(faceSide = THREE.DoubleSide)
+      config = config.copy(camera = getOrthograpicCamera)
+      config = config.copy(faceSide = THREE.DoubleSide)
       this
     }
     def _2D = {
       //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00))
-      config.copy(camera = getOrthograpicCamera)
-      config.copy(faceSide = THREE.FrontSide)
-      config.copy(sortObjects = false)
+      config = config.copy(camera = getOrthograpicCamera, faceSide = THREE.FrontSide, sortObjects = false)
       this
     }
     def ortho = {
-      config.copy(camera = getOrthograpicCamera)
+      config = config.copy(camera = getOrthograpicCamera)
       this
     }
     def perspective = {
-      config.copy(camera = getPerspectiveCamera)
+      config = config.copy(camera = getPerspectiveCamera)
       this
     }
     def asCanvas = {
-      config.copy(canvasStyle = true)
-      config.copy(autoClear = false)
-      config.copy(autoClearColor = false)
+      config = config.copy(canvasStyle = true, autoClear = false, autoClearColor = false)
       this
     }
     def asScene = {
-      config.copy(canvasStyle = false)
-      config.copy(autoClear = true)
-      config.copy(autoClearColor = true)
+      config = config.copy(canvasStyle = false, autoClear = true, autoClearColor = true)
       this
     }
     def antialiasing = {
-      config.copy(antialiasing = true)
+      config = config.copy(antialiasing = true)
       this
     }
     def size(_width: Int, _height: Int) = {
