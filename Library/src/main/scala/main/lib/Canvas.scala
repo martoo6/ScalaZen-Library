@@ -32,7 +32,7 @@ trait Canvas extends WorldCoordinates{
 
   val composer:EffectComposer
 
-  var delta:Double = 0
+  var delta:Float = 0
   var frameCount:Long = 0
 
   var mouseX = 0.0
@@ -122,9 +122,9 @@ trait Canvas extends WorldCoordinates{
       this
     }
     def _3D = {
-      //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.DoubleSide))
+      //new MeshBasicMaterial(js.Dynamic.literal(color= 0xffff00, side= THREE.FloatSide))
       config = config.copy(camera = getOrthograpicCamera)
-      config = config.copy(faceSide = THREE.DoubleSide)
+      config = config.copy(faceSide = THREE.FloatSide)
       this
     }
     def _2D = {
@@ -198,6 +198,8 @@ trait Canvas extends WorldCoordinates{
   val minFrameRate = 1
   var times = 0
 
+  var mainGroup:Group = new Group()
+
   def renderLoop(timestamp: Double){
 
     if(!isPaused) {
@@ -218,11 +220,13 @@ trait Canvas extends WorldCoordinates{
     if(!isPaused) {
       render
       //scene.add(scene)
-
+      //TODO: Could try to merge geometries and meshes in order to improve perfomance
+      scene.add(mainGroup)
       renderAction()
 
 
       camera.updateMatrix()
+      mainGroup = new Group()
     }
 
 
@@ -239,6 +243,10 @@ trait Canvas extends WorldCoordinates{
 
   def onKeyPress(f: String => Any): Unit ={
     dom.window.addEventListener("keypress", {e:KeyboardEvent => f(fromCharCode(e.charCode))})
+  }
+
+  def onKeyPress(pf: PartialFunction[String,Any]): Unit ={
+    dom.window.addEventListener("keypress", {e:KeyboardEvent => pf(fromCharCode(e.charCode))})
   }
 
   def onKeyPressEvent(f: KeyboardEvent => Any): Unit ={

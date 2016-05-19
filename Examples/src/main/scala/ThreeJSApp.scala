@@ -31,7 +31,8 @@ class ThreeJSApp extends BasicCanvas with DrawingUtils with SimplexNoise with Ma
   def render():Unit = {
     if(frameCount < 60*10) {
       val size = rand(2,5)
-      stroke(Palette.iDemandPancake.getRandom, size*2)
+      stroke(Palette.iDemandPancake.getRandom)
+      lineWeight(size*2)
 
       val fc = frameCount*0.02
 
@@ -42,7 +43,7 @@ class ThreeJSApp extends BasicCanvas with DrawingUtils with SimplexNoise with Ma
       val dest = (x,y,z)
 
       line(center,dest)
-      segSphere(dest, size, 5, Palette.iDemandPancake.getRandom.materializeL())
+      segSphere(dest, size, 5, Palette.iDemandPancake.getRandom.toMeshLambertMaterial())
     }
   }
 }

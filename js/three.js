@@ -123,7 +123,7 @@ THREE.PCFSoftShadowMap = 2;
 
 THREE.FrontSide = 0;
 THREE.BackSide = 1;
-THREE.DoubleSide = 2;
+THREE.FloatSide = 2;
 
 // shading
 
@@ -12707,7 +12707,7 @@ THREE.Loader.prototype = {
 
 			if ( m.doubleSided !== undefined ) {
 
-				mpars.side = THREE.DoubleSide;
+				mpars.side = THREE.FloatSide;
 
 			}
 
@@ -17065,7 +17065,7 @@ THREE.Mesh.prototype.raycast = ( function () {
 
 					} else {
 
-						if ( ray.intersectTriangle( vA, vB, vC, material.side !== THREE.DoubleSide, intersectionPoint ) === null ) continue;
+						if ( ray.intersectTriangle( vA, vB, vC, material.side !== THREE.FloatSide, intersectionPoint ) === null ) continue;
 
 					}
 
@@ -17117,7 +17117,7 @@ THREE.Mesh.prototype.raycast = ( function () {
 
 					} else {
 
-						if ( ray.intersectTriangle( vA, vB, vC, material.side !== THREE.DoubleSide, intersectionPoint ) === null ) continue;
+						if ( ray.intersectTriangle( vA, vB, vC, material.side !== THREE.FloatSide, intersectionPoint ) === null ) continue;
 
 					}
 
@@ -17217,7 +17217,7 @@ THREE.Mesh.prototype.raycast = ( function () {
 
 				} else {
 
-					if ( ray.intersectTriangle( a, b, c, faceMaterial.side !== THREE.DoubleSide, intersectionPoint ) === null ) continue;
+					if ( ray.intersectTriangle( a, b, c, faceMaterial.side !== THREE.FloatSide, intersectionPoint ) === null ) continue;
 
 				}
 
@@ -21167,7 +21167,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 	function setMaterialFaces( material ) {
 
-		material.side !== THREE.DoubleSide ? state.enable( _gl.CULL_FACE ) : state.disable( _gl.CULL_FACE );
+		material.side !== THREE.FloatSide ? state.enable( _gl.CULL_FACE ) : state.disable( _gl.CULL_FACE );
 		state.setFlipSided( material.side === THREE.BackSide );
 
 	}
@@ -24539,7 +24539,7 @@ THREE.WebGLPrograms = function ( renderer, capabilities ) {
 
 			alphaTest: material.alphaTest,
 			metal: material.metal,
-			doubleSided: material.side === THREE.DoubleSide,
+			doubleSided: material.side === THREE.FloatSide,
 			flipSided: material.side === THREE.BackSide
 
 		};

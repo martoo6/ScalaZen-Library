@@ -5,37 +5,39 @@ import scala.scalajs.js.Date
 /**
   * Created by martin on 04/11/15.
   */
-class Oscillator(var input: Unit => Double = _ => Date.now()){
+class Oscillator(var input: Unit => Float = _ => Date.now().toFloat){
+  implicit def toFloat(d:Double):Float = d.toFloat
+
   var amplitude = 1.0
   var frequency = 1.0
-  var oscOperation: Double => Double = Osc.Sin
+  var oscOperation: Float => Float = Osc.Sin
   var scale = (-1.0, 1.0)
-  val attachments = scala.collection.mutable.ListBuffer[Double => Unit]()
+  val attachments = scala.collection.mutable.ListBuffer[Float => Unit]()
 
-  def get(manualInput: Double = input()) = MathUtils.map(oscOperation(manualInput*frequency), -1, 1, scale._1, scale._2)
+  def get(manualInput: Float = input()) = MathUtils.map(oscOperation(manualInput*frequency), -1, 1, scale._1, scale._2)
   def get = MathUtils.map(oscOperation(input()*frequency), -1, 1, scale._1, scale._2)
   def run = {
     val value = get
     attachments.foreach(_(value))
   }
 
-  def amplitude(_amplitude:Double): Oscillator = {
+  def amplitude(_amplitude:Float): Oscillator = {
     amplitude = _amplitude
     this
   }
-  def frequency(_frequency:Double): Oscillator ={
+  def frequency(_frequency:Float): Oscillator ={
     frequency = _frequency
     this
   }
-  def scale(from:Double, to:Double): Oscillator ={
+  def scale(from:Float, to:Float): Oscillator ={
     scale = (from, to)
     this
   }
-  def oscOp(_oscOperation: Double => Double): Oscillator ={
+  def oscOp(_oscOperation: Float => Float): Oscillator ={
     oscOperation = _oscOperation
     this
   }
-  def attach(f: Double => Unit) = {
+  def attach(f: Float => Unit) = {
     attachments+=f
     this
   }
@@ -43,32 +45,32 @@ class Oscillator(var input: Unit => Double = _ => Date.now()){
 }
 
 object pSinOsc{
-  def apply(input: Unit => Double = _ => Date.now()) = new Oscillator(input).scale(0,1).oscOp(Osc.Sin)
+  def apply(input: Unit => Float = _ => Date.now().toFloat) = new Oscillator(input).scale(0,1).oscOp(Osc.Sin)
 }
 
 object sinOsc{
-  def apply(input: Unit => Double = _ => Date.now()) = new Oscillator(input).oscOp(Osc.Sin)
+  def apply(input: Unit => Float = _ => Date.now().toFloat) = new Oscillator(input).oscOp(Osc.Sin)
 }
 
 object pRectOsc{
-  def apply(input: Unit => Double = _ => Date.now()) = new Oscillator(input).scale(0,1).oscOp(Osc.Rect)
+  def apply(input: Unit => Float = _ => Date.now().toFloat) = new Oscillator(input).scale(0,1).oscOp(Osc.Rect)
 }
 
 object rectOsc{
-  def apply(input: Unit => Double = _ => Date.now()) = new Oscillator(input).oscOp(Osc.Rect)
+  def apply(input: Unit => Float = _ => Date.now().toFloat) = new Oscillator(input).oscOp(Osc.Rect)
 }
 
 object pRampOsc{
-  def apply(input: Unit => Double = _ => Date.now()) = new Oscillator(input).scale(0,1).oscOp(Osc.Ramp)
+  def apply(input: Unit => Float = _ => Date.now().toFloat) = new Oscillator(input).scale(0,1).oscOp(Osc.Ramp)
 }
 
 object rampOsc{
-  def apply(input: Unit => Double = _ => Date.now()) = new Oscillator(input).oscOp(Osc.Ramp)
+  def apply(input: Unit => Float = _ => Date.now().toFloat) = new Oscillator(input).oscOp(Osc.Ramp)
 }
 
 object Osc{
-  def Sin(input:Double)  = Math.sin(input)
-  def Rect(input:Double) = (Math.round(input % 1)*2-1).toDouble
-  def Ramp(input:Double) = (input % 1)*2-1
-  def Triangle(input:Double) = (input % 1)*2-1
+  def Sin(input:Float)  = Math.sin(input).toFloat
+  def Rect(input:Float) = (Math.round(input % 1)*2-1).toFloat
+  def Ramp(input:Float) = (input % 1)*2-1
+  def Triangle(input:Float) = (input % 1)*2-1
 }

@@ -31,20 +31,20 @@ package main.lib
  */
 
 
-case class Simplex(min:Double, max: Double) extends SimplexNoise with MathUtils{
-  override def noise(x: Double): Double = {
+case class Simplex(min:Float, max: Float) extends SimplexNoise with MathUtils{
+  override def noise(x: Float): Float = {
     map(super.noise(x),-1,1,min,max)
   }
-  override def noise(x: Double, y: Double): Double = {
+  override def noise(x: Float, y: Float): Float = {
     map(super.noise(x,y),-1,1,min,max)
   }
-  override def noise(x: Double, y: Double, z: Double): Double = {
+  override def noise(x: Float, y: Float, z: Float): Float = {
     map(super.noise(x,y,z),-1,1,min,max)
   }
 }
 
 object Simplex extends SimplexNoise{
-  def apply(max: Double):Simplex = Simplex(0,max)
+  def apply(max: Float):Simplex = Simplex(0,max)
   def apply:Simplex = Simplex(-1,1)
 }
 
@@ -126,7 +126,7 @@ trait SimplexNoise extends MathUtils{
     Array(1,1,1,0), Array(1,1,-1,0), Array(1,-1,1,0), Array(1,-1,-1,0),
     Array(-1,1,1,0), Array(-1,1,-1,0), Array(-1,-1,1,0), Array(-1,-1,-1,0))
 
-  private def ifloor(x: Double) :Int = {
+  private def ifloor(x: Float) :Int = {
     val i = x.toInt
     if (x > 0 || x == i) i else i - 1
   }
@@ -139,7 +139,7 @@ trait SimplexNoise extends MathUtils{
     * @param x x coordinate, must be in range of [-2E-8, +2E-8].
     * @return simplex noise value for the specified coordinate.
     */
-  def noise(x: Double) :Double = {
+  def noise(x: Float) :Float = {
     val pix = ifloor(x*F1)
 
     // The x distance from the cell origin
@@ -189,7 +189,7 @@ trait SimplexNoise extends MathUtils{
     * @param y y coordinate, must be in range of [-2E-8, +2E-8].
     * @return simplex noise value for the specified coordinates.
     */
-  def noise(x: Double, y: Double) :Double = {
+  def noise(x: Float, y: Float) :Float = {
     // Skew the (x,y) space to determine which cell of 2 simplices we're in
     val s = (x + y) * F2 // Hairy factor for 2D skewing
     val pix = ifloor(x + s)
@@ -266,7 +266,7 @@ trait SimplexNoise extends MathUtils{
     * @param z z coordinate, must be in range of [-2E-8, +2E-8].
     * @return simplex noise value for the specified coordinates.
     */
-  def noise(x: Double, y: Double, z:Double) :Double = {
+  def noise(x: Float, y: Float, z:Float) :Float = {
     // Skew the (x,y,z) space to determine which cell of 6 simplices we're in
     val s = (x + y + z) * F3 // Factor for 3D skewing
     val pix = ifloor(x + s)
@@ -397,7 +397,7 @@ trait SimplexNoise extends MathUtils{
     * @param w w coordinate, must be in range of [-2E-8, +2E-8].
     * @return simplex noise value for the specified coordinates.
     */
-  def noise(x: Double, y: Double, z:Double, w:Double) :Double = {
+  def noise(x: Float, y: Float, z:Float, w:Float) :Float = {
     // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in
     val s = (x + y + z + w) * F4 // Factor for 4D skewing
     val pix = ifloor(x + s)

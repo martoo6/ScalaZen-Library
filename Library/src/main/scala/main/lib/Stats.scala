@@ -15,8 +15,8 @@ import scala.scalajs.js.annotation.JSName
 class Stats extends js.Object{
   var REVISION: Int              = js.native
   var domElement: HTMLDivElement = js.native
-  def setMode(value: Double): Unit = js.native
+  def setMode(value: Float): Unit = js.native
   def begin(): Unit = js.native
-  def end(): Double = js.native
+  def end(): Float = js.native
   def update(): Unit = js.native
 }

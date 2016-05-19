@@ -25,8 +25,8 @@ object DefaultCanvas{
   body.appendChild(e)
 
   val canvasData = CanvasData(
-    new LineBasicMaterial(js.Dynamic.literal(color = 0xFFFFFF, side= THREE.DoubleSide)),
-    new MeshBasicMaterial(js.Dynamic.literal(color= 0xFFFFFF, side= THREE.DoubleSide)),
+    new LineBasicMaterial(js.Dynamic.literal(color = 0xFFFFFF, side= THREE.FloatSide)),
+    new MeshBasicMaterial(js.Dynamic.literal(color= 0xFFFFFF, side= THREE.FloatSide)),
     new Scene(),
     new OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -1000, 1000 ),
     renderer,

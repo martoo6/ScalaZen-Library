@@ -10,7 +10,9 @@ object MathUtils extends MathUtils
 trait MathUtils {
   import Math._
 
-  val PI = Math.PI
+  implicit def makefloat(d:Double): Float = d.toFloat
+
+  val PI = Math.PI.toFloat
   val TWO_PI = PI*2
   val HALF_PI = PI/2
   val QUARTER_PI = PI/4
@@ -20,57 +22,57 @@ trait MathUtils {
 
   private val randomGen = new Random()
 
-  def rand(low: Double, high: Double):Double = {
+  def rand(low: Float, high: Float):Float = {
     if (low >= high) low else rand(high - low) + low
   }
 
-  def rand(ceil: Double):Double = randomGen.nextDouble() * ceil
+  def rand(ceil: Float):Float = randomGen.nextFloat() * ceil
 
-  def rand:Double = randomGen.nextDouble()
+  def rand:Float = randomGen.nextFloat()
 
   def randomSeed(seed:Long) = randomGen.setSeed(seed)
 
-  def randInt(low: Int, high: Int):Double = {
+  def randInt(low: Int, high: Int):Float = {
     if (low >= high)  low else randInt(high - low) + low
   }
 
   def randInt(ceil: Int):Int = randomGen.nextInt(ceil)
 
-  def lerp[T1, T2](v1: T1, v2: T2, amount: Double)(implicit n1:Numeric[T1], n2:Numeric[T2]): Double = (n1.toDouble(v1)+n2.toDouble(v2))/amount
+  def lerp[T1, T2](v1: T1, v2: T2, amount: Float)(implicit n1:Numeric[T1], n2:Numeric[T2]): Float = (n1.toFloat(v1)+n2.toFloat(v2))/amount
 
-  def map(value: Double, in_min: Double, in_max: Double, out_min: Double, out_max: Double): Double ={
+  def map(value: Float, in_min: Float, in_max: Float, out_min: Float, out_max: Float): Float ={
     ((value-in_min)/(in_max-in_min))*(out_max-out_min) + out_min
   }
 
   //By using Numeric Typeclass we have these method for any numeric type, yey !
   implicit class RichNumeric[T](value: T)(implicit n:Numeric[T]) extends MathUtils{
-    def map(in_min: Double,in_max: Double,out_min: Double,out_max: Double): Double = {
-      map(n.toDouble(value),in_min,in_max,out_min,out_max)
+    def map(in_min: Float,in_max: Float,out_min: Float,out_max: Float): Float = {
+      map(n.toFloat(value),in_min,in_max,out_min,out_max)
     }
-    def constrain(min: Double,max: Double): Double = {
-      constrain(n.toDouble(value), min, max)
+    def constrain(min: Float,max: Float): Float = {
+      constrain(n.toFloat(value), min, max)
     }
-    def mapContrain(in_min: Double,in_max: Double,out_min: Double,out_max: Double): Double = {
-      mapContrain(n.toDouble(value),in_min,in_max,out_min,out_max)
+    def mapContrain(in_min: Float,in_max: Float,out_min: Float,out_max: Float): Float = {
+      mapContrain(n.toFloat(value),in_min,in_max,out_min,out_max)
     }
-    def constrainLoop(min: Double, max: Double): Double = {
-      constrainLoop(n.toDouble(value), min, max)
+    def constrainLoop(min: Float, max: Float): Float = {
+      constrainLoop(n.toFloat(value), min, max)
     }
   }
 
 
-  def mapContrain(value:Double, in_min:Double,in_max:Double,out_min:Double,out_max:Double): Double ={
+  def mapContrain(value:Float, in_min:Float,in_max:Float,out_min:Float,out_max:Float): Float ={
     constrain(map(value, in_min, in_max, out_min, out_max), out_min, out_max)
   }
 
-  def constrain(value:Double, min:Double, max:Double): Double = {
+  def constrain(value:Float, min:Float, max:Float): Float = {
     //Faster than match ???
     if(value<min) min
     else if(value>max) max
     else value
   }
 
-  def constrainLoop(value:Double, min:Double, max:Double) :Double= {
+  def constrainLoop(value:Float, min:Float, max:Float) :Float= {
     //Faster than match ???
     if(value<min) max - (value % min)
     else if(value>max) value % max
@@ -81,52 +83,54 @@ trait MathUtils {
   //TODO: make a builder for custom precision
   val precision = 360 * 2
   lazy val fSinArr = (0 until precision).map(_*(TWO_PI/precision)).map(sin).toArray
-  def fSin(num:Double) = {fSinArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+  def fSin(num:Float) = {fSinArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
 
   lazy val fCosArr = (0 until precision).map(_*(TWO_PI/precision)).map(cos).toArray
-  def fCos(num:Double) = {fCosArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+  def fCos(num:Float) = {fCosArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
 
   lazy val fTanArr = (0 until precision).map(_*(TWO_PI/precision)).map(tan).toArray
-  def fTan(num:Double) = {fTanArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+  def fTan(num:Float) = {fTanArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
 
   lazy val fASinArr = (0 until precision).map(_*(TWO_PI/precision)).map(asin).toArray
-  def fASin(num:Double) = {fASinArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+  def fASin(num:Float) = {fASinArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
 
   lazy val fACosArr = (0 until precision).map(_*(TWO_PI/precision)).map(acos).toArray
-  def fACos(num:Double) = {fACosArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+  def fACos(num:Float) = {fACosArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
 
   lazy val fATanArr = (0 until precision).map(_*(TWO_PI/precision)).map(atan).toArray
-  def fATan(num:Double) = {fATanArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+  def fATan(num:Float) = {fATanArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
 
   lazy val fpSinArr = (0 until precision).map(_*(TWO_PI/precision)).map(sin).map(_*0.5+0.5).toArray
-  def fpSin(num:Double) = {fpSinArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+  def fpSin(num:Float) = {fpSinArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
 
   lazy val fpCosArr = (0 until precision).map(_*(TWO_PI/precision)).map(cos).map(_*0.5+0.5).toArray
-  def fpCos(num:Double) = {fpCosArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
+  def fpCos(num:Float) = {fpCosArr(((abs(num % TWO_PI) * precision) / TWO_PI).toInt)}
 
 
   //So you don't have to import java.Math._
 
-  def sin(num: Double) = Math.sin(num)
-  def asin(num: Double) = Math.asin(num)
-  def sinh(num: Double) = Math.sinh(num)
+  def sin(num: Float) = Math.sin(num).toFloat
+  def asin(num: Float) = Math.asin(num).toFloat
+  def sinh(num: Float) = Math.sinh(num).toFloat
 
-  def cos(num: Double)  = Math.cos(num)
-  def acos(num: Double) = Math.acos(num)
-  def cosh(num: Double) = Math.cosh(num)
+  def cos(num: Float)  = Math.cos(num).toFloat
+  def acos(num: Float) = Math.acos(num).toFloat
+  def cosh(num: Float) = Math.cosh(num).toFloat
 
-  def tan(num: Double)  = Math.tan(num)
-  def atan(num: Double) = Math.atan(num)
-  def atan2(num: Double, num2: Double) = Math.atan2(num, num2)
-  def tanh(num: Double) = Math.tanh(num)
+  def tan(num: Float)  = Math.tan(num).toFloat
+  def atan(num: Float) = Math.atan(num).toFloat
+  def atan2(num: Float, num2: Float) = Math.atan2(num, num2).toFloat
+  def tanh(num: Float) = Math.tanh(num).toFloat
 
-  def abs(num: Double) = Math.abs(num)
+  def abs(num: Float) = Math.abs(num)
   def abs(num: Int) = Math.abs(num)
   def abs(num: Long) = Math.abs(num)
 
+  def pow(a: Float,b: Float): Float = Math.pow(a,b).toFloat
+
   //Another known functions
 
-  def sinc(num: Double) = if(num==0) 1.0 else Math.sin(num)/num
-  def cycloid(num:Double) = abs(sin(num))
-  def weierstrass(num: Double, identity:Double = 7, octaves:Int = 10) = (1 to octaves).map(x=>pow((1+1.5*PI)/identity,x)*cos(pow(identity,x)*num)).sum
+  def sinc(num: Float) = if(num==0) 1.0f else (Math.sin(num)/num).toFloat
+  def cycloid(num:Float) = abs(sin(num))
+  def weierstrass(num: Float, identity:Float = 7, octaves:Int = 10) = (1 to octaves).map(x=>(pow(((1+1.5*PI)/identity).toFloat, x)*cos(pow(identity,x)*num)).toFloat).sum
 }

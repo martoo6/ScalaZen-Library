@@ -16,17 +16,65 @@ trait Materials {
     def toLineMaterial(t:T): W
   }
 
-  implicit object RGBToLineMaterial extends LineMaterialTypeClass[RGB, LineBasicMaterial]{
-    override def toLineMaterial(t: RGB): LineBasicMaterial = {
-      val l = new LineBasicMaterial(js.Dynamic.literal(color = t.toColor, side= faceSide, linewidth = defaultLineMaterial.linewidth))
-      l.opacity = t.o
-      l
-    }
-  }
+// Not working
+//  implicit def Tuple2ToLineMaterial[T1,T2](t: (T1,T2))(implicit n1:Numeric[T1], n2:Numeric[T2]): LineMaterialTypeClass[(T1,T2), LineBasicMaterial] = {
+//    new LineMaterialTypeClass[(T1,T2), LineBasicMaterial]{
+//      def toLineMaterial(t: (T1,T2)): LineBasicMaterial = {
+//        val l = new LineBasicMaterial(js.Dynamic.literal(color = new Color(n1.toFloat(t._1), n1.toFloat(t._1), n1.toFloat(t._1)), side= faceSide, linewidth = defaultLineMaterial.linewidth))
+//        l.opacity = n2.toFloat(t._2)
+//        l
+//      }
+//    }
+//  }
+//
+//  implicit def Tuple3ToLineMaterial[T1,T2,T3](t: (T1,T2,T3))(implicit n1:Numeric[T1], n2:Numeric[T2], n3:Numeric[T3]): LineMaterialTypeClass[(T1,T2,T3), LineBasicMaterial] = {
+//    new LineMaterialTypeClass[(T1,T2,T3), LineBasicMaterial]{
+//      def toLineMaterial(t: (T1,T2,T3)): LineBasicMaterial = {
+//        val l = new LineBasicMaterial(js.Dynamic.literal(color = new Color(n1.toFloat(t._1), n2.toFloat(t._2), n3.toFloat(t._3)), side= faceSide, linewidth = defaultLineMaterial.linewidth))
+//        l.opacity = 1
+//        l
+//      }
+//    }
+//  }
+//
+//  implicit def Tuple4ToLineMaterial[T1,T2,T3,T4](t: (T1,T2,T3,T4))(implicit n1:Numeric[T1], n2:Numeric[T2], n3:Numeric[T3], n4:Numeric[T4]): LineMaterialTypeClass[(T1,T2,T3,T4), LineBasicMaterial] = {
+//    new LineMaterialTypeClass[(T1,T2,T3,T4), LineBasicMaterial]{
+//      def toLineMaterial(t: (T1,T2,T3,T4)): LineBasicMaterial = {
+//        val l = new LineBasicMaterial(js.Dynamic.literal(color = new Color(n1.toFloat(t._1), n2.toFloat(t._2), n3.toFloat(t._3)), side= faceSide, linewidth = defaultLineMaterial.linewidth))
+//        l.opacity = n4.toFloat(t._4)
+//        l
+//      }
+//    }
+//  }
 
-  implicit object ColorToLineMaterial extends LineMaterialTypeClass[Color, LineBasicMaterial]{
-    override def toLineMaterial(t: Color): LineBasicMaterial = new LineBasicMaterial(js.Dynamic.literal(color = t, side= faceSide, linewidth = defaultLineMaterial.linewidth))
-  }
+//  implicit object GRYToLineMaterial extends LineMaterialTypeClass[GRY, LineBasicMaterial]{
+//    override def toLineMaterial(t: GRY): LineBasicMaterial = {
+//      val l = new LineBasicMaterial(js.Dynamic.literal(color = t.toColor, side= faceSide, linewidth = defaultLineMaterial.linewidth))
+//      l.opacity = t.o
+//      l
+//    }
+//  }
+//
+//  implicit object HSBToLineMaterial extends LineMaterialTypeClass[HSB, LineBasicMaterial]{
+//    override def toLineMaterial(t: HSB): LineBasicMaterial = {
+//      val l = new LineBasicMaterial(js.Dynamic.literal(color = t.toColor, side= faceSide, linewidth = defaultLineMaterial.linewidth))
+//      l.opacity = t.o
+//      l
+//    }
+//  }
+//
+//  implicit object RGBToLineMaterial extends LineMaterialTypeClass[RGB, LineBasicMaterial]{
+//    override def toLineMaterial(t: RGB): LineBasicMaterial = {
+//      val l = new LineBasicMaterial(js.Dynamic.literal(color = t.toColor, side= faceSide, linewidth = defaultLineMaterial.linewidth))
+//      l.opacity = t.o
+//      l
+//    }
+//  }
+//
+//  implicit object ColorToLineMaterial extends LineMaterialTypeClass[Color, LineBasicMaterial]{
+//    override def toLineMaterial(t: Color): LineBasicMaterial = new LineBasicMaterial(js.Dynamic.literal(color = t, side= faceSide, linewidth = defaultLineMaterial.linewidth))
+//  }
+//
 
   implicit object LineBasicMaterialToLineMaterial extends LineMaterialTypeClass[LineBasicMaterial, LineBasicMaterial]{
     override def toLineMaterial(t: LineBasicMaterial): LineBasicMaterial = t
@@ -47,8 +95,8 @@ trait Materials {
     override def toMeshMaterial(t: Color): MeshBasicMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = t, side= faceSide))
   }
 
-  implicit object Tuple4ToMeshMaterial extends MeshMaterialTypeClass[(Double,Double,Double,Double), MeshBasicMaterial]{
-    override def toMeshMaterial(t: (Double,Double,Double,Double)): MeshBasicMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = new Color(t._1, t._2, t._3), side= faceSide, transparent=true, opacity = t._4))
+  implicit object Tuple4ToMeshMaterial extends MeshMaterialTypeClass[(Float,Float,Float,Float), MeshBasicMaterial]{
+    override def toMeshMaterial(t: (Float,Float,Float,Float)): MeshBasicMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = new Color(t._1, t._2, t._3), side= faceSide, transparent=true, opacity = t._4))
   }
 
   implicit object RgbToMeshMaterial extends MeshMaterialTypeClass[RGB, MeshBasicMaterial]{

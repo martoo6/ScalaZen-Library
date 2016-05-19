@@ -20,16 +20,46 @@ class ThreeJSApp10 extends BasicCanvas with DrawingUtils with StatsDisplay with 
 
   stroke(0xFFFFFF)
 
-  onKeyPress(_ => toogle)
+  //onKeyPress(_ => toogle)
+  var m = 0
+
+  onKeyPress { x=> x match{
+      case "p" => toogle
+      case "m" => m = (m+1) % 3
+    }
+  }
+
+  val radius = height/2
+
+  val lst = for{
+    div <- 0 to 200
+  } yield{
+    val s = 1 to div
+    val l = for {
+      x <- s
+      xx = x * TWO_PI / div
+      y <- s.drop(x)
+      yy = y * TWO_PI / div
+      item <- new Vector3(fSin(xx) * radius, fCos(xx) * radius) :: new Vector3(fSin(yy) * radius, fCos(yy) * radius) :: Nil
+    } yield item
+    (l, l.map(x => Rgb(abs(x.x)*0.01%1,1,abs(x.y)*0.01%1)), l.flatMap(x => Rgb(abs(x.x)*0.01%1,1,abs(x.y)*0.01%1) :: Rgb(1,abs(x.x)*0.01%1,abs(x.y)*0.01%1) :: Nil))
+  }
 
   def render():Unit = {
-    val div = mouseX.map(0,width,5,20).toInt
-    val aux = (1 to div).map(_*TWO_PI/div)
-    val lst = aux ++: aux.take(div)
-    val m = new LineDashedMaterial()
-    m.color.setRGB(1,0,1)
-    for(x<-lst.sliding(div+1); y<-x.drop(1)){
-        line((fSin(x.head)*200, fCos(x.head)*200), (fSin(y)*200, fCos(y)*200), m)
+    val div = mouseX.map(0,width,0,200).toInt
+
+    m match{
+      case 0 => line(lst(div)._1, lst(div)._3)
+      case 1 =>
+        stroke((1,0,1))
+        line(lst(div)._1)
+      case 2 =>
+        stroke((0,1,1))
+        lst(div)._1.view.sliding(2,2).foreach(x=>line(x.head, x.last))
+    }
+    if(frameCount%5==0) {
+      println(lst(div)._1.size)
+      println(m)
     }
   }
 

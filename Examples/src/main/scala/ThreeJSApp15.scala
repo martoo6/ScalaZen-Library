@@ -21,10 +21,10 @@ class ThreeJSApp15 extends BasicCanvas with SimplexNoise with DrawingUtils with 
     //val res = for(x <- -width/2 to width/2) yield generateLine(x,0)
     val res = for(x <- -width/2 to width/2) yield (x, cycloid(x*0.02) * 50)
     //res.grouped(width).foreach(x=>spline(x.toSeq :_*))
-    mspline(res)
+    spline(res)
   }
 
-  def generateLine(x:Int,y:Double) = {
+  def generateLine(x:Int,y:Float) = {
     val v1 = noise(x*0.01,frameCount*0.01)*10
     val v2 = cos((x*0.01).constrain(-Math.PI,Math.PI))*100
     (x,v1+v2+y)

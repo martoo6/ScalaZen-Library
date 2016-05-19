@@ -7,7 +7,6 @@ import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 class ThreeJSApp11 extends BasicCanvas with SimplexNoise with DrawingUtils with StatsDisplay with CameraControls{
-
   Setup._3D.Center.asScene
 
   addHemisphereLight(0xFFFFFF, 0x05F5F5, 1.0)
@@ -16,17 +15,12 @@ class ThreeJSApp11 extends BasicCanvas with SimplexNoise with DrawingUtils with 
   val step = 2
   val cant = 45
 
-  val materials = Palette.mellonBallSurprise.colors.map(_.materializeP(THREE.FrontSide))
+  val materials = Palette.mellonBallSurprise.colors.map(_.toMeshPhongMaterial(THREE.FrontSide))
 
   val cubes = for{
     x <- -cant/2 to cant/2
     y <- -cant/2 to cant/2
-  }
-    yield{
-      cube((x*step,-250,y*step),step, materials(rand(materials.size).toInt))
-    }
-
-
+  } yield cube((x*step,-250,y*step),step, materials(rand(materials.size).toInt))
 
   def render():Unit = {
     cubes.foreach { c =>

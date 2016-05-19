@@ -10,53 +10,53 @@ trait Converters {
   //############# VECTORS ###################
 
 
-  type vec2Double = (Double, Double)
+  type vec2Float = (Float, Float)
   type vec2Int    = (Int, Int)
-  type vec2DoubleInt = (Double, Int)
-  type vec2IntDouble = (Int, Double)
+  type vec2FloatInt = (Float, Int)
+  type vec2IntFloat = (Int, Float)
 
-  type vec3Double = (Double, Double, Double)
+  type vec3Float = (Float, Float, Float)
   type vec3Int    = (Int, Int, Int)
-  type vec3IntDoubleDouble = (Int, Double, Double)
-  type vec3DoubleIntDouble = (Double, Int, Double)
-  type vec3DoubleDoubleInt = (Double, Double, Int)
-  type vec3IntIntDouble = (Int, Int, Double)
-  type vec3DoubleIntInt = (Double, Int, Int)
-  type vec3IntDoubleInt = (Int, Double, Int)
+  type vec3IntFloatFloat = (Int, Float, Float)
+  type vec3FloatIntFloat = (Float, Int, Float)
+  type vec3FloatFloatInt = (Float, Float, Int)
+  type vec3IntIntFloat = (Int, Int, Float)
+  type vec3FloatIntInt = (Float, Int, Int)
+  type vec3IntFloatInt = (Int, Float, Int)
 
-  implicit def Vec3ToVector3(i: vec3Double): Vector3 = new Vector3(i._1, i._2, i._3)
+  implicit def Vec3ToVector3(i: vec3Float): Vector3 = new Vector3(i._1, i._2, i._3)
   implicit def Vec3IntToVector3(i: vec3Int): Vector3 = new Vector3(i._1, i._2, i._3)
-  implicit def Vec3IntDoubleDoubleToVector3(i: vec3IntDoubleDouble): Vector3 = new Vector3(i._1, i._2, i._3)
-  implicit def Vec3DoubleIntDoubleToVector3(i: vec3DoubleIntDouble): Vector3 = new Vector3(i._1, i._2, i._3)
-  implicit def Vec3DoubleDoubleIntToVector3(i: vec3DoubleDoubleInt): Vector3 = new Vector3(i._1, i._2, i._3)
-  implicit def Vec3IntIntDoubleToVector3(i: vec3IntIntDouble): Vector3 = new Vector3(i._1, i._2, i._3)
-  implicit def Vec3DoubleIntIntToVector3(i: vec3DoubleIntInt): Vector3 = new Vector3(i._1, i._2, i._3)
-  implicit def Vec3IntDoubleIntToVector3(i: vec3IntDoubleInt): Vector3 = new Vector3(i._1, i._2, i._3)
-  implicit def Vec2ToVector3(i: vec2Double): Vector3 = new Vector3(i._1, i._2, 0)
+  implicit def Vec3IntFloatFloatToVector3(i: vec3IntFloatFloat): Vector3 = new Vector3(i._1, i._2, i._3)
+  implicit def Vec3FloatIntFloatToVector3(i: vec3FloatIntFloat): Vector3 = new Vector3(i._1, i._2, i._3)
+  implicit def Vec3FloatFloatIntToVector3(i: vec3FloatFloatInt): Vector3 = new Vector3(i._1, i._2, i._3)
+  implicit def Vec3IntIntFloatToVector3(i: vec3IntIntFloat): Vector3 = new Vector3(i._1, i._2, i._3)
+  implicit def Vec3FloatIntIntToVector3(i: vec3FloatIntInt): Vector3 = new Vector3(i._1, i._2, i._3)
+  implicit def Vec3IntFloatIntToVector3(i: vec3IntFloatInt): Vector3 = new Vector3(i._1, i._2, i._3)
+  implicit def Vec2ToVector3(i: vec2Float): Vector3 = new Vector3(i._1, i._2, 0)
   implicit def Vec2IntToVector3(i: vec2Int): Vector3 = new Vector3(i._1, i._2, 0)
-  implicit def Vec2DoubleIntToVector3(i: vec2DoubleInt): Vector3 = new Vector3(i._1, i._2, 0)
-  implicit def Vec2IntDoubleToVector3(i: vec2IntDouble): Vector3 = new Vector3(i._1, i._2, 0)
-  implicit def IntToDouble(i: Int): Double = i.toDouble
+  implicit def Vec2FloatIntToVector3(i: vec2FloatInt): Vector3 = new Vector3(i._1, i._2, 0)
+  implicit def Vec2IntFloatToVector3(i: vec2IntFloat): Vector3 = new Vector3(i._1, i._2, 0)
+  //implicit def IntToFloat(i: Int): Float = i.toFloat
 //
 
 //
 //
 //  //Heterogeneous list would need typeclasses, but those typeclasses wouldn't work with existing threejs code.
 //  //actually structural typing would fix the problem, somehow...
-  implicit def SeqVec3ToVector3(lst: Seq[vec3Double]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
+  implicit def SeqVec3ToVector3(lst: Seq[vec3Float]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
   implicit def SeqVec3IntToVector3(lst: Seq[vec3Int]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
-  implicit def SeqVec3IntDoubleDoubleToVector3(lst: Seq[vec3IntDoubleDouble]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
-  implicit def SeqVec3DoubleIntDoubleToVector3(lst: Seq[vec3DoubleIntDouble]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
-  implicit def SeqVec3DoubleDoubleIntToVector3(lst: Seq[vec3DoubleDoubleInt]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
-  implicit def SeqVec3IntIntDoubleToVector3(lst: Seq[vec3IntIntDouble]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
-  implicit def SeqVec3DoubleIntIntToVector3(lst: Seq[vec3DoubleIntInt]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
-  implicit def SeqVec3IntDoubleIntToVector3(lst: Seq[vec3IntDoubleInt]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
-  implicit def SeqVec2ToVector3(lst: Seq[vec2Double]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
+  implicit def SeqVec3IntFloatFloatToVector3(lst: Seq[vec3IntFloatFloat]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
+  implicit def SeqVec3FloatIntFloatToVector3(lst: Seq[vec3FloatIntFloat]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
+  implicit def SeqVec3FloatFloatIntToVector3(lst: Seq[vec3FloatFloatInt]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
+  implicit def SeqVec3IntIntFloatToVector3(lst: Seq[vec3IntIntFloat]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
+  implicit def SeqVec3FloatIntIntToVector3(lst: Seq[vec3FloatIntInt]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
+  implicit def SeqVec3IntFloatIntToVector3(lst: Seq[vec3IntFloatInt]): Seq[Vector3] = lst.map{case(x,y,z)=>new Vector3(x,y,z)}
+  implicit def SeqVec2ToVector3(lst: Seq[vec2Float]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
   implicit def SeqVec2IntToVector3(lst: Seq[vec2Int]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
-  implicit def SeqVec2DoubleIntToVector3(lst: Seq[vec2DoubleInt]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
-  implicit def SeqVec2IntDoubleToVector3(lst: Seq[vec2IntDouble]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
+  implicit def SeqVec2FloatIntToVector3(lst: Seq[vec2FloatInt]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
+  implicit def SeqVec2IntFloatToVector3(lst: Seq[vec2IntFloat]): Seq[Vector3] = lst.map{case(x,y)=>new Vector3(x,y,0)}
 //
-//  implicit def SeqVec3IntDoubleIntToVector3(i: Seq[{val _1}]): Seq[Vector3] = new Vector3(i._1, i._2, i._3)
+//  implicit def SeqVec3IntFloatIntToVector3(i: Seq[{val _1}]): Seq[Vector3] = new Vector3(i._1, i._2, i._3)
 
   //############# COLORS ###################
 

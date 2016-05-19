@@ -15,16 +15,16 @@ class ThreeJSApp20 extends BasicCanvas with DrawingUtils with StatsDisplay with 
 
   val radius2 = radius * 0.3
   val coords =
-      polarCoords.map { case (g, t) => (sin(g) * cos(t) * radius, cos(g) * sin(t) * radius, sin(t) * radius) }.toVector ::
-      polarCoords.map { case (g, t) => (sin(g) * cos(t) * radius, cos(g) * sin(t) * radius, sin(t) * radius) }.toVector ::
-      polarCoords.map { case (g, t) => (cos(g) * tanh(t) * radius, sin(g) * sin(t) * radius, sin(t) * radius) }.toVector ::
-      polarCoords.map { case (g, t) => (sin(g) * tanh(t) * radius, sin(g) * sin(t) * radius, sin(t) * radius) }.toVector ::
-        polarCoords.map { case (g, t) => (cos(g) * cos(t) * radius, sin(g*t) * sin(t) * radius, sin(t*t) * radius) }.toVector ::
-        polarCoords.map { case (g, t) => (cos(g) * cos(t) * radius, sin(g*t) * sin(t) * radius, sin(t*t) * radius) }.toVector ::
-        polarCoords.map { case (g, t) => (cos(g*g) * cos(t*t) * radius, cos(g*t) * sin(t) * radius, sin(t*t) * radius) }.toVector ::
-        polarCoords.map { case (g, t) => (cos(g*g) * cos(t*t) * radius, cos(g*t) * sin(t) * radius, sin(t*t) * radius) }.toVector ::
-        polarCoords.map { case (g, t) => (tan(g) * cos(t) * radius, cos(g) * sin(t/5) * radius, tan(t/2) * radius) }.toVector ::
-        polarCoords.map { case (g, t) => (tan(g) * cos(t) * radius, cos(g) * sin(t/5) * radius, tan(t/2) * radius) }.toVector ::
+      polarCoords.map { case (g, t) => new Vector3(sin(g) * cos(t) * radius, cos(g) * sin(t) * radius, sin(t) * radius) }.toVector ::
+      polarCoords.map { case (g, t) => new Vector3(sin(g) * cos(t) * radius, cos(g) * sin(t) * radius, sin(t) * radius) }.toVector ::
+      polarCoords.map { case (g, t) => new Vector3(cos(g) * tanh(t) * radius, sin(g) * sin(t) * radius, sin(t) * radius) }.toVector ::
+      polarCoords.map { case (g, t) => new Vector3(sin(g) * tanh(t) * radius, sin(g) * sin(t) * radius, sin(t) * radius) }.toVector ::
+        polarCoords.map { case (g, t) => new Vector3(cos(g) * cos(t) * radius, sin(g*t) * sin(t) * radius, sin(t*t) * radius) }.toVector ::
+        polarCoords.map { case (g, t) => new Vector3(cos(g) * cos(t) * radius, sin(g*t) * sin(t) * radius, sin(t*t) * radius) }.toVector ::
+        polarCoords.map { case (g, t) => new Vector3(cos(g*g) * cos(t*t) * radius, cos(g*t) * sin(t) * radius, sin(t*t) * radius) }.toVector ::
+        polarCoords.map { case (g, t) => new Vector3(cos(g*g) * cos(t*t) * radius, cos(g*t) * sin(t) * radius, sin(t*t) * radius) }.toVector ::
+        polarCoords.map { case (g, t) => new Vector3(tan(g) * cos(t) * radius, cos(g) * sin(t/5) * radius, tan(t/2) * radius) }.toVector ::
+        polarCoords.map { case (g, t) => new Vector3(tan(g) * cos(t) * radius, cos(g) * sin(t/5) * radius, tan(t/2) * radius) }.toVector ::
       Nil
 
   val vals = coords.head.map(_ => segSphere(center, 2, 1, Rgb(0, 0, 0)))

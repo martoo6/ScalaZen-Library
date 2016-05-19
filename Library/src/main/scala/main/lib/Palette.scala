@@ -42,15 +42,15 @@ trait PaletteT extends Converters{
   val iDemandPancake      = Palette(0x594F4F :: 0x547980 :: 0x45ADA8 :: 0x9DE0AD :: 0xE5FCC2 :: Nil :_*)
 }
 
-// May go away, conventions should be RGB equals (Double, Double, Double, Double)
-// GRY equals (Double, Double)
-case class RGB(var r :Double, var g :Double, var b :Double, var o:Double = 1){
+// May go away, conventions should be RGB equals (Float, Float, Float, Float)
+// GRY equals (Float, Float)
+case class RGB(var r :Float, var g :Float, var b :Float, var o:Float = 1){
   def toColor: Color = new Color(r, g, b)
 }
-case class HSB(var h :Double, var s :Double, var b :Double, var o:Double = 1){
+case class HSB(var h :Float, var s :Float, var b :Float, var o:Float = 1){
   def toColor: Color = new Color().setHSL(h, s, b)
 }
 //Grayscale
-case class GRY(var v :Double, var o:Double = 1){
+case class GRY(var v :Float, var o:Float = 1){
   def toColor: Color = new Color(v,v,v)
 }

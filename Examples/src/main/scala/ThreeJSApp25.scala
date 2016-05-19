@@ -8,6 +8,7 @@ import scala.scalajs.js.annotation.JSExport
 import scala.scalajs.js.typedarray.ArrayBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
+import scala.util.Success
 
 /**
  * Circles
@@ -86,28 +87,31 @@ class ThreeJSApp25 extends BasicCanvas with DrawingUtils with StatsDisplay with 
 
   var s: AudioBuffer = null
 
-  var startTime:Double = System.currentTimeMillis()
+  var startTime:Float =  0
 
-  song.onSuccess{case e => s = e }
+  var lines = song.map { case e =>
+    s = e
+    startTime = System.currentTimeMillis()
+    println("Size: " + (0 to s.getChannelData(0).length by 5000).size)
+    (0 to s.getChannelData(0).length by 5000).map{ i =>
+     val xx = i.map(0,s.getChannelData(0).length, -width/2, width)
+     val yy = s.getChannelData(0).get(i)
+     (new Vector3(xx, yy.map(-1,1,0,-200), 0), new Vector3(xx, yy.map(-1,1,0,200), 0), new Color(0, 0, yy * 0.5 + 0.5))
+    }
+  }
 
+  val redColor = new Color(1,0,0)
 
 
   def render():Unit = {
-    if(s!=null)
-    {
-      val lines = (0 to s.getChannelData(0).length by 20000).map{ i =>
-        val xx = i.map(0,s.getChannelData(0).length, -width/2, width)
-        val yy = s.getChannelData(0).get(i)
-        ((xx, 0), (xx, yy.map(0,1,-100,100)), new Color(0, 0, yy))
-      }
-
-
-      lines.foreach{ case (v1,v2,c) =>
+    lines.andThen
+    { case Success(l) =>
+      l.take(5).foreach{ case (v1,v2,c) =>
         line(v1, v2, c)
       }
       //Draw Position
-      val xPos = System.currentTimeMillis().map(startTime,startTime + s.duration, -width/2, width/2)
-      line((xPos, - 50), (xPos, 50), new Color(1,0,0))
+      val xPos = System.currentTimeMillis().map(startTime, startTime + s.duration*1000, -width/2, width/2)
+      line((xPos, - 50), (xPos, 50), redColor)
     }
   }
 

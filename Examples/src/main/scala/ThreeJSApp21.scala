@@ -39,7 +39,7 @@ class ThreeJSApp21 extends BasicCanvas with SimplexNoise with DrawingUtils with 
 
   //org.scalajs.dom.document.body.style.backgroundColor = "#222831"
 
-  startRecording
+  //startRecording
 
   def render(): Unit = {
     //org.scalajs.dom.document.body.style.backgroundColor = "#222831"
@@ -48,7 +48,7 @@ class ThreeJSApp21 extends BasicCanvas with SimplexNoise with DrawingUtils with 
     val slice = fCos(TWO_PI*frameCount/(totalFrames)).map(-1,1,0,stripLength - 2).toInt
 
     val g = list.indices.map { i =>
-      mspline(list(i).drop(slice), list(i).size-slice, p(i % p.colors.size))
+      spline(list(i).drop(slice), list(i).size-slice, p(i % p.colors.size))
     }
     group(g).setRotationFromAxisAngle(yAxis, frameCount.map(0, totalFrames, 0, TWO_PI))
 
