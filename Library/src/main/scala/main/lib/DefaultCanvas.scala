@@ -8,8 +8,8 @@ import scala.scalajs.js
  * Created by martin on 10/17/15.
  */
 object DefaultCanvas{
-  def width = dom.window.innerWidth
-  def height = dom.window.innerHeight
+  def width: Int = dom.window.innerWidth.toInt
+  def height: Int = dom.window.innerHeight.toInt
 
   val renderer = new WebGLRenderer(js.Dynamic.literal(preserveDrawingBuffer=true, clearColor="0xFFFFFF"))
 

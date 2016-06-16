@@ -11,8 +11,8 @@ trait WorldCoordinates extends MathUtils{
   val yAxis = new Vector3(0,1,0)
   val zAxis = new Vector3(0,0,1)
 
-  var width = dom.window.innerWidth
-  var height = dom.window.innerHeight
+  var width: Int = dom.window.innerWidth.toInt
+  var height: Int = dom.window.innerHeight.toInt
 
   var worldCoordinates: Coordinates = CenterCoordiantes
 

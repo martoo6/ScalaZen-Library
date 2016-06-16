@@ -15,8 +15,8 @@ trait Canvas extends WorldCoordinates{
   //TODO: Replace everything possible with vals !
 
   var faceSide: Side = THREE.FrontSide
-  val _center = new Vector3(0,0,500)
-  val leftBottomPosition = new Vector3(width / 2, height / 2, 1000)
+  def _center = new Vector3(0,0,500)
+  def leftBottomPosition = new Vector3(width / 2, height / 2, 1000)
   var position = _center
 
   var renderAction: Unit => Unit = { _ => renderer.render(scene, camera, forceClear = !canvasStyle)}
@@ -39,8 +39,6 @@ trait Canvas extends WorldCoordinates{
   var mouseY = 0.0
 
   def run():Unit = {
-    println(width)
-    println(height)
     Setup.configure()
     renderLoop(System.currentTimeMillis())
   }
@@ -48,7 +46,7 @@ trait Canvas extends WorldCoordinates{
   object Setup {
 
     case class SetupConfiguration(worldCoordinates: Coordinates,
-                                  position: Vector3,
+                                  position: () => Vector3,
                                   faceSide: Side,
                                   camera: (Int, Int) => Camera,
                                   sortObjects: Boolean,
@@ -60,7 +58,7 @@ trait Canvas extends WorldCoordinates{
 
     var config: SetupConfiguration = SetupConfiguration(
       CenterCoordiantes,
-      _center,
+      () => _center,
       THREE.FrontSide,
       getOrthograpicCamera,
       sortObjects = false,
@@ -112,12 +110,12 @@ trait Canvas extends WorldCoordinates{
     private def getPerspectiveCamera(width: Int, height:Int):Camera = new PerspectiveCamera(45, width / height, 1, 1000)
 
     def Center = {
-      config = config.copy(position = _center)
+      config = config.copy(position = _center _)
       config = config.copy(worldCoordinates = CenterCoordiantes)
       this
     }
     def LeftBottom = {
-      config = config.copy(position = leftBottomPosition)
+      config = config.copy(position = leftBottomPosition _)
       config = config.copy(worldCoordinates = LeftBottomCoordiantes)
       this
     }
@@ -162,7 +160,7 @@ trait Canvas extends WorldCoordinates{
       config match {
         case SetupConfiguration(_worldCoordinates, _position, _faceSide, _camera, _sortObjects, _ortho, _canvasStyle, _autoClear, _autoClearColor, _antialiasing) =>
           worldCoordinates = _worldCoordinates
-          position = _position
+          position = _position()
           faceSide = _faceSide
           camera = _camera(width, height)
           renderer.sortObjects = _sortObjects
@@ -243,10 +241,6 @@ trait Canvas extends WorldCoordinates{
 
   def onKeyPress(f: String => Any): Unit ={
     dom.window.addEventListener("keypress", {e:KeyboardEvent => f(fromCharCode(e.charCode))})
-  }
-
-  def onKeyPress(pf: PartialFunction[String,Any]): Unit ={
-    dom.window.addEventListener("keypress", {e:KeyboardEvent => pf(fromCharCode(e.charCode))})
   }
 
   def onKeyPressEvent(f: KeyboardEvent => Any): Unit ={

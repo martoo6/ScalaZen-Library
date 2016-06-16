@@ -18,13 +18,11 @@ class ThreeJSApp26 extends BasicCanvas with DrawingUtils with StatsDisplay with 
 
   stroke(0xFFFFFF)
 
-  //onKeyPress(_ => toogle)
   var m = true
 
-  onKeyPress { x=> x match{
+  onKeyPress {
       case "p" => toogle
       case "m" => m= !m
-    }
   }
 
     val div = 20

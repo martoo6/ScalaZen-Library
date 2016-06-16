@@ -38,7 +38,9 @@ class ThreeJSApp25 extends BasicCanvas with DrawingUtils with StatsDisplay with 
     // Schedule the song to start playing at time:0
     source.start()
 
-    onKeyPress(s => if(s=="p") source.stop())
+    onKeyPress {
+      case "p" => source.stop()
+    }
 
     println("Started to play song !")
   }

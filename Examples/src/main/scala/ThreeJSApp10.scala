@@ -9,9 +9,9 @@ import org.scalajs.dom.raw.KeyboardEvent
 import scala.scalajs.js.annotation.JSExport
 
 /**
- * Line Dashed Material (Not working)
- * Scala Collections Functions (Sliding)
- */
+  * Line Dashed Material (Not working)
+  * Scala Collections Functions (Sliding)
+  */
 
 @JSExport
 class ThreeJSApp10 extends BasicCanvas with DrawingUtils with StatsDisplay with SimplexNoise with AutoClear{
@@ -23,10 +23,9 @@ class ThreeJSApp10 extends BasicCanvas with DrawingUtils with StatsDisplay with 
   //onKeyPress(_ => toogle)
   var m = 0
 
-  onKeyPress { x=> x match{
-      case "p" => toogle
-      case "m" => m = (m+1) % 3
-    }
+  onKeyPress {
+    case "p" => toogle
+    case "m" => m = (m+1) % 3
   }
 
   val radius = height/2
