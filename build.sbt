@@ -12,7 +12,7 @@ enablePlugins(ScalaJSPlugin).
 settings(commonSettings: _*).
 settings(
   name := "ScalaZen",
-  libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.0",
+  libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.1",
   libraryDependencies += "org.webjars.bower" % "three.js" % "0.73.0",
   jsDependencies += "org.webjars.bower" % "three.js" % "0.73.0" / "three.js" minified "three.min.js",
   jsDependencies += ProvidedJS / "js/OrbitControls.js" dependsOn "three.js",
