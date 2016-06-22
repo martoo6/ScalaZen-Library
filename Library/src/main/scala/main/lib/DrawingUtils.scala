@@ -22,9 +22,16 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
   def now = System.currentTimeMillis()
 
   //Should re calculate acording to origin
-  def random2D = new Vector3(rand(width), rand(height),0)
-  def randomWidth = rand(width)
-  def randomHeight = rand(height)
+  def random2D = new Vector3(randomWidth, randomHeight, 0)
+  //Replace with Polimophism probably
+  def randomWidth = worldCoordinates match{
+    case CenterCoordiantes => rand(-width*0.5, width*0.5)
+    case LeftBottomCoordiantes => rand(width)
+  }
+  def randomHeight = worldCoordinates match{
+    case CenterCoordiantes => rand(-height*0.5, height*0.5)
+    case LeftBottomCoordiantes => rand(height)
+  }
 
   def vecXYAngle(angle:Float, size:Float=1) = new Vector3(size,0,0).applyAxisAngle(zAxis, angle)
 
@@ -287,8 +294,14 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
   private val planeGeometry =   new PlaneGeometry(1, 1)
 
   def rect[MM, W <: Material, V](pos: V, _width:Float, _height:Float, material: MM = defaultMeshMaterial)(implicit meshMaterialTypeClass: MeshMaterialTypeClass[MM, W], vectorTypeclass: VectorTypeclass[V]): Mesh[W] = {
+
     val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(vectorTypeclass.toVector(pos), (_width, _height)), meshMaterialTypeClass.toMeshMaterial(material))
     mesh.scale.set(_width, _height, 1)
+
+    val eh = new EdgesHelper(mesh, defaultLineMaterial.color.getHex())
+    eh.material.asInstanceOf[LineBasicMaterial].linewidth=2
+    mainGroup.add(eh)
+
     mesh
   }
 
@@ -404,9 +417,16 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
 
   def lineWidth(width: Float) = lineWeight(width)
 
-  def stroke[T](color: T)(implicit n: ColorTypeclass[T]) =
-    defaultLineMaterial = new LineBasicMaterial(js.Dynamic.literal(color = n.toColor(color), linewidth = defaultLineMaterial.linewidth, linejoin=defaultLineMaterial.linejoin, linecap=defaultLineMaterial.linecap, fog=defaultLineMaterial.fog))
+  def stroke[T](color: T)(implicit n: ColorTypeclass[T]) = {
+    defaultLineMaterial = new LineBasicMaterial(js.Dynamic.literal(color = n.toColor(color), linewidth = defaultLineMaterial.linewidth, linejoin = defaultLineMaterial.linejoin, linecap = defaultLineMaterial.linecap, fog = defaultLineMaterial.fog))
+  }
 
+  def noFill = fill((0,0,0,0))
+
+  def fill[T](color: T)(implicit n: ColorTypeclass[T]) = {
+    val alpha = n.alpha(color)
+    defaultMeshMaterial = new MeshBasicMaterial(js.Dynamic.literal(color = n.toColor(color), fog = defaultMeshMaterial.fog, opacity=alpha , transparent= if(alpha==1) false else true))
+  }
   //Should check default attributes for world (3D, 2D)
 
   //#######################  CUBE #############################
