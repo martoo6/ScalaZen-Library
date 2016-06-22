@@ -17,7 +17,7 @@ class ThreeJSApp23 extends BasicCanvas with DrawingUtils with StatsDisplay with 
   val r = rand(TWO_PI)
 
   val dots = (0 to 2000).map{ i=>
-    (random2D,Palette.iDemandPancake.getRandom.alpha(0.008))
+    (rand2D,Palette.iDemandPancake.getRandom.alpha(0.008))
   }
 
   def render():Unit = {

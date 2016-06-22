@@ -19,7 +19,7 @@ class ThreeJSApp7 extends BasicCanvas with DrawingUtils with StatsDisplay with S
   val perlin = Simplex(-15,15)
 
   val circles = (0 to 1000).map{ i=>
-    circle(random2D, 5, Palette.iDemandPancake.getRandom)
+    circle(rand2D, 5, Palette.iDemandPancake.getRandom)
   }
 
   def render():Unit = {

@@ -22,14 +22,14 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
   def now = System.currentTimeMillis()
 
   //Should re calculate acording to origin
-  def random2D = new Vector3(randomWidth, randomHeight, 0)
+  def rand2D = new Vector3(randomWidth, randomHeight, 0)
   //Replace with Polimophism probably
-  def randomWidth = worldCoordinates match{
-    case CenterCoordiantes => rand(-width*0.5, width*0.5)
+  def randomWidth = worldCoordinates match {
+    case CenterCoordiantes     => rand(-width*0.5, width*0.5)
     case LeftBottomCoordiantes => rand(width)
   }
-  def randomHeight = worldCoordinates match{
-    case CenterCoordiantes => rand(-height*0.5, height*0.5)
+  def randomHeight = worldCoordinates match {
+    case CenterCoordiantes     => rand(-height*0.5, height*0.5)
     case LeftBottomCoordiantes => rand(height)
   }
 
@@ -297,11 +297,6 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
 
     val mesh = addMeshInPlace(planeGeometry, RectMode.rectMode(vectorTypeclass.toVector(pos), (_width, _height)), meshMaterialTypeClass.toMeshMaterial(material))
     mesh.scale.set(_width, _height, 1)
-
-    val eh = new EdgesHelper(mesh, defaultLineMaterial.color.getHex())
-    eh.material.asInstanceOf[LineBasicMaterial].linewidth=2
-    mainGroup.add(eh)
-
     mesh
   }
 
@@ -396,6 +391,22 @@ trait DrawingUtils extends MathUtils with Converters with Materials with ColorsT
         m
       }
     }
+
+  implicit class RichMesh2(m: Mesh[_]){
+    def outline = {
+      val eh = new EdgesHelper(m, defaultLineMaterial.color.getHex())
+      eh.material.asInstanceOf[LineBasicMaterial].linewidth = 2
+      mainGroup.add(eh)
+      m
+    }
+
+    def outline[C](color: C, strokeWidth:Float = 1)(implicit colorTypeclass: ColorTypeclass[C]) = {
+      val eh = new EdgesHelper(m, colorTypeclass.toColor(color).getHex())
+      eh.material.asInstanceOf[LineBasicMaterial].linewidth = strokeWidth
+      mainGroup.add(eh)
+      m
+    }
+  }
 
   implicit class RichColor[T](color: T)(implicit n: ColorTypeclass[T]){
     def toMeshBasicMaterial(side:Side = faceSide)  = new MeshBasicMaterial(js.Dynamic.literal(color = n.toColor(color), side= side))

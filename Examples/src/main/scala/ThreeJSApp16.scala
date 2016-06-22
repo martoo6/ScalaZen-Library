@@ -16,7 +16,7 @@ class ThreeJSApp16 extends BasicCanvas with DrawingUtils with StatsDisplay with 
 
 
   val dots = (0 to 1000).map{ i=>
-    (random2D ,Palette.iDemandPancake.getRandom)
+    (rand2D ,Palette.iDemandPancake.getRandom)
   }
 
   val circles = point(dots:_*).geometry

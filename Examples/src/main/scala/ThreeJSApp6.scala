@@ -14,7 +14,7 @@ class ThreeJSApp6 extends BasicCanvas with DrawingUtils with StatsDisplay with S
 
 
   val circles = (0 to 1000).map{ i=>
-    circle(random2D, rand(2,6), blueSaddness.getRandom)
+    circle(rand2D, rand(2,6), blueSaddness.getRandom)
   }
 
   def render():Unit = {
